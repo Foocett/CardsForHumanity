@@ -1,53 +1,34 @@
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-
 const app = express();
+const http = require('http');
 const server = http.createServer(app);
-const io = socketIo(server);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname+'/main.html');
+});
+
 io.on('connection', (socket) => {
-    console.log('A user connected');
-
-    socket.on('createRoom', () => {
-        const roomId = "goDutch";
-        socket.join(roomId);
-        socket.emit('roomCreated', roomId);
-    });
-
-    socket.on('joinRoom', (roomId) => {
-        socket.join(roomId);
-        socket.to(roomId).emit('playerJoined', socket.id); // Notify others in the room
-    });
-
-
-    // Add more event listeners for game logic here
-
+    console.log('a user connected');
     socket.on('disconnect', () => {
-        console.log('User disconnected');
-        // Handle user disconnection
+        console.log('user disconnected');
+    });
+
+    socket.on('chat message', (msg) => {
+        console.log('message: ' + msg);
+    });
+
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg);
     });
 });
+
 
 server.listen(3000, () => {
-    console.log('Listening on *:3000');
+    console.log('listening on *:3000');
 });
 
-const socket = io('http://localhost:3000');
-
-// To create a room
-socket.emit('createRoom');
-
-socket.on('roomCreated', (roomId) => {
-    console.log(`Room created with ID: ${roomId}`);
-});
-
-// To join a room
-const roomId = 'someRoomId'; // This would be obtained from the user
-socket.emit('joinRoom', roomId);
-
-socket.on('playerJoined', (playerId) => {
-    console.log(`Player joined: ${playerId}`);
-});
 
 const rawBuiltin = require('./Packs/builtinPack.json');
 const rawAutism = require('./Packs/autismPack.json');

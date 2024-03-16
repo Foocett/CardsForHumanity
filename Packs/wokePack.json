@@ -1,0 +1,35 @@
+{
+  "whiteCards": [
+    "An unemployed white man in an instagram comment section",
+    "The woke agenda, whatever that means",
+    "The Queen James bible",
+    "Ron DeSantis reading feminist literature",
+    "A poorly executed Trump impression",
+    "George Santos if he was straight",
+    "An average Floridian",
+    "Mitch McConnell freezing up again",
+    "The GOP",
+    "The DNC",
+    "Several violations of the Geneva Convention",
+    "The leading cause of death among US children",
+    "A tiktok ban",
+    "The state of our union",
+    "Making a cum tribute to Trump's mugshot",
+    "Damn Liberals"
+  ],
+
+  "blackCards": [
+    {
+      "text": "Insiders are saying _____ will be the primary focus of the GOP in the coming election cycle.",
+      "blanks": 1
+    },
+    {
+      "text": "The senate has just passed a bill allocating $100 Billion for _____, medicare is still communism though.",
+      "blanks": 1
+    },
+    {
+      "text": "The only thing that can fix our economy is _____ and we need your help!",
+      "blanks": 1
+    }
+  ]
+}

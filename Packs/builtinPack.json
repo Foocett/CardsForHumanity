@@ -1,0 +1,44 @@
+{
+  "whiteCards": [
+    "A joi",
+    "Benadryl",
+    "NyQuill",
+    "The Hat Man",
+    "1/10 Dentists",
+    "9/10 Dentists",
+    "A peculiarly average penis",
+    "Rubbing the inside of your girl's thigh and asking if she came",
+    "The clitoris",
+    "A VERY intense game of mini golf",
+    "A motherfucking quiche",
+    "Baking edibles in an easy bake oven",
+    "Raw, unfiltered, (fragile) masculinity",
+    "Explaining to your wife what mansplaining actually means",
+    "A shitty super hero ripping his jeans into jorts so you know he's ready to fuck shit up",
+    "Junie B. Jones lunging at you and biting your jugular like a rabid dog",
+    "MLK's 'I have a dream', but it was about a wet dream"
+  ],
+
+  "blackCards": [
+    {
+      "text": "Elon Musk has unveiled X's newest feature: _____.",
+      "blanks": 1
+    },
+    {
+      "text": "It's giving _____...",
+      "blanks": 1
+    },
+    {
+      "text": "What are you serving?",
+      "blanks": 1
+    },
+    {
+      "text": "Unless the function has _____, I'm not going.",
+      "blanks": 1
+    },
+    {
+      "text": "Tonight on WWE, _____ faces off against _____!",
+      "blanks": 2
+    }
+  ]
+}

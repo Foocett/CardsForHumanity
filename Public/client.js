@@ -1,11 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("stuff is happening");
+    const username = prompt("Please enter your username:", "Harry Potter");
     const socket = io(); // Connect to the server
     const gameInfo = document.getElementById('game-info');
     const handDiv = document.getElementById('hand');
     const submitButton = document.getElementById('submit-cards');
 
     let selectedCards = []; // Track selected cards for submission
+
+    if (username !== null && username.trim() !== "") {
+        socket.emit('registerUser', { username: username });
+    } else {
+        // Handle case where user does not input a name
+        alert("You must enter a username to continue.");
+        window.location.reload(); // Reload the page or redirect as needed
+    }
+
 
     // Listen for game state updates
     socket.on('gameState', (state) => {

@@ -11,14 +11,26 @@ app.get('/', (req, res) => {
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
+
+    socket.on('registerUser', (data) => {
+        console.log('Registering user:', data.username);
+        const newPlayer = new Player(data.username, socket.id);
+        game.addPlayer(newPlayer);
+
+        // You might want to emit back some confirmation or game state
+        socket.emit('userRegistered', { success: true });
+        // Or broadcast/update all clients with the new player list or game state as needed
+    });
+
     console.log('A user connected:', socket.id);
     let ip = socket.handshake.address;
-    const newPlayer = new Player("User-" + game.players.length, ip);
+    const newPlayer = new Player("User-" + game.players.length, socket.id);
     game.addPlayer(newPlayer);
-    console.log(newPlayer.address);
     // Send the initial game state and player's hand to the connected player
-    socket.emit('gameState', { /* Relevant game state info */ });
+    socket.emit('gameState', {game});
     socket.emit('initialHand', newPlayer.hand.map(card => card.toString()));
+
+
 
     // Listen for player actions, e.g., submitting cards
     socket.on('submitCards', (cardIds) => {
@@ -123,12 +135,13 @@ class BlackCard {
 }
 
 class Player {
-    constructor(username, address) {
+    constructor(username, id) {
         this.name = username;
-        this.address = address;
+        this.id = id;
         this.score = 0;
         this.hand = [];
         this.czar = false;
+        console.log(this);
     }
 
     setCzar(state) {

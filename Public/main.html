@@ -7,126 +7,50 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
     <link rel="stylesheet" href="main.css">
-    <style>
-        html {
-            width: 100%;
-            height: 100%;
-        }
-
-        body{
-            width: 100%;
-            height: 100%;   
-            margin-top: 0px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-bottom: 0px;
-        }
-
-        header {
-            display: flex;
-            width: 100%;
-            height: 10vh;
-            background-color: darkolivegreen;
-            fill: darkolivegreen;
-            justify-content: center;
-            align-content: center;
-            justify-items: center;
-            align-items: center;
-        }
-
-        #header-title{
-            display: flex;
-            color: black;
-            font-size: large;
-            text-align: center;
-            margin-right: 10vw;
-        }
-
-        #cards-private-container{
-            display: inline-flex;
-            width: 100%;
-            height: 30vh;
-            align-content: space-evenly;
-            justify-content: space-evenly;
-            border-color: black;
-            border-width: 2px;
-        }
-
-        
-        #cards-public-container{
-            display: inline-flex;
-            width: 100%;
-            height: 30vh;
-            border-color: black;
-            border-width: 2px;
-        }
-
-        #public-white-card-text, #public-white-card-pack, #white-card-text, #white-card-pack{
-            color: black;
-        }
-
-        #black-card-text, #black-card-pack{
-            color: white
-        }
-
-        #submitted-cards-container{
-            display: inline-flex;
-            align-content: space-evenly;
-        }
-
-        #white-card{
-            display:flex;
-            width: 7.5vw;
-            background-color: white;
-            border-color: black;
-            border-width: 2px;
-            border-style: ridge;
-        }
-
-        #public-white-card{
-            display:none;
-            width: 10vw;
-            background-color: white;
-            border-color: black;
-            border-width: 2px;
-            border-style: ridge;
-            margin-right: 5vw;
-        }
-
-        #black-card {
-            margin-left: 1vw;
-            left: 0;
-            width: 10vw;
-            background-color: black;
-            border-color: white;
-            border-width: 2px;
-            border-style: ridge;
-            margin-right: 5vw;
-        }
-    </style>
 </head>
 <body>
     <header id="main-header" class="main-header">
         <title id="header-title" class="main-header">Cards For Humanity</title>
     </header>
     <div class="cards-public" id="cards-public-container">
-        <div class="cards-public" id="black-card-container">
-            <div class="cards-public" id="black-card">
-                <p class="cards-public" id="black-card-text">Card Text Here</p>
-                <p class="cards-public" id="black-card-pack">Pack Info Here</p>
-            </div>
+        <div class="black-card" id="black-card">
+            <p class="black-card-text" id="black-card-text">Card Text Here</p>
+            <p class="black-card-pack" id="black-card-pack">Pack Info Here</p>
         </div>
-        <div class="cards-public" id="submitted-cards-container"></div>
+        <div class="white-card" id="submitted-card-1">
+            <p class="white-card-text" id="submitted-card-1-text">Card Text Here</p>
+            <p class="white-card-pack" id="submitted-card-1-pack">Pack Info Here</p>
+        </div>
     </div>
-    <div class="cards-personal" id="cards-personal-container"></div>
-    <div class="cards-personal" id="white-card">
-        <p class="cards-personal" id="white-card-text">Card Text Here</p>
-        <p class="cards-personal" id="white-card-pack">Pack Info Here</p>
+    <div class="cards-personal" id="cards-personal-container">
+        <div class="white-card" id="white-card-1">
+            <p class="white-card-text" id="white-card-1-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-1-pack">Pack Info Here</p>
+        </div>
+        <div class="white-card" id="white-card-2">
+            <p class="white-card-text" id="white-card-2-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-2-pack">Pack Info Here</p>
+        </div>
+        <div class="white-card" id="white-card-3">
+            <p class="white-card-text" id="white-card-3-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-3-pack">Pack Info Here</p>
+        </div>
+        <div class="white-card" id="white-card-4">
+            <p class="white-card-text" id="white-card-4-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-4-pack">Pack Info Here</p>
+        </div>
+        <div class="white-card" id="white-card-5">
+            <p class="white-card-text" id="white-card-5-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-5-pack">Pack Info Here</p>
+        </div>
+        <div class="white-card" id="white-card-6">
+            <p class="white-card-text" id="white-card-6-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-6-pack">Pack Info Here</p>
+        </div>
+        <div class="white-card" id="white-card-7">
+            <p class="white-card-text" id="white-card-7-text">Card Text Here</p>
+            <p class="white-card-pack" id="white-card-7-pack">Pack Info Here</p>
+        </div>
     </div>
-    <div class="cards-public" id="public-white-card">
-        <p class="cards-public" id="public-white-card-text">Card Text Here</p>
-        <p class="cards-public" id="public-white-card-pack">Pack Info Here</p>
-    </div>
-    <p id="test-header">Placeholder</p>
 </body>
 </html>

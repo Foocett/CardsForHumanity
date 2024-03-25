@@ -13,7 +13,7 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
     clients[socket.id] = socket;
 
-    socket.on("clientDebug", (message) => {
+    socket.on("serverDebug", (message) => {
         console.log("-----\nClient Debug:\n"+message+"\n-----");
     });
     socket.on("requestPlayerData", (username, ackCallback) => {
@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
         });
         game.players.splice(playerIndex);
         delete game.playerLibrary[socket.id];
+        console.log("A user has disconnected: " + socket.id);
     });
 
     console.log('A user connected:', socket.id);

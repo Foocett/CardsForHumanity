@@ -4,48 +4,46 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-
+let clients = {};
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/main.html');
 });
+
 app.use(express.static('public'));
-
 io.on('connection', (socket) => {
-
-    socket.on('registerUser', (data) => {
-        console.log('Registering user:', data.username);
-        const newPlayer = new Player(data.username, socket.id);
+    clients[socket.id] = socket;
+    socket.on("requestPlayerData", (username, ackCallback) => {
+        const newPlayer = new Player(username, socket.id);
+        newPlayer.topUpCards();
         game.addPlayer(newPlayer);
+        // Process request and prepare the response
+        const responseData = {
+            rawPlayerInfo: newPlayer,
+        };
+        // Use the callback function to send the response back to the client
+        ackCallback(responseData);
+    })
 
-        // You might want to emit back some confirmation or game state
-        socket.emit('userRegistered', { success: true });
-        // Or broadcast/update all clients with the new player list or game state as needed
+    socket.on("received", () => {
+        console.log("received");
+        console.log(game.playerLibrary[socket.id]);
+    })
+
+    socket.on('disconnect', () => {
+        delete clients[socket.id]; // Remove socket when client disconnects
+        let playerIndex;
+        game.players.forEach(player => {
+            if(player.name === game.playerLibrary[socket.id].name) {
+                playerIndex = game.players.indexOf(player)
+            }
+        });
+        game.players.splice(playerIndex);
+        delete game.playerLibrary[socket.id];
     });
 
     console.log('A user connected:', socket.id);
-    let ip = socket.handshake.address;
-    const newPlayer = new Player("User-" + game.players.length, socket.id);
-    game.addPlayer(newPlayer);
-    // Send the initial game state and player's hand to the connected player
-    socket.emit('gameState', {game});
-    socket.emit('initialHand', newPlayer.hand.map(card => card.toString()));
-
-
-
-    // Listen for player actions, e.g., submitting cards
-    socket.on('submitCards', (cardIds) => {
-        // Handle card submission
-    });
-
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-        game.removePlayer(socket.id); // You'll need to adjust your game logic to support this
-        // Notify all players about the disconnection
-        io.emit('playerDisconnected', { playerId: socket.id });
-    });
-
-    // Additional event listeners for game actions...
 });
+// Additional event listeners for game actions...
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
@@ -83,12 +81,12 @@ class Deck {
         this.blackDiscard = [];
 
         selectedPacks.forEach(pack => {
-           allWhiteCards[pack].forEach(white => {
-               this.whiteDeck.push(new WhiteCard(white, pack));
-           });
-           allBlackCards[pack].forEach(black =>{
-               this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack))
-           });
+            allWhiteCards[pack].forEach(white => {
+                this.whiteDeck.push(new WhiteCard(white, pack));
+            });
+            allBlackCards[pack].forEach(black =>{
+                this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack))
+            });
         });
     }
 
@@ -104,7 +102,7 @@ class Deck {
         let index = getRandom(0, this.blackDeck.length);
         let card = this.whiteDeck[index];
         this.blackDiscard.push(card)
-        this.blackDeck.splice(index, 1);
+        this.blackDeck.push(index);
         return(card);
     }
 }
@@ -115,8 +113,12 @@ class WhiteCard {
     constructor(text, pack) {
         this.text = text;
         this.pack = pack;
+        this.owner;
     }
 
+    setOwner(player){
+        this.owner = player;
+    }
     toString() {
         return this.text;
     }
@@ -141,7 +143,6 @@ class Player {
         this.score = 0;
         this.hand = [];
         this.czar = false;
-        console.log(this);
     }
 
     setCzar(state) {
@@ -149,8 +150,8 @@ class Player {
     }
 
     topUpCards(deck) {
-        while (this.hand.length < 7) {
-            this.hand.push(deck.drawWhite());
+        while(this.hand.length < 7) {
+            this.hand.push(game.deck.drawWhite());
         }
     }
 
@@ -166,14 +167,7 @@ class Player {
             }
             return this.hand.splice(index, 1)[0]; // Remove the card from the hand
         });
-
         // Further logic to handle the submission can go here
-    }
-
-
-
-    toString() {
-        return `Name: ${this.name}\nIP: ${this.address}`;
     }
 }
 
@@ -181,12 +175,14 @@ class Game {
     constructor(deck) {
         this.deck = deck;
         this.players = [];
+        this.playerLibrary = {}
         this.currentCzarIndex = 0;
         this.gamePhase = 'waiting'; // Example phases: waiting, submitting, judging, results
     }
 
     addPlayer(player) {
         this.players.push(player);
+        this.playerLibrary[player.id] = player;
         player.topUpCards(this.deck);
     }
 
@@ -217,10 +213,11 @@ class Game {
         this.selectNextCzar();
         // Notify players about the new black card and that a new turn has started
     }
-
     // Additional methods to handle submissions, judging, and scoring...
 }
 
+const gameDeck = new Deck("builtin", "uwu", "woke");
+const game = new Game(gameDeck);
 
 function getRandom(min, max) {
     const minCeiled = Math.ceil(min);
@@ -228,7 +225,5 @@ function getRandom(min, max) {
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
 }
 
-const gameDeck = new Deck("builtin", "uwu", "woke");
-const game = new Game(gameDeck);
-
 module.exports = { Deck, WhiteCard, BlackCard }; // Exporting the classes for use in other files
+

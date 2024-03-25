@@ -24,11 +24,6 @@ io.on('connection', (socket) => {
         ackCallback(responseData);
     })
 
-    socket.on("received", () => {
-        console.log("received");
-        console.log(game.playerLibrary[socket.id]);
-    })
-
     socket.on('disconnect', () => {
         delete clients[socket.id]; // Remove socket when client disconnects
         let playerIndex;
@@ -56,13 +51,16 @@ const rawWoke = require('./Packs/wokePack.json');
 const rawDutch = require('./Packs/dutchPack.json');
 const rawStem = require('./Packs/stemPack.json');
 const rawUwU = require('./Packs/uwuPack.json');
+const rawAP = require("./Packs/apPack.json")
+
 const allWhiteCards = {
     "builtin": rawBuiltin.whiteCards,
     "autism": rawAutism.whiteCards,
     "woke": rawWoke.whiteCards,
     "dutch": rawDutch.whiteCards,
     "stem": rawStem.whiteCards,
-    "uwu": rawUwU.whiteCards
+    "uwu": rawUwU.whiteCards,
+    "familyFriendly": rawAP.whiteCards
 };
 const allBlackCards = {
     "builtin": rawBuiltin.blackCards,
@@ -70,7 +68,8 @@ const allBlackCards = {
     "woke": rawWoke.blackCards,
     "dutch": rawDutch.blackCards,
     "stem": rawStem.blackCards,
-    "uwu": rawUwU.blackCards
+    "uwu": rawUwU.blackCards,
+    "ap": rawAP.blackCards
 };
 
 class Deck {

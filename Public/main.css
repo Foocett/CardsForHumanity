@@ -89,10 +89,12 @@ header {
 
 .white-card-text, .white-card-pack {
     padding-left: 3px;
+    margin-bottom: 1px;
     color: black;
 }
 
 .black-card-text, .black-card-pack {
     padding-left: 3px;
+    margin-bottom: 1px;
     color: white;
 }

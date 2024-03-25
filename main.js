@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
 app.use(express.static('public'));
 io.on('connection', (socket) => {
     clients[socket.id] = socket;
+
+    socket.on("clientDebug", (message) => {
+        console.log("-----\nClient Debug:\n"+message+"\n-----");
+    });
     socket.on("requestPlayerData", (username, ackCallback) => {
         const newPlayer = new Player(username, socket.id);
         newPlayer.topUpCards();

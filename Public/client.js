@@ -1,24 +1,26 @@
+let handElements = []
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log("connected");
-    const username = prompt("Please enter your username:");
+    let username = prompt("Please enter your username:");
+    while (username === null || username.trim() === "") {
+        alert("You must enter a username to continue.");
+        username = prompt("Please enter your username:");
+    }
     const socket = io(); // Connect to the server
     let self;
     let hand = []; // Track selected cards for submission
     let testHeader = document.getElementById("test-header");
-    if (username !== null && username.trim() !== "") {
-        socket.emit('requestPlayerData', username, (response) => {
-            self = response.rawPlayerInfo
-            socket.emit("received")
-        });
-        testHeader.textContent = "hand";
-    } else {
-        // Handle case where user does not input a name
-        alert("You must enter a username to continue.");
-        window.location.reload(); // Reload the page or redirect as needed
-    }
+    socket.emit('requestPlayerData', username, (response) => {
+        self = response.rawPlayerInfo
+    });
+    testHeader.textContent = "hand";
 });
 
-
+for(let i = 1; i<=7; i++){
+    handElements.push(document.getElementById("white-card-"+i))
+    console.log(handElements);
+}
 
 // Function to handle card selection
 function selectCard(index, cardElement) {

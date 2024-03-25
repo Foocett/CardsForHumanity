@@ -26,14 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const handCards = document.querySelectorAll(".white-card");
+
     handCards.forEach(card => {
         card.addEventListener('click', function() {
+            // Remove the selected class from all cards
             handCards.forEach(element => {
-                element.style.backgroundColor = "white";
-                element.style.color = "black";
+                element.classList.remove("selected-card");
+                element.style.backgroundColor = "white"; // Reset background color
+                element.style.color = "black"; // Reset text color
             });
-            this.style.backgroundColor = "#84b5d1";
-            this.style.color = "white";
+
+            // Add the selected class to the clicked card
+            this.classList.add("selected-card");
         });
     });
 

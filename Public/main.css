@@ -66,8 +66,23 @@ header {
     color: black;
     border-color: black;
     border-width: 2px;
-    border-style: ridge;
-    transition: background-color 0.2s, color 0.2s;
+    border-style: solid;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer; /* Encourage user interaction */
+}
+
+.white-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.white-card:not(.selected-card):hover {
+    background-color: #f9f9f9; /* Very light gray */
+}
+
+.selected-card {
+    background-color: #05acfa !important; /* Ensures this style has priority */
+    color: #f9f9f9 !important;
 }
 
 #black-card{

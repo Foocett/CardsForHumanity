@@ -90,6 +90,7 @@ header {
 .white-card-text, .white-card-pack {
     padding-left: 3px;
     margin-bottom: 1px;
+    margin-top: 2px;
     color: black;
 }
 

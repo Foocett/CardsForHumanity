@@ -67,22 +67,19 @@ header {
     border-color: black;
     border-width: 2px;
     border-style: ridge;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 #black-card{
-    margin-left: 4px;
     display:flex;
     color: white;
     background-color: black;
     border-color: white;
-    border-width: 2px;
-    border-style: ridge;
     flex-direction: column;
     justify-content: space-between;
     width: 12vw;
     height: 100%;
     margin-left: 10px;
-    border-color: black;
     border-width: 2px;
     border-style: ridge;
 }
@@ -91,7 +88,7 @@ header {
     padding-left: 3px;
     margin-bottom: 1px;
     margin-top: 2px;
-    color: black;
+    color: inherit;
 }
 
 .black-card-text, .black-card-pack {

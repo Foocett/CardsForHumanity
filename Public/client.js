@@ -1,5 +1,5 @@
-let handElements = []
-
+let handElementsText = []
+let handElementsPack = []
 document.addEventListener('DOMContentLoaded', function() {
     console.log("connected");
     let username = prompt("Please enter your username:");
@@ -9,20 +9,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const socket = io(); // Connect to the server
     let self;
-    let hand = []; // Track selected cards for submission
-    let testHeader = document.getElementById("test-header");
+    for(let i = 1; i<=7; i++){
+        handElementsText.push(document.getElementById("white-card-"+i+"-text"))
+        handElementsPack.push(document.getElementById("white-card-"+i+"-pack"))
+    }
     socket.emit('requestPlayerData', username, (response) => {
         self = response.rawPlayerInfo
+        populateCardsFromHand(self);
     });
-    testHeader.textContent = "hand";
 });
 
-for(let i = 1; i<=7; i++){
-    handElements.push(document.getElementById("white-card-"+i))
-    console.log(handElements);
+function populateCardsFromHand(self) {
+    for(let i = 0; i<7;i++){
+
+        handElementsText[i].textContent = self.hand[i].text;
+        handElementsPack[i].textContent = getProperName(self.hand[i].pack);
+    }
 }
 
-// Function to handle card selection
+function getProperName(name){
+    switch(name){
+        case "uwu":
+            return "UwU Pack";
+        case "builtin":
+            return "Built In Pack";
+        case "woke":
+            return "Woke Pack";
+        case "dutch":
+            return "Dutch Pack";
+        case "autism":
+            return "Autism Pack";
+        case "stem":
+            return "STEM Pack";
+        case "familyFriendly":
+            return "Family Friendly Pack";
+    }
+}
+
+const allWhiteCards = {
+    "builtin": rawBuiltin.whiteCards,
+    "autism": rawAutism.whiteCards,
+    "woke": rawWoke.whiteCards,
+    "dutch": rawDutch.whiteCards,
+    "stem": rawStem.whiteCards,
+    "uwu": rawUwU.whiteCards,
+    "familyFriendly": rawAP.whiteCards
+};
 function selectCard(index, cardElement) {
     const selectedIndex = selectedCards.indexOf(index);
     if (selectedIndex > -1) {

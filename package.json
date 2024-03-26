@@ -1,7 +1,7 @@
 {
   "name": "cardsforhumanity",
   "version": "1.0.0",
-  "description": "",
+  "description": "A game based off Cards Against Humanity except I made it so it's generally mediocre.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

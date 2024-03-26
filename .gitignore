@@ -128,3 +128,6 @@ dist
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
+
+# everything else
+*notes.txt

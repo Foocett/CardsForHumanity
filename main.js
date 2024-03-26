@@ -5,6 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 let clients = {};
+let cardSubmissions = [];
+let submissionCount = 0;
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/main.html');
 });
@@ -31,16 +33,24 @@ io.on('connection', (socket) => {
 
     socket.on("submit-cards", (payload, ackCallback) => {
         console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :");
-        console.log(payload.submission)
+        submissionCount++;
+        cardSubmissions.push(new WhiteCard(payload.submission, payload.submissionPack));
         const submittingPlayer = game.playerLibrary[payload.id];
-        console.log(submittingPlayer.hand);
-        submittingPlayer.hand.splice(payload.submissionIndex);
+        submittingPlayer.hand.splice(payload.submissionIndex, 1);
         submittingPlayer.topUpCards(game.deck);
-        console.log(submittingPlayer.hand)
         const responseData = {
             rawPlayerInfo: submittingPlayer
         };
         ackCallback(responseData)
+        let showContent = false;
+        if(submissionCount >= game.players.length ){
+            showContent = true
+        }
+        let data = {
+            submissions: cardSubmissions,
+            showContent: showContent
+        }
+        io.emit("pushSubmittedCards", data);
     });
     
     socket.on('disconnect', () => {
@@ -132,12 +142,8 @@ class WhiteCard {
     constructor(text, pack) {
         this.text = text;
         this.pack = pack;
-        this.owner;
     }
 
-    setOwner(player){
-        this.owner = player;
-    }
     toString() {
         return this.text;
     }
@@ -182,6 +188,7 @@ class Game {
         this.playerLibrary = {}
         this.currentCzarIndex = 0;
         this.gamePhase = 'waiting'; // Example phases: waiting, submitting, judging, results
+
     }
 
     addPlayer(player) {
@@ -208,25 +215,26 @@ class Game {
     }
 
     startTurn() {
+        this.selectNextCzar();
         this.currentBlackCard = this.deck.drawBlack();
         this.gamePhase = 'submitting';
-        this.players.forEach(player => {
-            player.topUpCards(this.deck);
-            player.submittedCards = []; // Reset submitted cards for the new round
-        });
-        this.selectNextCzar();
         // Notify players about the new black card and that a new turn has started
     }
-    // Additional methods to handle submissions, judging, and scoring...
+
+
 }
 
-const gameDeck = new Deck("builtin", "uwu", "woke");
+const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "ap", "autism", "stem");
 const game = new Game(gameDeck);
 
 function getRandom(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+}
+
+function updateGameState(game) {
+    io.emit()
 }
 
 module.exports = { Deck, WhiteCard, BlackCard }; // Exporting the classes for use in other files

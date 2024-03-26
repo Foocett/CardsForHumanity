@@ -16,6 +16,7 @@ io.on('connection', (socket) => {
     socket.on("serverDebug", (message) => {
         console.log("-----\nClient Debug:\n"+message+"\n-----");
     });
+
     socket.on("requestPlayerData", (username, ackCallback) => {
         const newPlayer = new Player(username, socket.id);
         newPlayer.topUpCards();
@@ -28,6 +29,20 @@ io.on('connection', (socket) => {
         ackCallback(responseData);
     })
 
+    socket.on("submit-cards", (payload, ackCallback) => {
+        console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :");
+        console.log(payload.submission)
+        const submittingPlayer = game.playerLibrary[payload.id];
+        console.log(submittingPlayer.hand);
+        submittingPlayer.hand.splice(payload.submissionIndex);
+        submittingPlayer.topUpCards(game.deck);
+        console.log(submittingPlayer.hand)
+        const responseData = {
+            rawPlayerInfo: submittingPlayer
+        };
+        ackCallback(responseData)
+    });
+    
     socket.on('disconnect', () => {
         delete clients[socket.id]; // Remove socket when client disconnects
         let playerIndex;
@@ -157,21 +172,6 @@ class Player {
         while(this.hand.length < 7) {
             this.hand.push(game.deck.drawWhite());
         }
-    }
-
-    submitCards(cardIndices) {
-        // Ensure the submitted card indices are valid
-        if (cardIndices.length !== game.currentBlackCard.blanks) {
-            throw new Error("Incorrect number of cards submitted.");
-        }
-
-        let submittedCards = cardIndices.map(index => {
-            if (index < 0 || index >= this.hand.length) {
-                throw new Error("Invalid card index.");
-            }
-            return this.hand.splice(index, 1)[0]; // Remove the card from the hand
-        });
-        // Further logic to handle the submission can go here
     }
 }
 

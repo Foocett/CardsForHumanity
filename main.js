@@ -90,7 +90,7 @@ const allWhiteCards = {
     "dutch": rawDutch.whiteCards,
     "stem": rawStem.whiteCards,
     "uwu": rawUwU.whiteCards,
-    "familyFriendly": rawAP.whiteCards
+    "ap": rawAP.whiteCards
 };
 const allBlackCards = {
     "builtin": rawBuiltin.blackCards,
@@ -224,7 +224,8 @@ class Game {
 
 }
 
-const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "ap", "autism", "stem");
+//const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "ap", "autism", "stem");
+const gameDeck = new Deck("stem", "dutch", "ap");
 const game = new Game(gameDeck);
 
 function getRandom(min, max) {

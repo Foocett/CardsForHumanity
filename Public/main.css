@@ -4,6 +4,8 @@ html {
 }
 
 body{
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -22,11 +24,10 @@ header {
 }
 
 #header-title{
-    display: flex;
+    display: inline;
     color: black;
     font-size: large;
     text-align: center;
-    margin-right: 10vw;
 }
 
 #cards-personal-container{
@@ -34,7 +35,7 @@ header {
     flex-direction: row;
     justify-content: flex-start;
     width: 100%;
-    height: 30vh;
+    height: 25vh;
     border-color: black;
     border-width: 2px;
 }
@@ -47,7 +48,7 @@ header {
     flex-direction: row;
     justify-items: flex-start;
     width: 100%;
-    height: 30vh;
+    height: 25vh;
     border-color: black;
     border-width: 2px;
 }
@@ -94,6 +95,8 @@ header {
 .selected-card {
     background-color: #05acfa !important; /* Ensures this style has priority */
     color: #f9f9f9 !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #black-card{
@@ -127,4 +130,56 @@ header {
     display: inline;
     margin-top: 12px;
     width: 100%;
+    margin-bottom: 1vh;
+}
+
+#sub-content {
+    display: inline-flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+#score-display-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-items: flex-start;
+    border-width: 2px;  
+    border-color: black;
+    border-style: solid;
+}
+
+.player-score-item {
+    display: grid;
+    justify-content: space-between;
+}
+
+.player-score-item-username, .player-score-item-score {
+    display: block;
+}
+
+
+.player-score-item-username {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    margin-left: 4px;
+    justify-self: left;
+}
+
+.player-score-item-score {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    justify-self: right;
+    margin-right: 10px;
+}
+
+#chat {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-items: flex-start;
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+    width: 75%;
 }

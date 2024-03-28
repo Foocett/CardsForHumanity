@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
         populateCardsFromHand(self);
     });
 
+    socket.on("updatePlayerList", (playerInfo) => {
+        updateConnectedPlayers(playerInfo)
+    })
+
     function populateCardsFromHand(self) {
         for(let i = 0; i<7;i++){
             handElementsText[i].textContent = self.hand[i].text;
@@ -130,6 +134,34 @@ document.addEventListener('DOMContentLoaded', function() {
             submittedCard.appendChild(cardPack);
             publicContainer.appendChild(submittedCard);
         });
+    }
+
+    let connectedPlayerObjects = [];
+    function updateConnectedPlayers(playerInfo) {
+        let playerContainer = document.getElementById("score-display-container")
+        connectedPlayerObjects.forEach(item => {
+            item.remove();
+        })
+        for (let i = 0; i < playerInfo.length; i++) {
+            let newPlayerObject = document.createElement("div");
+            newPlayerObject.classList.add("player-score-item");
+
+            let newPlayerObjectUsername = document.createElement("h");
+            let newPlayerObjectScore = document.createElement("h");
+            newPlayerObjectUsername.classList.add("player-score-item-username");
+            newPlayerObjectScore.classList.add("player-score-item-score");
+            newPlayerObjectUsername.textContent = playerInfo[i].name;
+            newPlayerObjectScore.textContent = playerInfo[i].score;
+            if(i % 2 === 1)  {
+                newPlayerObject.style.backgroundColor = "#d1d1e0"
+            } else {
+                newPlayerObject.style.backgroundColor = "#a3a3c2"
+            }
+            newPlayerObject.appendChild(newPlayerObjectUsername);
+            newPlayerObject.appendChild(newPlayerObjectScore);
+            playerContainer.appendChild(newPlayerObject);
+            connectedPlayerObjects.push(newPlayerObject);
+        }
     }
 });
 

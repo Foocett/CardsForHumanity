@@ -9,7 +9,7 @@ let cardSubmissions = [];
 let submissionCount = 0;
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/public/main.html');
+    res.sendFile(__dirname+'/public/client.html');
 });
 
 app.use(express.static('public'));
@@ -221,8 +221,8 @@ class Game {
 
 }
 
-//const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "ap", "autism", "stem");
-const gameDeck = new Deck("stem", "dutch", "ap");
+const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "ap", "autism", "stem");
+//const gameDeck = new Deck("stem", "dutch", "ap");
 const game = new Game(gameDeck);
 
 function getRandom(min, max) {

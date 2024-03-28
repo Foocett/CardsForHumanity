@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedIndex;
     let selectedText;
     let selectedPack;
+    let submittedText;
+    let submittedPack;
 
     function debug(message){
         socket.emit("debug", message);
@@ -78,6 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
         socket.emit('submit-cards', payload, (response) => {
             self = response.rawPlayerInfo;
             populateCardsFromHand(self);
+            submittedText = selectedText;
+            submittedPack = selectedPack;
             handCards.forEach(element => {
                 element.classList.remove("selected-card");
                 element.style.backgroundColor = "white"; // Reset background color
@@ -114,8 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 cardPack.style.display = "h";
             } else if (firstCard) {
                 firstCard = false;
-                cardText.textContent = selectedText;
-                cardPack.textContent = selectedPack;
+                cardText.textContent = submittedText;
+                cardPack.textContent = submittedPack;
                 cardText.style.display = "h";
                 cardPack.style.display = "h";
             } else {

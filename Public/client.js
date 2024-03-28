@@ -110,22 +110,22 @@ document.addEventListener('DOMContentLoaded', function() {
         submissions.forEach ( card => {
             const submittedCard = document.createElement("div");
             submittedPublicCardElements.push(submittedCard);
-            const cardText = document.createElement("h");
-            const cardPack = document.createElement("h")
+            const cardText = document.createElement("p");
+            const cardPack = document.createElement("p")
             submittedCard.classList.add("white-card");
             cardText.classList.add("white-card-text");
             cardPack.classList.add("white-card-pack");
             if(showContent){
                 cardText.textContent = card.text;
                 cardPack.textContent = card.pack;
-                cardText.style.display = "h";
-                cardPack.style.display = "h";
+                cardText.style.display = "p";
+                cardPack.style.display = "p";
             } else if (firstCard) {
                 firstCard = false;
                 cardText.textContent = submittedText;
                 cardPack.textContent = submittedPack;
-                cardText.style.display = "h";
-                cardPack.style.display = "h";
+                cardText.style.display = "p";
+                cardPack.style.display = "p";
             } else {
                 cardText.style.display = "none";
                 cardPack.style.display = "none";

@@ -1,0 +1,211 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+p {
+    font-family: "Helvetica Neue", sans-serif ;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+header {
+    display: flex;
+    width: 100%;
+    height: 10vh;
+    background-color: black;
+    fill: black;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+#header-title{
+    display: inline;
+    color: white;
+    font-size: xxx-large;
+    text-align: center;
+    letter-spacing: 5px;
+}
+
+#for-span {
+    text-decoration: underline;
+}
+
+#cards-personal-container{
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    height: 28vh;
+    border-color: black;
+    border-width: 2px;
+}
+
+
+#cards-public-container{
+    margin-bottom: 30px;
+    margin-top: 30px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-items: flex-start;
+    width: 100%;
+    height: 28vh;
+    border-color: black;
+    border-width: 2px;
+}
+
+#template-card{
+    display:none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 12vw;
+    height: 100%;
+    margin-left: 10px;
+    background-color: white;
+    color: black;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.white-card{
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    color: black;
+    border-style: solid;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer; /* Encourage user interaction */
+}
+
+#black-card{
+    color: white;
+    background-color: black;
+    flex-direction: column;
+    justify-content: space-between;
+    border-style: ridge;
+}
+
+.white-card,.black-card {
+    display: flex;
+    width: 12vw;
+    height: 100%;
+    margin-left: 10px;
+    border-width: 2px;
+    border-radius: 4px;
+    border-color: black;
+    padding-left: 2px;
+    padding-right: 4px;
+    padding-top: 2px;
+}
+
+.white-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.white-card:not(.selected-card):hover {
+    background-color: #f9f9f9; /* Very light gray */
+}
+
+.selected-card {
+    background-color: #05acfa !important; /* Ensures this style has priority */
+    color: #f9f9f9 !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.white-card-text, .white-card-pack {
+    padding-left: 3px;
+    margin-bottom: 1px;
+    margin-top: 2px;
+    color: inherit;
+}
+
+.black-card-text, .black-card-pack {
+    padding-left: 3px;
+    margin-bottom: 1px;
+    color: white;
+}
+
+.black-card-pack, .white-card-pack {
+    font-size: 8pt;
+}
+
+#submit-button {
+    display: inline;
+    margin-top: 12px;
+    width: 100%;
+    margin-bottom: 1vh;
+}
+
+#sub-content {
+    display: inline-flex;
+    flex-direction: row;
+    flex-grow: 1;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+#score-display-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-items: flex-start;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+.player-score-item {
+    display: grid;
+    justify-content: space-between;
+}
+
+.player-score-item-username, .player-score-item-score {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+.player-score-item-username {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    margin-left: 4px;
+    justify-self: left;
+}
+
+.player-score-item-score {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    justify-self: right;
+    margin-right: 10px;
+}
+
+#player-score-item-template {
+    display: none;
+}
+
+#chat {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-items: flex-start;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    width: 75%;
+}

@@ -137,6 +137,9 @@ header {
     display: inline-flex;
     flex-direction: row;
     flex-grow: 1;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
 }
 
 #score-display-container {
@@ -144,7 +147,7 @@ header {
     flex-direction: column;
     flex-grow: 1;
     justify-items: flex-start;
-    border-width: 2px;  
+    border-width: 1px;
     border-color: black;
     border-style: solid;
 }
@@ -156,6 +159,8 @@ header {
 
 .player-score-item-username, .player-score-item-score {
     display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 
@@ -173,12 +178,16 @@ header {
     margin-right: 10px;
 }
 
+#player-score-item-template {
+    display: none;
+}
+
 #chat {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     justify-items: flex-start;
-    border-width: 2px;
+    border-width: 1px;
     border-color: black;
     border-style: solid;
     width: 75%;

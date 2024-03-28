@@ -7,6 +7,7 @@ const io = new Server(server);
 let clients = {};
 let cardSubmissions = [];
 let submissionCount = 0;
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/main.html');
 });
@@ -54,16 +55,17 @@ io.on('connection', (socket) => {
     });
     
     socket.on('disconnect', () => {
-        delete clients[socket.id]; // Remove socket when client disconnects
         let playerIndex;
         game.players.forEach(player => {
             if(player.name === game.playerLibrary[socket.id].name) {
                 playerIndex = game.players.indexOf(player)
             }
         });
-        game.players.splice(playerIndex);
+        game.players.splice(playerIndex, 1);
         delete game.playerLibrary[socket.id];
+        delete clients[socket.id];
         console.log("A user has disconnected: " + socket.id);
+        updateClientPlayerLists();
     });
 
     console.log('A user connected:', socket.id);
@@ -195,12 +197,7 @@ class Game {
         this.players.push(player);
         this.playerLibrary[player.id] = player;
         player.topUpCards(this.deck);
-    }
-
-    removePlayer(playerId) {
-        // Assuming playerId is something you can use to uniquely identify players (e.g., socket.id)
-        this.players = this.players.filter(player => player.id !== playerId);
-        // Handle the case where the game might need to pause or adjust because of the player count change
+        updateClientPlayerLists();
     }
 
     startGame() {
@@ -232,6 +229,11 @@ function getRandom(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+}
+
+function updateClientPlayerLists(){
+    let playerInfo = game.players
+    io.emit("updatePlayerList", (playerInfo));
 }
 
 function updateGameState(game) {

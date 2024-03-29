@@ -17,10 +17,13 @@
     "A shitty super hero ripping his jeans into jorts so you know he's ready to fuck shit up",
     "Junie B. Jones lunging at you and biting your jugular like a rabid dog",
     "MLK's 'I have a dream', but it was about a wet dream",
-    "Mulch.",
     "Meth gators",
     "'Single Ladies' by Beyonce playing on the radio after a car crash",
-    "An erection that lasts more than eight hours"
+    "An erection that lasts more than eight hours",
+    "A Fresh Natty Lite",
+    "Fettishizing asian women",
+    "Fettishizing black women",
+    "A particularly large shallot that's definitely just an onion"
   ],
 
   "blackCards": [
@@ -41,8 +44,11 @@
       "blanks": 1
     },
     {
-      "text": "Tonight on WWE, _____ faces off against _____!",
-      "blanks": 2
+      "text": "What ACTUALLY caused 9/11?",
+      "blanks": 1
+    },
+    {
+      "text": ""
     }
   ]
 }

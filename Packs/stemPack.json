@@ -2,12 +2,19 @@
   "whiteCards": [
     "Rounding Pi to 4 just to be safe",
     "GitHub",
-    "Getting flamed on Stackoverflow but it's okay because you're a bottom"
+    "Getting flamed on Stackoverflow but it's okay because you're a bottom",
+    "Vsauce",
+    "The limit as h approaches zero of the quantity (f(x+h) - f(x)) divided by h",
+    "Negative b plus or minus the square root of b squared minus four ac over 2a"
   ],
 
   "blackCards": [
     {
       "text": "",
+      "blanks": 1
+    },
+    {
+      "text": "Why am I failing Compsci?",
       "blanks": 1
     }
   ]

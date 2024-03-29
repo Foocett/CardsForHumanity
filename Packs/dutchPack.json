@@ -14,8 +14,19 @@
     "Amstud.",
     "Being like Ike",
     "An academic team announcement",
-    "JV Boys Soccer"
+    "JV Boys Soccer",
+    "Go dutch!",
+    "MY president, Asher Patel",
+    "David Allen Parks",
+    "The shiniest head",
+    "Casual favoritism",
+    "A shitty Starwars pun",
+    "Seniors winning",
+    "Fondren's Meter Stick",
+    "The 4-block schedule",
+    "Academic team"
   ],
+
   "blackCards": [
     {
       "text": "The only thing I miss more than morning meeting weather reports is _____.",
@@ -24,6 +35,10 @@
     {
       "text": "Holy shit did you hear that Campbell is teaching a _____ elective next year?",
       "blanks": 1
+    },
+    {
+      "text": "What ruined the morning meeting game?",
+      "blanks": "1"
     }
   ]
 }

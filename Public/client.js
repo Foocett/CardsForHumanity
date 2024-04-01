@@ -17,7 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedPack;
     let submittedText;
     let submittedPack;
-
+    let hasCardBeenSelected = false;
+    const startGameButton = document.getElementById("start-turn-button");
+    const blackText = document.getElementById("black-card-text");
+    const blackPack = document.getElementById("black-card-pack");
+    const submitButton = document.getElementById("submit-button");
+    const publicContainer = document.getElementById("cards-public-container")
+    let playerContainer = document.getElementById("score-display-container")
+    submitButton.disabled = true;
     function debug(message){
         socket.emit("debug", message);
     }
@@ -30,11 +37,40 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.emit('requestPlayerData', username, (response) => {
         self = response.rawPlayerInfo
         populateCardsFromHand(self);
+        if(self.admin){
+            startGameButton.style.display = "block";
+            startGameButton.onclick = () => {
+                socket.emit("begin-game");
+                startGameButton.style.display = "none";
+            }
+        } else {
+            startGameButton.style.display = "none";
+        }
     });
 
     socket.on("updatePlayerList", (playerInfo) => {
         updateConnectedPlayers(playerInfo)
     })
+
+
+    socket.on("start-turn", (gameData) => {
+        hasCardBeenSelected = false;
+        handCards.forEach(card => {
+            card.classList.remove("selected-card")
+        })
+        socket.emit('update-self', username, (response) => {
+            self = response.rawPlayerInfo
+            setCardsClickable(!self.czar);
+        });
+
+        submitButton.disabled = self.czar;
+        blackText.textContent = gameData.currentBlackCard.text;
+        blackText.textContent = gameData.currentBlackCard.text;
+        blackPack.textContent =  getProperName(gameData.currentBlackCard.pack);
+        updateConnectedPlayers(gameData.players);
+
+    });
+
 
     function populateCardsFromHand(self) {
         for(let i = 0; i<7;i++){
@@ -45,17 +81,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     for(let i=0;i<7;i++){
         handCards[i].addEventListener('click', function() {
-            selectedIndex = i;
-            selectedText = self.hand[i].text;
-            selectedPack = self.hand[i].pack;
-            handCards.forEach(element => {
-                element.classList.remove("selected-card");
-                element.style.backgroundColor = "white"; // Reset background color
-                element.style.color = "black"; // Reset text color
-            });
-
-            // Add the selected class to the clicked card
-            this.classList.add("selected-card");
+            if(this.classList.contains("clickable")){
+                selectedIndex = i;
+                selectedText = self.hand[i].text;
+                selectedPack = self.hand[i].pack;
+                handCards.forEach(element => {
+                    element.classList.remove("selected-card");
+                    element.style.backgroundColor = "white"; // Reset background color
+                    element.style.color = "black"; // Reset text color
+                });
+                // Add the selected class to the clicked card
+                this.classList.add("selected-card");
+                hasCardBeenSelected = true;
+                submitButton.disabled = false;
+            }
         });
     }
 
@@ -73,36 +112,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 return "Autism Pack";
             case "stem":
                 return "STEM Pack";
-            case "ap":
-                return "Family Friendly Pack";
         }
     }
 
-    const submitButton = document.getElementById("submit-button");
     submitButton.onclick = () => {
-        let payload = {username:self.name, submission:selectedText, submissionPack: selectedPack, submissionIndex:selectedIndex, id: self.id}
-        socket.emit('submit-cards', payload, (response) => {
-            self = response.rawPlayerInfo;
-            populateCardsFromHand(self);
-            submittedText = selectedText;
-            submittedPack = selectedPack;
-            handCards.forEach(element => {
-                element.classList.remove("selected-card");
-                element.style.backgroundColor = "white"; // Reset background color
-                element.style.color = "black"; // Reset text color
+        if(hasCardBeenSelected) {
+            let payload = {
+                username: self.name,
+                submission: selectedText,
+                submissionPack: selectedPack,
+                submissionIndex: selectedIndex,
+                id: self.id
+            }
+            socket.emit('submit-cards', payload, (response) => {
+                self = response.rawPlayerInfo;
+                populateCardsFromHand(self);
+                submittedText = selectedText;
+                submittedPack = selectedPack;
+                handCards.forEach(element => {
+                    element.classList.remove("selected-card");
+                    element.classList.remove("clickable");
+                    element.style.backgroundColor = "white"; // Reset background color
+                    element.style.color = "black"; // Reset text color
+                });
             });
-        });
-        submitButton.disabled = true;
+            submitButton.disabled = true;
+        }
     };
 
-    const publicContainer = document.getElementById("cards-public-container")
     let submittedPublicCardElements = [];
-
     socket.on("pushSubmittedCards", (payload) => {
         displaySubmittedCards(payload.submissions, payload.showContent)
     })
     function displaySubmittedCards(submissions, showContent){
-        debug("displaying cards")
         submittedPublicCardElements.forEach(card => {
             card.remove();
         })
@@ -117,13 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
             cardPack.classList.add("white-card-pack");
             if(showContent){
                 cardText.textContent = card.text;
-                cardPack.textContent = card.pack;
+                cardPack.textContent = getProperName(card.pack);
                 cardText.style.display = "p";
                 cardPack.style.display = "p";
-            } else if (firstCard) {
+            } else if (firstCard && !self.czar) {
                 firstCard = false;
                 cardText.textContent = submittedText;
-                cardPack.textContent = submittedPack;
+                cardPack.textContent = getProperName(submittedPack);
                 cardText.style.display = "p";
                 cardPack.style.display = "p";
             } else {
@@ -137,8 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let connectedPlayerObjects = [];
+
     function updateConnectedPlayers(playerInfo) {
-        let playerContainer = document.getElementById("score-display-container")
         connectedPlayerObjects.forEach(item => {
             item.remove();
         })
@@ -157,11 +199,28 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 newPlayerObject.style.backgroundColor = "#a3a3c2"
             }
+
+            if(playerInfo[i].czar){
+                newPlayerObject.style.backgroundColor = "#6b6b78"
+            }
             newPlayerObject.appendChild(newPlayerObjectUsername);
             newPlayerObject.appendChild(newPlayerObjectScore);
             playerContainer.appendChild(newPlayerObject);
             connectedPlayerObjects.push(newPlayerObject);
         }
+    }
+
+    function setCardsClickable(state){
+        handCards.forEach(card => {
+            if(state) {
+                if (!card.classList.contains("clickable")) {
+                    card.classList.add("clickable")
+                }
+            }
+            else {
+                card.classList.remove("clickable");
+            }
+        });
     }
 });
 

@@ -30,6 +30,7 @@ const allBlackCards = { //store black card components for all packs
 };
 
 //Create server
+// This section was sourced from the official Socket.IO documentation (https://socket.io/docs/v4/server-api/)
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/client.html');
 });
 app.use(express.static('public'));
+
 
 //handle client events
 io.on('connection', (socket) => {

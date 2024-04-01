@@ -1,105 +1,18 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-let clients = {};
-let cardSubmissions = [];
-let submissionCount = 0;
-let hasFirstPlayerJoined = false;
-let hasFirstTurnStarted = false;
-app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/public/client.html');
-});
+//Global thingies
+let clients = {}; //keeps track of connected socket objects
+let cardSubmissions = []; //holds received cards
+let submissionCount = 0; //counts card submissions
+let hasFirstPlayerJoined = false; //used to determining czar/admin
+let hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
 
-app.use(express.static('public'));
-io.on('connection', (socket) => {
-    clients[socket.id] = socket;
-    socket.on("serverDebug", (message) => {
-        console.log("-----\nClient Debug:\n"+message+"\n-----");
-    });
-
-    socket.on("requestPlayerData", (username, ackCallback) => {
-        const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined);
-        newPlayer.topUpCards();
-        newPlayer.czar = !hasFirstPlayerJoined;
-        game.addPlayer(newPlayer);
-        // Process request and prepare the response
-        const responseData = {
-            rawPlayerInfo: newPlayer,
-        };
-        // Use the callback function to send the response back to the client
-        ackCallback(responseData);
-    })
-
-
-    socket.on("update-self", (username, ackCallback) => {
-        console.log(game.playerLibrary[socket.id].name + " has been updated, czar: " + game.playerLibrary[socket.id].czar);
-        const responseData = {
-            rawPlayerInfo: game.playerLibrary[socket.id]
-        };
-        ackCallback(responseData);
-    })
-
-
-    socket.on("begin-game", () => {
-        game.setGamePhase("submitting")
-    });
-
-
-    socket.on("submit-cards", (payload, ackCallback) => {
-        console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :");
-        submissionCount++;
-        cardSubmissions.push(new WhiteCard(payload.submission, payload.submissionPack));
-        const submittingPlayer = game.playerLibrary[payload.id];
-        submittingPlayer.hand.splice(payload.submissionIndex, 1);
-        submittingPlayer.topUpCards(game.deck);
-        const responseData = {
-            rawPlayerInfo: submittingPlayer
-        };
-        ackCallback(responseData)
-        let showContent = submissionCount >= game.players.length-1;
-        if(showContent){
-            game.setGamePhase("judging");
-        }
-        let data = {
-            submissions: cardSubmissions,
-            showContent: showContent
-        }
-        io.emit("pushSubmittedCards", data);
-    });
-    
-    socket.on('disconnect', () => {
-        let playerIndex;
-        game.players.forEach(player => {
-            if(player.name === game.playerLibrary[socket.id].name) {
-                playerIndex = game.players.indexOf(player)
-            }
-        });
-        game.players.splice(playerIndex, 1);
-        delete game.playerLibrary[socket.id];
-        delete clients[socket.id];
-        console.log("A user has disconnected: " + socket.id);
-        updateClientPlayerLists();
-    });
-
-    console.log('A user connected:', socket.id);
-});
-// Additional event listeners for game actions...
-
-server.listen(3000, () => {
-    console.log('listening on *:3000');
-});
-
-
-const rawBuiltin = require('./Packs/builtinPack.json');
-const rawAutism = require('./Packs/autismPack.json');
-const rawWoke = require('./Packs/wokePack.json');
-const rawDutch = require('./Packs/dutchPack.json');
-const rawStem = require('./Packs/stemPack.json');
-const rawUwU = require('./Packs/uwuPack.json');
-const allWhiteCards = {
+//import pack files
+const rawBuiltin = require('./Packs/builtinPack.json'); //builtin pack
+const rawAutism = require('./Packs/autismPack.json'); //autism pack (based)
+const rawWoke = require('./Packs/wokePack.json'); //woke pack
+const rawDutch = require('./Packs/dutchPack.json'); //dutch pack
+const rawStem = require('./Packs/stemPack.json'); //STEM pack
+const rawUwU = require('./Packs/uwuPack.json'); //UwU pack
+const allWhiteCards = { //store white card components for all packs
     "builtin": rawBuiltin.whiteCards,
     "autism": rawAutism.whiteCards,
     "woke": rawWoke.whiteCards,
@@ -107,7 +20,7 @@ const allWhiteCards = {
     "stem": rawStem.whiteCards,
     "uwu": rawUwU.whiteCards,
 };
-const allBlackCards = {
+const allBlackCards = { //store black card components for all packs
     "builtin": rawBuiltin.blackCards,
     "autism": rawAutism.blackCards,
     "woke": rawWoke.blackCards,
@@ -116,43 +29,122 @@ const allBlackCards = {
     "uwu": rawUwU.blackCards,
 };
 
-class Deck {
-    constructor(...selectedPacks) {
-        this.whiteDeck = [];
-        this.blackDeck = [];
-        this.whiteDiscrard = [];
-        this.blackDiscard = [];
+//Create server
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+app.get('/', (req, res) => {
+    res.sendFile(__dirname+'/public/client.html');
+});
+app.use(express.static('public'));
 
-        selectedPacks.forEach(pack => {
-            allWhiteCards[pack].forEach(white => {
-                this.whiteDeck.push(new WhiteCard(white, pack));
+//handle client events
+io.on('connection', (socket) => {
+    clients[socket.id] = socket; //add new connection to client list
+
+    socket.on("requestPlayerData", (username, ackCallback) => { //create and return new player object from new client username
+        const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined); //create player object
+        newPlayer.topUpCards(); //populate player hand
+        newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
+        game.addPlayer(newPlayer); //add player object to game.players
+        const responseData = { //data to be returned to player (formatted as object for possible future features)
+            rawPlayerInfo: newPlayer
+        };
+        ackCallback(responseData); //returns new player object to client
+    });
+
+
+    socket.on("update-self", (username, ackCallback) => { //returns corresponding player object to client
+        const responseData = { //data to be returned to player
+            rawPlayerInfo: game.playerLibrary[socket.id] //gets player based on client socket id
+        };
+        ackCallback(responseData); //returns player data to requesting client
+    })
+
+
+    socket.on("begin-game", () => {
+        game.setGamePhase("submitting") //begins game
+    });
+
+
+    socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
+        console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :"); //print for debugging
+        submissionCount++; //add to total submitted count
+        cardSubmissions.push(new WhiteCard(payload.submission, payload.submissionPack)); //creates card object from client data
+        const submittingPlayer = game.playerLibrary[payload.id]; //gets corresponding player for submitting client
+        submittingPlayer.hand.splice(payload.submissionIndex, 1); //removes submitted card from player hand
+        submittingPlayer.topUpCards(game.deck); //repopulates player hand
+        const responseData = { //data to be returned to player
+            rawPlayerInfo: submittingPlayer
+        };
+        ackCallback(responseData) //returns data to player
+        let showContent = submissionCount >= game.players.length-1; //determines if all cards have been submitted
+        if(showContent){
+            game.setGamePhase("judging"); //if all cards received, set phase to judging
+        }
+        let data = { //card display information
+            submissions: cardSubmissions,
+            showContent: showContent
+        }
+        io.emit("pushSubmittedCards", data); //sends all submitted cards to all players
+    });
+    
+    socket.on('disconnect', () => { //on player disconnect
+        let playerIndex;
+        game.players.forEach(player => { //for each player
+            if(player.name === game.playerLibrary[socket.id].name) { //if name matches DC-ing socket's associated name...
+                playerIndex = game.players.indexOf(player) //get index of removed player
+            }
+        });
+        game.players.splice(playerIndex, 1); //remove player from game list
+        delete game.playerLibrary[socket.id]; //remove player from game library
+        delete clients[socket.id]; //remove player from global clients library
+        console.log("A user has disconnected: " + socket.id);
+        updateClientPlayerLists(); //push changes to all clients
+    });
+    console.log('A user connected:', socket.id); //display when socket connection is made
+});
+
+class Deck { //deck object
+    constructor(...selectedPacks) { //given all inputted packs
+        this.whiteDeck = []; //all white card objects
+        this.blackDeck = []; //all black card objects
+        this.whiteDiscrard = []; //used white cards
+        this.blackDiscard = []; //used black cards
+
+        selectedPacks.forEach(pack => { //for each selected pack
+            allWhiteCards[pack].forEach(white => { //for white text component
+                this.whiteDeck.push(new WhiteCard(white, pack)); //create new white card objects
             });
-            allBlackCards[pack].forEach(black => {
-                this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack))
+            allBlackCards[pack].forEach(black => { //for each black card object
+                this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack)) //create new black card object
             });
         });
     }
 
     drawWhite(){
-        let index = getRandom(0, this.whiteDeck.length);
-        let card = this.whiteDeck[index];
-        this.whiteDiscrard.push(card)
-        this.whiteDeck.splice(index, 1);
-        return(card);
+        let index = getRandom(0, this.whiteDeck.length); //random index in white card list
+        let card = this.whiteDeck[index]; //get card corresponding to random index
+        this.whiteDiscrard.push(card) //add card to discarded list
+        this.whiteDeck.splice(index, 1); //remove card from game list
+        return(card); //return selected card object
     }
 
     drawBlack(){
-        let index = getRandom(0, this.blackDeck.length);
-        let card = this.blackDeck[index];
-        this.blackDiscard.push(card)
-        this.blackDeck.splice(index, 1);
-        return(card);
+        let index = getRandom(0, this.blackDeck.length); //random index in black card list
+        let card = this.blackDeck[index]; //get card corresponding to random index
+        this.blackDiscard.push(card) //add card to discarded list
+        this.blackDeck.splice(index, 1); //remove card from game list
+        return(card); //return selected card object
     }
 }
 
 
 
-class WhiteCard {
+class WhiteCard { //white card object
     constructor(text, pack) {
         this.text = text;
         this.pack = pack;
@@ -163,7 +155,7 @@ class WhiteCard {
     }
 }
 
-class BlackCard {
+class BlackCard { //black card object
     constructor(text, blanks, pack) {
         this.text = text;
         this.blanks = blanks;
@@ -175,104 +167,102 @@ class BlackCard {
     }
 }
 
-class Player {
+class Player { //player object
     constructor(username, id, admin) {
-        this.name = username;
-        this.id = id;
-        this.score = 0;
-        this.hand = [];
-        this.czar = false;
-        this.admin = admin
+        this.name = username; //inputted player username
+        this.id = id; //player socket id
+        this.score = 0; //player score
+        this.hand = []; //populated on player creation
+        this.czar = false; //false by default, possibly changed on player creation
+        this.admin = admin //grants power to "use start game"
     }
 
 
     topUpCards(deck) {
-        while(this.hand.length < 7) {
+        while(this.hand.length < 7) { //draw white cards until hand length equals seven
             this.hand.push(game.deck.drawWhite());
         }
     }
 }
 
 class Game {
-    constructor(deck) {
-        this.deck = deck;
-        this.players = [];
-        this.playerLibrary = {};
-        this.czarIndex = 0;
-        this.czar = 0;
-        this.currentBlackCard = 0;
-        this.phase = 'waiting'; // Example phases: waiting, submitting, judging, results
-
+    constructor(deck) { //game object (created when file is ran)
+        this.deck = deck; //deck object
+        this.players = []; //list of player objects for easier access
+        this.playerLibrary = {}; //library of players indexed by socket id
+        this.czarIndex = 0; //position in the players list of the current czar
+        this.czar = 0; //current card czar; will later be set to a player object
+        this.currentBlackCard = 0; //current black card; will later be set to black card object
+        this.phase = 'waiting'; //current game phase, will be set to "submitting" on admin game start
     }
 
-    addPlayer(player) {
-        this.players.push(player);
-        this.playerLibrary[player.id] = player;
-        player.topUpCards(this.deck);
-        updateClientPlayerLists();
-        hasFirstPlayerJoined = true;
+    addPlayer(player) { //adds and updates given player object
+        this.players.push(player); //push player object to game array
+        this.playerLibrary[player.id] = player; //add to player library as socket id
+        player.topUpCards(this.deck); //top up player cards
+        updateClientPlayerLists(); //signals to all clients to update player list
+        hasFirstPlayerJoined = true; //used to determine first player to join (admin/first czar)
     }
 
-    setGamePhase(phase) {
+    setGamePhase(phase) { //runs code based on given game phase
         switch(phase){
             case "submitting":
-                this.phase = "submitting"
+                this.phase = "submitting" //set game phase to submitting
                 this.startSubmissionPhase()
                 return;
             case "judging":
-                this.phase = "judging"
-
+                this.phase = "judging" //set game phase to judging
                 return;
             case "displaying":
-                this.phase = "displaying"
+                this.phase = "displaying" //set game phase to displaying
                 return;
         }
     }
 
-    selectNextCzar() {
-        this.players.forEach(player => {
+    selectNextCzar() { //selects next card czar
+        this.players.forEach(player => { //remove czar status from all players
             player.czar = false;
         });
 
-        if(!hasFirstTurnStarted){
+        if(!hasFirstTurnStarted){ //for first round, do not iterate to second player
             this.czarIndex = 0;
             this.czar = this.players[0];
-        } else {
-            this.czarIndex = (this.czarIndex + 1) % this.players.length;
-            this.czar = this.players[this.czarIndex]
+        } else { //for all other rounds, iterate to next player in list
+            this.czarIndex = (this.czarIndex + 1) % this.players.length; //iterate czar index, jump to zero if at end of list
+            this.czar = this.players[this.czarIndex] //set game.czar to new czar player object
         }
-        this.czar.czar = true;
+        this.czar.czar = true; //set player.czar to true for selected player
     }
 
     startSubmissionPhase() {
-        this.currentBlackCard = this.deck.drawBlack();
-        game.selectNextCzar();
-        hasFirstTurnStarted = true;
-        submissionCount = 0;
-        cardSubmissions = [];
-        io.emit("start-turn", (this));
+        this.currentBlackCard = this.deck.drawBlack(); //draw new black card
+        game.selectNextCzar(); //assign new card czar
+        hasFirstTurnStarted = true; //
+        submissionCount = 0; //reset submission count
+        cardSubmissions = []; //reset submission list
+        io.emit("start-turn", (this)); //send current game state to all connected clients
     }
 
     startJudgingPhase() {
-
-        io.emit("start-judging", (this));
+        io.emit("start-judging", (this)); //send game phase to all connected players
     }
 }
-
-const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "autism", "stem");
-//const gameDeck = new Deck("stem", "dutch", "ap");
-const game = new Game(gameDeck);
 function getRandom(min, max) { //shortcut function to make my life easier
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+    //currently I only use this for drawing cards but I might use it for something else after
+    const minCeiled = Math.ceil(min); //ceil min value
+    const maxFloored = Math.floor(max); //floor max value
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); //calculate and floor random number
 }
 
 function updateClientPlayerLists(){
-    let playerInfo = game.players
-    io.emit("updatePlayerList", (playerInfo));
+    io.emit("updatePlayerList", (game.players)); //send player list to all clients
 }
 
-
+const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "autism", "stem"); //create game deck with all packs
+//const gameDeck = new Deck("stem", "dutch", "ap"); //create deck with family friendly content
+const game = new Game(gameDeck); //create game object using newly created deck object
+server.listen(3000, () => { //listen for client connections and interactions @ port 3000
+    console.log('listening on *:3000');
+});
 module.exports = { Deck, WhiteCard, BlackCard }; // Exporting the classes for use in other files
 

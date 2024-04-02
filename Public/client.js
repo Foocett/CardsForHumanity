@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedText; //text of selected card
     let selectedPack; //pack of selected card
     let submittedText; //text of submitted card
+    let judgingSelectedIndex; //index of selected card in judging phase
+    let judgingSelectedText; //text of selected card in judging phase
     let submittedPack; //pack of submitted card
     let hasCardBeenSelected = false; //used to prevent submission before selection
     let hasCardBeenSubmitted = false;
@@ -57,17 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
         handCards.forEach(card => { //remove selected class from all HTML objects
             card.classList.remove("selected-card")
         })
-        socket.emit('update-self', username, (response) => { //requests updated personal info
-            self = response.rawPlayerInfo
-            setCardsClickable(!self.czar); //if player is czar, make hand cards unclickable
-        });
-
+        updateSelf();
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
         blackPack.textContent =  getProperName(gameData.currentBlackCard.pack); //get full pack name
         updateConnectedPlayers(gameData.players); //updates connected players
     });
 
+    socket.on("start")
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
         for(let i = 0; i<7;i++){ //for each of seven cards
@@ -139,27 +138,64 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let submittedPublicCardElements = []; //hold submitted card HTML elements
+    let submittedPublicTextElements = []; //hold submitted text HTML elements
     socket.on("pushSubmittedCards", (payload) => {
-        displaySubmittedCards(payload.submissions, payload.showContent) //display all clients' submitted cards
+        displaySubmittedCards(payload.submissions, payload.showContent, payload.displaying, payload.winningIndex) //display all clients' submitted cards
     })
-    function displaySubmittedCards(submissions, showContent){
+    function displaySubmittedCards(submissions, showContent, displaying, winningIndex){
+        updateSelf();
         submittedPublicCardElements.forEach(card => { //remove all current elements
             card.remove();
         })
+        submittedPublicTextElements.forEach(obj => { //remove all current elements
+            obj.remove();
+        })
         let firstCard = true; //to track which card is the first card
-        submissions.forEach ( card => {
+        let submissionsLength = submissions.length;
+        if(displaying) {
+            submissionsLength--;
+        }
+        for(let i=0; i<submissionsLength;i++){
             const submittedCard = document.createElement("div"); //create new card
-            submittedPublicCardElements.push(submittedCard); //add to element list
             const cardText = document.createElement("p"); //create text object child
             const cardPack = document.createElement("p"); //create pack object child
             submittedCard.classList.add("white-card"); //add white card class for CSS formatting
+            submittedCard.classList.add("submitted-card"); //designate card as a selected card
             cardText.classList.add("white-card-text"); //add white card text class for CSS formatting
+            cardText.classList.add("submitted-card-text"); //designate card text
             cardPack.classList.add("white-card-pack"); //add white card pack class for CSS formatting
+            cardText.textContent = submissions[i].text; //set card text content
+            cardPack.textContent = getProperName(submissions[i].pack); //set pack text
+            if(displaying && i === winningIndex) {
+                submittedCard.classList.add("selected-card");
+            }
+            submittedPublicCardElements.push(submittedCard); //add to element list
+            submittedPublicTextElements.push(cardText);
+
+            submittedCard.addEventListener('click', function() {
+                if(this.classList.contains('clickable')){
+                    selectedIndex = i;
+                    selectedText = submittedPublicTextElements[i]; //since text list will always align with card list
+                    submittedPublicCardElements.forEach(element => { //for each card element
+                        element.classList.remove("selected-card"); //remove selected class from all cards
+                        element.style.backgroundColor = "white"; //reset card background color
+                        element.style.color = "black"; //reset card text color
+                    });
+                    // Add the selected class to the clicked card
+                    this.classList.add("selected-card"); //add selected card class to clicked card
+                    hasCardBeenSelected = true; //a card has been selected
+                    submitButton.disabled = false; //re-enable submit button
+                }
+            });
+
             if(showContent){ //if content is to be shown to all
-                cardText.textContent = card.text; //set card text content
-                cardPack.textContent = getProperName(card.pack); //set pack text
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
+                if(self.czar) {
+                    submittedPublicCardElements.forEach(card => {
+                        card.classList.add("clickable")
+                    });
+                }
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
                 firstCard = false; //disable first card
                 cardText.textContent = submittedText; //display personal submission text on first card
@@ -173,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submittedCard.appendChild(cardText); //add text as child of card element
             submittedCard.appendChild(cardPack); //add pack as child of card element
             publicContainer.appendChild(submittedCard); //add card as child of card container
-        });
+        }
     }
 
     let connectedPlayerObjects = []; //HTML elements for displaying players
@@ -206,6 +242,16 @@ document.addEventListener('DOMContentLoaded', function() {
             playerContainer.appendChild(newPlayerObject); //add player as child of main container object
             connectedPlayerObjects.push(newPlayerObject); //add player object to list of player elements
         }
+    }
+
+    function updateSelf() {
+        socket.emit('update-self', username, (response) => { //requests updated personal info
+            self = response.rawPlayerInfo
+            setCardsClickable(!self.czar); //if player is czar, make hand cards unclickable
+        });        socket.emit('update-self', username, (response) => { //requests updated personal info
+            self = response.rawPlayerInfo
+            setCardsClickable(!self.czar); //if player is czar, make hand cards unclickable
+        });
     }
 
     function setCardsClickable(state){ //set all cards' clickability

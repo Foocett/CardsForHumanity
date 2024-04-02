@@ -1,6 +1,7 @@
 //Global thingies
 let clients = {}; //keeps track of connected socket objects
 let cardSubmissions = []; //holds received cards
+let submissionsAsText = []; //holds received cards' text content
 let submissionCount = 0; //counts card submissions
 let hasFirstPlayerJoined = false; //used to determining czar/admin
 let hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
@@ -46,7 +47,6 @@ app.use(express.static('public'));
 //handle client events
 io.on('connection', (socket) => {
     clients[socket.id] = socket; //add new connection to client list
-
     socket.on("requestPlayerData", (username, ackCallback) => { //create and return new player object from new client username
         const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined); //create player object
         newPlayer.topUpCards(); //populate player hand
@@ -71,26 +71,53 @@ io.on('connection', (socket) => {
         game.setGamePhase("submitting") //begins game
     });
 
+    socket.on("display-debug", (data) => {
+        console.log(data.text)
+        console.log(data.rawList);
+    })
 
     socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
         console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :"); //print for debugging
         submissionCount++; //add to total submitted count
-        cardSubmissions.push(new WhiteCard(payload.submission, payload.submissionPack)); //creates card object from client data
+        let newCard = new WhiteCard(payload.submission, payload.submissionPack)
+        newCard.setOwner(game.playerLibrary[socket.id]);
+        cardSubmissions.push(newCard); //creates card object from client data
+        submissionsAsText.push(payload.submission)
         const submittingPlayer = game.playerLibrary[payload.id]; //gets corresponding player for submitting client
-        submittingPlayer.hand.splice(payload.submissionIndex, 1); //removes submitted card from player hand
-        submittingPlayer.topUpCards(game.deck); //repopulates player hand
+        if(!submittingPlayer.czar) {
+            submittingPlayer.hand.splice(payload.submissionIndex, 1); //removes submitted card from player hand
+            submittingPlayer.topUpCards(game.deck); //repopulates player hand
+        }
         const responseData = { //data to be returned to player
             rawPlayerInfo: submittingPlayer
         };
         ackCallback(responseData) //returns data to player
-        let showContent = submissionCount >= game.players.length-1; //determines if all cards have been submitted
-        if(showContent){
+        let showContent = submissionCount >= game.players.length - 1; //determines if all cards have been submitted
+        if (showContent) {
             game.setGamePhase("judging"); //if all cards received, set phase to judging
+        }
+        let displaying = submittingPlayer.czar;
+        let text = payload.submission
+        let winningIndex;
+        if(displaying) {
+            text = cardSubmissions[payload.submissionIndex].text;
+
+            for(let i = 0; i<cardSubmissions.length;i++) {
+                if(cardSubmissions[i].text === text) {
+                    cardSubmissions[i].owner.score++;
+                    winningIndex = i;
+                    updateClientPlayerLists();
+                }
+            }
         }
         let data = { //card display information
             submissions: cardSubmissions,
-            showContent: showContent
+            showContent: showContent,
+            displaying: displaying,
+            cardText: text,
+            winningIndex: winningIndex
         }
+        console.log(data);
         io.emit("pushSubmittedCards", data); //sends all submitted cards to all players
     });
     
@@ -152,6 +179,9 @@ class WhiteCard { //white card object
         this.pack = pack;
     }
 
+    setOwner(player){
+        this.owner = player;
+    }
     toString() {
         return this.text;
     }
@@ -214,6 +244,7 @@ class Game {
                 return;
             case "judging":
                 this.phase = "judging" //set game phase to judging
+                this.startJudgingPhase()
                 return;
             case "displaying":
                 this.phase = "displaying" //set game phase to displaying
@@ -250,7 +281,7 @@ class Game {
     }
 }
 function getRandom(min, max) { //shortcut function to make my life easier
-    //currently I only use this for drawing cards but I might use it for something else after
+    //currently I only use this for drawing cards, but I might use it for something else after
     const minCeiled = Math.ceil(min); //ceil min value
     const maxFloored = Math.floor(max); //floor max value
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); //calculate and floor random number

@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedText; //text of selected card
     let selectedPack; //pack of selected card
     let submittedText; //text of submitted card
-    let judgingSelectedIndex; //index of selected card in judging phase
-    let judgingSelectedText; //text of selected card in judging phase
     let submittedPack; //pack of submitted card
     let hasCardBeenSelected = false; //used to prevent submission before selection
     let hasCardBeenSubmitted = false;
@@ -57,8 +55,14 @@ document.addEventListener('DOMContentLoaded', function() {
         hasCardBeenSelected = false; //reset selected cards
         hasCardBeenSubmitted = false;
         handCards.forEach(card => { //remove selected class from all HTML objects
-            card.classList.remove("selected-card")
+            card.classList.remove("selected-card");
+            if(!self.czar) {
+                card.classList.add("clickable");
+            }
         })
+        submittedPublicCardElements.forEach(card => {
+           card.remove();
+        });
         updateSelf();
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
@@ -130,6 +134,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     element.classList.remove("clickable");
                     element.style.backgroundColor = "white"; // Reset background color
                     element.style.color = "black"; // Reset text color
+                });
+                submittedPublicCardElements.forEach(element => { //reset all cards and make hand unclickable to prevent more submissions
+                    element.classList.remove("clickable");
                 });
             });
             submitButton.disabled = true; //disable submit button
@@ -246,9 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateSelf() {
         socket.emit('update-self', username, (response) => { //requests updated personal info
-            self = response.rawPlayerInfo
-            setCardsClickable(!self.czar); //if player is czar, make hand cards unclickable
-        });        socket.emit('update-self', username, (response) => { //requests updated personal info
             self = response.rawPlayerInfo
             setCardsClickable(!self.czar); //if player is czar, make hand cards unclickable
         });

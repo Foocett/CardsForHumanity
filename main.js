@@ -1,10 +1,10 @@
 //Global thingies
 let clients = {}; //keeps track of connected socket objects
 let cardSubmissions = []; //holds received cards
-let submissionsAsText = []; //holds received cards' text content
 let submissionCount = 0; //counts card submissions
 let hasFirstPlayerJoined = false; //used to determining czar/admin
 let hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
+let displayTime = 5; //time for cards to be displayed after czar makes a selection (in seconds)
 
 //import pack files
 const rawBuiltin = require('./Packs/builtinPack.json'); //builtin pack
@@ -71,18 +71,12 @@ io.on('connection', (socket) => {
         game.setGamePhase("submitting") //begins game
     });
 
-    socket.on("display-debug", (data) => {
-        console.log(data.text)
-        console.log(data.rawList);
-    })
-
     socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
         console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :"); //print for debugging
         submissionCount++; //add to total submitted count
         let newCard = new WhiteCard(payload.submission, payload.submissionPack)
         newCard.setOwner(game.playerLibrary[socket.id]);
         cardSubmissions.push(newCard); //creates card object from client data
-        submissionsAsText.push(payload.submission)
         const submittingPlayer = game.playerLibrary[payload.id]; //gets corresponding player for submitting client
         if(!submittingPlayer.czar) {
             submittingPlayer.hand.splice(payload.submissionIndex, 1); //removes submitted card from player hand
@@ -107,6 +101,7 @@ io.on('connection', (socket) => {
                     cardSubmissions[i].owner.score++;
                     winningIndex = i;
                     updateClientPlayerLists();
+                    game.setGamePhase("displaying")
                 }
             }
         }
@@ -117,7 +112,6 @@ io.on('connection', (socket) => {
             cardText: text,
             winningIndex: winningIndex
         }
-        console.log(data);
         io.emit("pushSubmittedCards", data); //sends all submitted cards to all players
     });
     
@@ -248,6 +242,7 @@ class Game {
                 return;
             case "displaying":
                 this.phase = "displaying" //set game phase to displaying
+                this.startDisplayCount();
                 return;
         }
     }
@@ -270,15 +265,21 @@ class Game {
     startSubmissionPhase() {
         this.currentBlackCard = this.deck.drawBlack(); //draw new black card
         game.selectNextCzar(); //assign new card czar
-        hasFirstTurnStarted = true; //
+        hasFirstTurnStarted = true; //checks if this is the first turn
         submissionCount = 0; //reset submission count
         cardSubmissions = []; //reset submission list
         io.emit("start-turn", (this)); //send current game state to all connected clients
     }
 
     startJudgingPhase() {
-        io.emit("start-judging", (this)); //send game phase to all connected players
     }
+
+    startDisplayCount() {
+        setTimeout(function() {
+            game.setGamePhase("submitting")
+        }, (displayTime*1000))
+    }
+
 }
 function getRandom(min, max) { //shortcut function to make my life easier
     //currently I only use this for drawing cards, but I might use it for something else after

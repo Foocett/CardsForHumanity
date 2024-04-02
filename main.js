@@ -13,6 +13,7 @@ const rawWoke = require('./Packs/wokePack.json'); //woke pack
 const rawDutch = require('./Packs/dutchPack.json'); //dutch pack
 const rawStem = require('./Packs/stemPack.json'); //STEM pack
 const rawUwU = require('./Packs/uwuPack.json'); //UwU pack
+const rawFestival = require('./Packs/festivalPack.json'); //festival pack
 const allWhiteCards = { //store white card components for all packs
     "builtin": rawBuiltin.whiteCards,
     "autism": rawAutism.whiteCards,
@@ -20,6 +21,7 @@ const allWhiteCards = { //store white card components for all packs
     "dutch": rawDutch.whiteCards,
     "stem": rawStem.whiteCards,
     "uwu": rawUwU.whiteCards,
+    "festival": rawFestival.whiteCards
 };
 const allBlackCards = { //store black card components for all packs
     "builtin": rawBuiltin.blackCards,
@@ -28,6 +30,7 @@ const allBlackCards = { //store black card components for all packs
     "dutch": rawDutch.blackCards,
     "stem": rawStem.blackCards,
     "uwu": rawUwU.blackCards,
+    "festival": rawFestival.blackCards
 };
 
 //Create server
@@ -36,7 +39,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
+const { Server } = require('socket.io');
 const io = new Server(server);
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/client.html');
@@ -72,7 +75,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
-        console.log("Submission received from " + payload.username + " at index " + payload.submissionIndex +" :"); //print for debugging
         submissionCount++; //add to total submitted count
         let newCard = new WhiteCard(payload.submission, payload.submissionPack)
         newCard.setOwner(game.playerLibrary[socket.id]);
@@ -292,7 +294,7 @@ function updateClientPlayerLists(){
     io.emit("updatePlayerList", (game.players)); //send player list to all clients
 }
 
-const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "autism", "stem"); //create game deck with all packs
+const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "autism", "stem", "festival"); //create game deck with all packs
 //const gameDeck = new Deck("stem", "dutch", "ap"); //create deck with family friendly content
 const game = new Game(gameDeck); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000

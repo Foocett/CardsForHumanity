@@ -112,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return "Autism Pack";
             case "stem":
                 return "STEM Pack";
+            case "festival":
+                return "EDM Festival Pack"
         }
     }
 

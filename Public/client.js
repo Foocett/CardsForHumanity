@@ -135,9 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     element.style.backgroundColor = "white"; // Reset background color
                     element.style.color = "black"; // Reset text color
                 });
-                submittedPublicCardElements.forEach(element => { //reset all cards and make hand unclickable to prevent more submissions
-                    element.classList.remove("clickable");
-                });
             });
             submitButton.disabled = true; //disable submit button
             hasCardBeenSubmitted = true;
@@ -198,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(showContent){ //if content is to be shown to all
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
-                if(self.czar) {
+                if(self.czar  && !hasCardBeenSubmitted) {
                     submittedPublicCardElements.forEach(card => {
                         card.classList.add("clickable")
                     });

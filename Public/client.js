@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const socket = io(); // Connect to the server
     let self; //will be given value after client is initialized with server
     const handCards = document.querySelectorAll(".white-card"); //all cards in hand
-    let handElementsText = [] //white card text objects
-    let handElementsPack = [] //white card pack objects
+    let handElementsText = []; //white card text objects
+    let handElementsPack = []; //white card pack objects
     let selectedIndex; //index of selected card
     let selectedText; //text of selected card
     let selectedPack; //pack of selected card
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateSelf() {
         socket.emit('update-self', username, (response) => { //requests updated personal info
             self = response.rawPlayerInfo
-            setCardsClickable(!self.czar); //if player is czar, make hand cards unclickable
+            setCardsClickable(!self.czar && !hasCardBeenSubmitted); //if player is czar, make hand cards unclickable
         });
     }
 

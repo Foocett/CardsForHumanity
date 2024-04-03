@@ -12,7 +12,7 @@ const rawAutism = require('./Packs/autismPack.json'); //autism pack (based)
 const rawWoke = require('./Packs/wokePack.json'); //woke pack
 const rawDutch = require('./Packs/dutchPack.json'); //dutch pack
 const rawStem = require('./Packs/stemPack.json'); //STEM pack
-const rawUwU = require('./Packs/uwuPack.json'); //UwU pack
+const rawBrainrot = require('./Packs/brainrotPack.json'); //Brainrot pack
 const rawFestival = require('./Packs/festivalPack.json'); //festival pack
 const allWhiteCards = { //store white card components for all packs
     "builtin": rawBuiltin.whiteCards,
@@ -20,7 +20,7 @@ const allWhiteCards = { //store white card components for all packs
     "woke": rawWoke.whiteCards,
     "dutch": rawDutch.whiteCards,
     "stem": rawStem.whiteCards,
-    "uwu": rawUwU.whiteCards,
+    "brainrot": rawBrainrot.whiteCards,
     "festival": rawFestival.whiteCards
 };
 const allBlackCards = { //store black card components for all packs
@@ -29,7 +29,7 @@ const allBlackCards = { //store black card components for all packs
     "woke": rawWoke.blackCards,
     "dutch": rawDutch.blackCards,
     "stem": rawStem.blackCards,
-    "uwu": rawUwU.blackCards,
+    "brainrot": rawBrainrot.blackCards,
     "festival": rawFestival.blackCards
 };
 
@@ -206,7 +206,7 @@ class Player { //player object
     }
 
 
-    topUpCards(deck) {
+    topUpCards() {
         while(this.hand.length < 7) { //draw white cards until hand length equals seven
             this.hand.push(game.deck.drawWhite());
         }
@@ -221,7 +221,6 @@ class Game {
         this.czarIndex = 0; //position in the players list of the current czar
         this.czar = 0; //current card czar; will later be set to a player object
         this.currentBlackCard = 0; //current black card; will later be set to black card object
-        this.phase = 'waiting'; //current game phase, will be set to "submitting" on admin game start
     }
 
     addPlayer(player) { //adds and updates given player object
@@ -235,15 +234,12 @@ class Game {
     setGamePhase(phase) { //runs code based on given game phase
         switch(phase){
             case "submitting":
-                this.phase = "submitting" //set game phase to submitting
                 this.startSubmissionPhase()
                 return;
             case "judging":
-                this.phase = "judging" //set game phase to judging
                 this.startJudgingPhase()
                 return;
             case "displaying":
-                this.phase = "displaying" //set game phase to displaying
                 this.startDisplayCount();
                 return;
         }
@@ -294,7 +290,7 @@ function updateClientPlayerLists(){
     io.emit("updatePlayerList", (game.players)); //send player list to all clients
 }
 
-const gameDeck = new Deck("builtin", "uwu", "woke", "dutch", "autism", "stem", "festival"); //create game deck with all packs
+const gameDeck = new Deck("builtin", "brainrot", "woke", "dutch", "autism", "stem", "festival"); //create game deck with all packs
 //const gameDeck = new Deck("stem", "dutch", "ap"); //create deck with family friendly content
 const game = new Game(gameDeck); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000

@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getProperName(name){ //returns the full formatted name of a pack given an inputted shorthand
         switch(name){
-            case "uwu":
-                return "UwU Pack";
+            case "brainrot":
+                return "Brainrot Pack";
             case "builtin":
                 return "Built In Pack";
             case "woke":

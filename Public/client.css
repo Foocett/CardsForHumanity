@@ -176,11 +176,15 @@ header {
     border-width: 1px;
     border-color: black;
     border-style: solid;
+
 }
 
 .player-score-item {
     display: grid;
     justify-content: space-between;
+    border-style: hidden;
+    border-bottom: solid black;
+    overflow: scroll;
 }
 
 .player-score-item-username, .player-score-item-score {
@@ -202,6 +206,7 @@ header {
     grid-column-end: 5;
     justify-self: right;
     margin-right: 10px;
+    border: hidden;
 }
 
 #player-score-item-template {

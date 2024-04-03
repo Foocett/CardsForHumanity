@@ -25,7 +25,8 @@
     "Fettishizing black women",
     "A particularly large shallot that's definitely just an onion",
     "a child",
-    "an amber alert"
+    "an amber alert",
+    "Being a fucking wizard"
   ],
 
   "blackCards": [
@@ -59,6 +60,10 @@
     },
     {
       "text": "New ick unlocked: _____.",
+      "blanks": 1
+    },
+    {
+      "text": "What's the first thing you're doing during the purge?",
       "blanks": 1
     },
   ]

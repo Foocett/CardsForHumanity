@@ -101,6 +101,7 @@ io.on('connection', (socket) => {
             for(let i = 0; i<cardSubmissions.length;i++) {
                 if(cardSubmissions[i].text === text) {
                     cardSubmissions[i].owner.score++;
+                    cardSubmissions[i].owner.justWon = true;
                     winningIndex = i;
                     updateClientPlayerLists();
                     game.setGamePhase("displaying")
@@ -203,6 +204,7 @@ class Player { //player object
         this.hand = []; //populated on player creation
         this.czar = false; //false by default, possibly changed on player creation
         this.admin = admin //grants power to "use start game"
+        this.justWon = false;
     }
 
 
@@ -262,10 +264,14 @@ class Game {
 
     startSubmissionPhase() {
         this.currentBlackCard = this.deck.drawBlack(); //draw new black card
+        game.players.forEach(player => {
+            player.justWon = false;
+        });
         game.selectNextCzar(); //assign new card czar
         hasFirstTurnStarted = true; //checks if this is the first turn
         submissionCount = 0; //reset submission count
         cardSubmissions = []; //reset submission list
+        updateClientPlayerLists();
         io.emit("start-turn", (this)); //send current game state to all connected clients
     }
 

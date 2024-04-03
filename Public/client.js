@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let submittedText; //text of submitted card
     let submittedPack; //pack of submitted card
     let hasCardBeenSelected = false; //used to prevent submission before selection
-    let hasCardBeenSubmitted = false;
+    let hasCardBeenSubmitted = false; //used to prevent multiple submissions
 
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
@@ -233,14 +233,19 @@ document.addEventListener('DOMContentLoaded', function() {
             newPlayerObjectScore.classList.add("player-score-item-score"); //add class for CSS
             newPlayerObjectUsername.textContent = playerInfo[i].name; //set username text content
             newPlayerObjectScore.textContent = playerInfo[i].score; //set score text content
-            if(i % 2 === 1)  { //change color every other iteration
-                newPlayerObject.style.backgroundColor = "#d1d1e0" //lighter grey
+            if(i % 2 === 1)  { //change color every other iteration (disabled right now, might add back later)
+                newPlayerObject.style.backgroundColor = "#cfcfd3";
             } else {
-                newPlayerObject.style.backgroundColor = "#a3a3c2" //darker gray
+                newPlayerObject.style.backgroundColor = "#cfcfd3";
             }
 
-            if(playerInfo[i].czar){ //if player is czar, set color to a darker gray
-                newPlayerObject.style.backgroundColor = "#6b6b78" //even darker gray
+            if(playerInfo[i].czar) { //if player is czar, set color to gray
+                newPlayerObject.style.backgroundColor = "#99999a";
+                newPlayerObjectUsername.textContent = (playerInfo[i].name + " [Card Czar]");
+            }
+
+            if(playerInfo[i].justWon) { //if player has justWon status, highlight their item
+                newPlayerObject.style.backgroundColor = "#dea2bd";
             }
 
             newPlayerObject.appendChild(newPlayerObjectUsername); //add username as child of player object

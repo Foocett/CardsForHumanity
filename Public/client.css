@@ -9,6 +9,7 @@ body{
     width: 100%;
     height: 100%;
     margin: 0;
+    background-color: white;
 }
 
 p {
@@ -28,6 +29,7 @@ header {
     align-content: center;
     justify-items: center;
     align-items: center;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.93); /* Adjusts the x-offset, y-offset, blur radius, and color for the glow */
 }
 
 #start-turn-button {

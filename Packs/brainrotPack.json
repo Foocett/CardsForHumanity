@@ -22,7 +22,19 @@
     "Gooning",
     "Microplastics",
     "Losing your math class edging streak because of your teacher's level ten gyatt",
-    "Red-40"
+    "Red-40",
+    "The fog.",
+    "Skibidi",
+    "Livvy Dunne",
+    "Baby Gronk",
+    "Fentanyl, a good bit of it too.",
+    "League of Legends",
+    "A particularly good gooning session",
+    "Rizz.",
+    "The rizzler",
+    "Andrew "Girlboss" Tate",
+    "Ohio",
+    "Dropping stolen car batteries and catalytic converters into the ocean where they belong."
   ],
   "blackCards": [
     {
@@ -30,7 +42,11 @@
       "blanks": 1
     },
     {
-      "text": "",
+      "text": "'Dude! you've gotta give _____maxxing a try.'",
+      "blanks": 1
+    },
+    {
+      "text": "'Honestly, that's so based and _____pilled.'",
       "blanks": 1
     }
   ]

@@ -23,32 +23,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const blackText = document.getElementById("black-card-text");
     const blackPack = document.getElementById("black-card-pack");
     const submitButton = document.getElementById("submit-button");
-    const publicContainer = document.getElementById("cards-public-container")
-    const playerContainer = document.getElementById("score-display-container")
+    const publicContainer = document.getElementById("cards-public-container");
+    const playerContainer = document.getElementById("score-display-container");
     submitButton.disabled = true; //disable submit button by default
 
     for(let i = 1; i<=7; i++){ //get HTML objects for each card
-        handElementsText.push(document.getElementById("white-card-"+i+"-text")) //text object
-        handElementsPack.push(document.getElementById("white-card-"+i+"-pack")) //pack object
+        handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object
+        handElementsPack.push(document.getElementById("white-card-"+i+"-pack")); //pack object
     }
 
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
-        self = response.rawPlayerInfo //set self equal to returned player object
+        self = response.rawPlayerInfo; //set self equal to returned player object
         populateCardsFromHand(self); //convert self.hand into HTML elements
         if(self.admin){ //if admin, show start game button
             startGameButton.style.display = "block";
             startGameButton.onclick = () => {
                 socket.emit("begin-game"); //send begin game signal to server
                 startGameButton.style.display = "none"; //hide after click
-            }
+            };
         } else {
             startGameButton.style.display = "none"; //hide button
         }
     });
 
     socket.on("updatePlayerList", (playerInfo) => { //updates list of connected players
-        updateConnectedPlayers(playerInfo)
-    })
+        updateConnectedPlayers(playerInfo);
+    });
 
 
     socket.on("start-turn", (gameData) => { //on start turn command receive
@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if(!self.czar) {
                 card.classList.add("clickable");
             }
-        })
+        });
         submittedPublicCardElements.forEach(card => {
-           card.remove();
+            card.remove();
         });
         updateSelf();
         submitButton.disabled = self.czar; //if player is czar, disable submit button
@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         blackPack.textContent =  getProperName(gameData.currentBlackCard.pack); //get full pack name
         updateConnectedPlayers(gameData.players); //updates connected players
     });
-
-    socket.on("start")
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
         for(let i = 0; i<7;i++){ //for each of seven cards
@@ -113,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             case "stem":
                 return "STEM Pack";
             case "festival":
-                return "EDM Festival Pack"
+                return "EDM Festival Pack";
         }
     }
 
@@ -125,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 submissionPack: selectedPack,
                 submissionIndex: selectedIndex,
                 id: self.id
-            }
+            };
             socket.emit('submit-cards', payload, (response) => { //send cards to server
                 self = response.rawPlayerInfo; //update self based on server callback
                 populateCardsFromHand(self); //reset cards in hand
@@ -146,16 +144,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let submittedPublicCardElements = []; //hold submitted card HTML elements
     let submittedPublicTextElements = []; //hold submitted text HTML elements
     socket.on("pushSubmittedCards", (payload) => {
-        displaySubmittedCards(payload.submissions, payload.showContent, payload.displaying, payload.winningIndex) //display all clients' submitted cards
-    })
+        displaySubmittedCards(payload.submissions, payload.showContent, payload.displaying, payload.winningIndex); //display all clients' submitted cards
+    });
     function displaySubmittedCards(submissions, showContent, displaying, winningIndex){
         updateSelf();
         submittedPublicCardElements.forEach(card => { //remove all current elements
             card.remove();
-        })
+        });
         submittedPublicTextElements.forEach(obj => { //remove all current elements
             obj.remove();
-        })
+        });
         let firstCard = true; //to track which card is the first card
         let submissionsLength = submissions.length;
         if(displaying) {
@@ -199,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 cardPack.style.display = "p"; //make card pack visible
                 if(self.czar  && !hasCardBeenSubmitted) {
                     submittedPublicCardElements.forEach(card => {
-                        card.classList.add("clickable")
+                        card.classList.add("clickable");
                     });
                 }
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
@@ -223,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateConnectedPlayers(playerInfo) { //update list of connected players on client side
         connectedPlayerObjects.forEach(item => { //remove all existing elements
             item.remove();
-        })
+        });
         for (let i = 0; i < playerInfo.length; i++) { //for each current player
             let newPlayerObject = document.createElement("div"); //create new player/score container object
             newPlayerObject.classList.add("player-score-item"); //add class for CSS
@@ -257,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateSelf() {
         socket.emit('update-self', username, (response) => { //requests updated personal info
-            self = response.rawPlayerInfo
+            self = response.rawPlayerInfo;
             setCardsClickable(!self.czar && !hasCardBeenSubmitted); //if player is czar, make hand cards unclickable
         });
     }
@@ -266,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
         handCards.forEach(card => { //for each card
             if(state) { //if set to true
                 if (!card.classList.contains("clickable")) { //if card does not have clickable class
-                    card.classList.add("clickable") //add clickable class
+                    card.classList.add("clickable"); //add clickable class
                 }
             }
             else {
@@ -275,4 +273,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-

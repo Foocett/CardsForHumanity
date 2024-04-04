@@ -5,7 +5,6 @@ let submissionCount = 0; //counts card submissions
 let hasFirstPlayerJoined = false; //used to determining czar/admin
 let hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
 let displayTime = 5; //time for cards to be displayed after czar makes a selection (in seconds)
-
 //import pack files
 const rawBuiltin = require('./Packs/builtinPack.json'); //builtin pack
 const rawAutism = require('./Packs/autismPack.json'); //autism pack (based)
@@ -67,16 +66,16 @@ io.on('connection', (socket) => {
             rawPlayerInfo: game.playerLibrary[socket.id] //gets player based on client socket id
         };
         ackCallback(responseData); //returns player data to requesting client
-    })
+    });
 
 
     socket.on("begin-game", () => {
-        game.setGamePhase("submitting") //begins game
+        game.setGamePhase("submitting"); //begins game
     });
 
     socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
         submissionCount++; //add to total submitted count
-        let newCard = new WhiteCard(payload.submission, payload.submissionPack)
+        let newCard = new WhiteCard(payload.submission, payload.submissionPack);
         newCard.setOwner(game.playerLibrary[socket.id]);
         cardSubmissions.push(newCard); //creates card object from client data
         const submittingPlayer = game.playerLibrary[payload.id]; //gets corresponding player for submitting client
@@ -87,13 +86,13 @@ io.on('connection', (socket) => {
         const responseData = { //data to be returned to player
             rawPlayerInfo: submittingPlayer
         };
-        ackCallback(responseData) //returns data to player
+        ackCallback(responseData); //returns data to player
         let showContent = submissionCount >= game.players.length - 1; //determines if all cards have been submitted
         if (showContent) {
             game.setGamePhase("judging"); //if all cards received, set phase to judging
         }
         let displaying = submittingPlayer.czar;
-        let text = payload.submission
+        let text = payload.submission;
         let winningIndex;
         if(displaying) {
             text = cardSubmissions[payload.submissionIndex].text;
@@ -104,7 +103,7 @@ io.on('connection', (socket) => {
                     cardSubmissions[i].owner.justWon = true;
                     winningIndex = i;
                     updateClientPlayerLists();
-                    game.setGamePhase("displaying")
+                    game.setGamePhase("displaying");
                 }
             }
         }
@@ -114,15 +113,15 @@ io.on('connection', (socket) => {
             displaying: displaying,
             cardText: text,
             winningIndex: winningIndex
-        }
+        };
         io.emit("pushSubmittedCards", data); //sends all submitted cards to all players
     });
-    
+
     socket.on('disconnect', () => { //on player disconnect
         let playerIndex;
         game.players.forEach(player => { //for each player
             if(player.name === game.playerLibrary[socket.id].name) { //if name matches DC-ing socket's associated name...
-                playerIndex = game.players.indexOf(player) //get index of removed player
+                playerIndex = game.players.indexOf(player); //get index of removed player
             }
         });
         game.players.splice(playerIndex, 1); //remove player from game list
@@ -138,7 +137,7 @@ class Deck { //deck object
     constructor(...selectedPacks) { //given all inputted packs
         this.whiteDeck = []; //all white card objects
         this.blackDeck = []; //all black card objects
-        this.whiteDiscrard = []; //used white cards
+        this.whiteDiscard = []; //used white cards
         this.blackDiscard = []; //used black cards
 
         selectedPacks.forEach(pack => { //for each selected pack
@@ -146,7 +145,7 @@ class Deck { //deck object
                 this.whiteDeck.push(new WhiteCard(white, pack)); //create new white card objects
             });
             allBlackCards[pack].forEach(black => { //for each black card object
-                this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack)) //create new black card object
+                this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack)); //create new black card object
             });
         });
     }
@@ -154,7 +153,7 @@ class Deck { //deck object
     drawWhite(){
         let index = getRandom(0, this.whiteDeck.length); //random index in white card list
         let card = this.whiteDeck[index]; //get card corresponding to random index
-        this.whiteDiscrard.push(card) //add card to discarded list
+        this.whiteDiscard.push(card); //add card to discarded list
         this.whiteDeck.splice(index, 1); //remove card from game list
         return(card); //return selected card object
     }
@@ -162,7 +161,7 @@ class Deck { //deck object
     drawBlack(){
         let index = getRandom(0, this.blackDeck.length); //random index in black card list
         let card = this.blackDeck[index]; //get card corresponding to random index
-        this.blackDiscard.push(card) //add card to discarded list
+        this.blackDiscard.push(card); //add card to discarded list
         this.blackDeck.splice(index, 1); //remove card from game list
         return(card); //return selected card object
     }
@@ -188,7 +187,7 @@ class BlackCard { //black card object
     constructor(text, blanks, pack) {
         this.text = text;
         this.blanks = blanks;
-        this.pack = pack
+        this.pack = pack;
     }
 
     toString() {
@@ -203,7 +202,7 @@ class Player { //player object
         this.score = 0; //player score
         this.hand = []; //populated on player creation
         this.czar = false; //false by default, possibly changed on player creation
-        this.admin = admin //grants power to "use start game"
+        this.admin = admin; //grants power to "use start game"
         this.justWon = false;
     }
 
@@ -236,10 +235,10 @@ class Game {
     setGamePhase(phase) { //runs code based on given game phase
         switch(phase){
             case "submitting":
-                this.startSubmissionPhase()
+                this.startSubmissionPhase();
                 return;
             case "judging":
-                this.startJudgingPhase()
+                this.startJudgingPhase();
                 return;
             case "displaying":
                 this.startDisplayCount();
@@ -257,7 +256,7 @@ class Game {
             this.czar = this.players[0];
         } else { //for all other rounds, iterate to next player in list
             this.czarIndex = (this.czarIndex + 1) % this.players.length; //iterate czar index, jump to zero if at end of list
-            this.czar = this.players[this.czarIndex] //set game.czar to new czar player object
+            this.czar = this.players[this.czarIndex]; //set game.czar to new czar player object
         }
         this.czar.czar = true; //set player.czar to true for selected player
     }
@@ -280,8 +279,8 @@ class Game {
 
     startDisplayCount() {
         setTimeout(function() {
-            game.setGamePhase("submitting")
-        }, (displayTime*1000))
+            game.setGamePhase("submitting");
+        }, (displayTime*1000));
     }
 
 }
@@ -303,4 +302,3 @@ server.listen(3000, () => { //listen for client connections and interactions @ p
     console.log('listening on *:3000');
 });
 module.exports = { Deck, WhiteCard, BlackCard }; // Exporting the classes for use in other files
-

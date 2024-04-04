@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedPack; //pack of selected card
     let submittedText; //text of submitted card
     let submittedPack; //pack of submitted card
+    let mySubmission = false //used to prevent repetitive vine boomage
     let hasCardBeenSelected = false; //used to prevent submission before selection
     let hasCardBeenSubmitted = false; //used to prevent multiple submissions
 
@@ -25,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById("submit-button");
     const publicContainer = document.getElementById("cards-public-container");
     const playerContainer = document.getElementById("score-display-container");
+    const vineBoom = document.getElementById("vine-boom");
+    vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
     for(let i = 1; i<=7; i++){ //get HTML objects for each card
@@ -66,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSelf();
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
+        if(gameData.currentBlackCard.text.includes("vine")){
+            thatMomentWhen();
+        }
         blackPack.textContent =  getProperName(gameData.currentBlackCard.pack); //get full pack name
         updateConnectedPlayers(gameData.players); //updates connected players
     });
@@ -83,6 +89,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 selectedIndex = i; //set selected card index to position in for loop
                 selectedText = self.hand[i].text; //set global selected text
                 selectedPack = self.hand[i].pack; //set global selected pack
+                if(!this.classList.contains("selected-card") && selectedText.includes("vine")) { //play vine boom if vine boom card & card isn't already selected
+                    thatMomentWhen();
+                }
                 handCards.forEach(element => { //for each card element
                     element.classList.remove("selected-card"); //remove selected class from all cards
                     element.style.backgroundColor = "white"; //reset card background color
@@ -123,7 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 submissionPack: selectedPack,
                 submissionIndex: selectedIndex,
                 id: self.id
-            };
+            }
+            mySubmission = true
             socket.emit('submit-cards', payload, (response) => { //send cards to server
                 self = response.rawPlayerInfo; //update self based on server callback
                 populateCardsFromHand(self); //reset cards in hand
@@ -172,6 +182,9 @@ document.addEventListener('DOMContentLoaded', function() {
             cardPack.textContent = getProperName(submissions[i].pack); //set pack text
             if(displaying && i === winningIndex) {
                 submittedCard.classList.add("selected-card");
+                if(submissions[i].text.includes("vine")) {
+                    thatMomentWhen(); //vine boom if "*vine boom* wins;
+                }
             }
             submittedPublicCardElements.push(submittedCard); //add to element list
             submittedPublicTextElements.push(cardText);
@@ -180,6 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(this.classList.contains('clickable')){
                     selectedIndex = i;
                     selectedText = submittedPublicTextElements[i]; //since text list will always align with card list
+                    if(!this.classList.contains("selected-card") && selectedText.includes("vine")) { //play vine boom if vine boom card & card isn't already selected
+                        thatMomentWhen();
+                    }
                     submittedPublicCardElements.forEach(element => { //for each card element
                         element.classList.remove("selected-card"); //remove selected class from all cards
                         element.style.backgroundColor = "white"; //reset card background color
@@ -193,6 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if(showContent){ //if content is to be shown to all
+                if(cardText.textContent.includes("vine")){
+                    thatMomentWhen();
+                }
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
                 if(self.czar  && !hasCardBeenSubmitted) {
@@ -203,6 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
                 firstCard = false; //disable first card
                 cardText.textContent = submittedText; //display personal submission text on first card
+                if(submittedText.includes("vine") && mySubmission) {
+                    thatMomentWhen();
+                    mySubmission = false;
+                }
                 cardPack.textContent = getProperName(submittedPack); //display personal submission pack on first card
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
@@ -272,4 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    const thatMomentWhen = () => { vineBoom.play(); }
 });

@@ -66,5 +66,9 @@
       "text": "What's the first thing you're doing during the purge?",
       "blanks": 1
     },
+    {
+      "text": "We all have that one friend who's always _____.",
+      "blanks": 1
+    }
   ]
 }

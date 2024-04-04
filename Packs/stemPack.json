@@ -18,11 +18,13 @@
     "A hotel with an infinite number of rooms",
     "Plus C",
     "Programming in C-- because you're just cool like that",
-    "Reading through source code and realizing that all the comments have a slight sexual undertone",
+    "Reading through source code and realizing all the comments are notably flirtatious",
     "Refusing to use any other language because you are a proud Python princess",
     "Centering a div",
     "Only using SCSS because you're a girlboss",
-    "Assaulting someone at gunpoint because they use the wrong Linux distro"
+    "Assaulting someone at gunpoint because they use a mediocre Linux distro",
+    "os.remove(\"C:\\Windows\\system32\")",
+    "YandereDev using a switch statement"
   ],
 
   "blackCards": [
@@ -44,6 +46,10 @@
     },
     {
       "text": "I choose to use _____.js because Node.js is for betas.",
+      "blanks": 1
+    },
+    {
+      "text": "_____++, the new, high level, object oriented programming language.",
       "blanks": 1
     }
   ]

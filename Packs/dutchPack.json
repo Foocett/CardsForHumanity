@@ -46,11 +46,19 @@
     "Learning a new conjugation table",
     "Another spanish teacher job listing",
     "The brightest object in the sky (Parks' head)",
-    "Saying howdy man named JP",
+    "Saying howdy to a man named JP",
     "Herbert the silly crab",
     "a VERY jiggy italian shrimp",
     "A dialectical journal",
-    "Chapel"
+    "Chapel",
+    "T-Bone",
+    "Stealing your friends minecraft girlfriend",
+    "W white fudge ding dong",
+    "Stealing pokemon cards from lockers",
+    "Toilet doritos",
+    "Sprite",
+    "tafkat.",
+    "The Holland Hall Graduating Class Of Twenty Twenty Four®."
   ],
 
   "blackCards": [
@@ -80,6 +88,10 @@
     },
     {
       "text": "Dude, I can't believe you managed to fit _____ into the harkness.",
+      "blanks": "1"
+    },
+    {
+      "text": "What the FUCK does tafkat mean?!?!",
       "blanks": "1"
     }
   ]

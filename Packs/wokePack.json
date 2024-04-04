@@ -49,6 +49,10 @@
     {
       "text": "What is Fox News worried about today?",
       "blanks": 1
+    },
+    {
+      "text": "You've heard of Watergate, now get ready for _____gate.",
+      "blanks": 1
     }
   ]
 }

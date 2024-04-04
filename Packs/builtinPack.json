@@ -32,7 +32,8 @@
     "Gaslighting, gatekeeping, and girlbossing... all at the same time",
     "Gaslamping",
     "Cum.",
-    "Temu"
+    "Temu",
+    "Thinking you're going to sneeze but not so you end up just sitting there like a little bitch"
   ],
 
   "blackCards": [
@@ -86,6 +87,10 @@
     },
     {
       "text": "I think we can all agree that _____ is mid asf.",
+      "blanks": 1
+    },
+    {
+      "text": "What's worse than missing a sneeze?",
       "blanks": 1
     }
   ]

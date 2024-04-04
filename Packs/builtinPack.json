@@ -24,9 +24,15 @@
     "Fettishizing asian women",
     "Fettishizing black women",
     "A particularly large shallot that's definitely just an onion",
-    "a child",
-    "an amber alert",
-    "Being a fucking wizard"
+    "A child",
+    "Being scared by an amber alert and peeing a little",
+    "Being a fucking wizard",
+    "Imagining Sisyphus happy",
+    "Being mid",
+    "Gaslighting, gatekeeping, and girlbossing... all at the same time",
+    "Gaslamping",
+    "Cum.",
+    "Temu"
   ],
 
   "blackCards": [
@@ -68,6 +74,18 @@
     },
     {
       "text": "We all have that one friend who's always _____.",
+      "blanks": 1
+    },
+    {
+      "text": "What never fails to turn you on?",
+      "blanks": 1
+    },
+    {
+      "text": "What will never get old?",
+      "blanks": 1
+    },
+    {
+      "text": "I think we can all agree that _____ is mid asf.",
       "blanks": 1
     }
   ]

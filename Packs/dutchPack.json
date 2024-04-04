@@ -2,7 +2,7 @@
   "whiteCards": [
     "David Allen Motherfucking Parks",
     "An Honor Council announcement",
-    "Dutch beating you to a bloody pulp after saying \"Go Lions!\"",
+    "Dutch beating a child to bloody pulp after they say \"Go Lions!\"",
     "Danning Wilford Bloom",
     "The toilet lasagna incidents of '22",
     "Misgendering Dutch the Lion",
@@ -12,6 +12,10 @@
     "Culture Week",
     "A stat survey",
     "Amstud.",
+    "Hegemony",
+    "A harkness",
+    "Norms AND values",
+    "Your own personnal mental map of reality",
     "Being like Ike",
     "An academic team announcement",
     "JV Boys Soccer",
@@ -20,10 +24,21 @@
     "The shiniest head",
     "Casual favoritism",
     "A shitty Starwars pun",
+    "Freshmen",
     "Seniors winning",
     "Fondren's Meter Stick",
     "The 4-block schedule",
-    "Academic team"
+    "Academic team",
+    "Father Spigot",
+    "Baked Alaska",
+    "Golden Ostrich",
+    "Doing a Freudian dream analysis over Gorsky's dream",
+    "A garden weasel",
+    "My GPA",
+    "Addressing both deans as 'Phil'",
+    "Bullshitting your way through a harkness discussion",
+    "AP Human Geography",
+    "Math league"
   ],
 
   "blackCards": [
@@ -37,6 +52,22 @@
     },
     {
       "text": "What ruined the morning meeting game?",
+      "blanks": "1"
+    },
+    {
+      "text": "Why were you late to class?",
+      "blanks": "1"
+    },
+    {
+      "text": "How did you get full demand?",
+      "blanks": "1"
+    },
+    {
+      "text": "Why did Muir give a 15-minute morning meeting announcement?",
+      "blanks": "1"
+    },
+    {
+      "text": "Dude, I can't believe you managed to fit _____ into the harkness.",
       "blanks": "1"
     }
   ]

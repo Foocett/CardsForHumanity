@@ -9,7 +9,6 @@
     "Mitch McConnell freezing up again",
     "The GOP",
     "The DNC",
-    "Several violations of the Geneva Convention",
     "The leading cause of death among US children",
     "A tiktok ban",
     "The state of our union",
@@ -20,12 +19,23 @@
     "'FACTS' by Tom MacDonald and Ben Shapiro",
     "A log by bolb",
     "Presidential twerk-off",
-    "Eating the rich"
+    "Eating the rich",
+    "Debating why something isn't 'technically' genocide.",
+    "A completely 100% non-partisan card pack with absolutely zero political bias whatsoever",
+    "Making sure Shou Chew's is still singaporean (again)",
+    "Project 2025",
+    "Christian nationalism",
+    "Drag queen story hour",
+    "A classroom litter box that may or may not actually exist",
+    "An illustrious state superintendent named Ryan Walters",
+    "Attending a megachurch because that's what Jesus would've wanted",
+    "Voting for Chris Christie for shits and giggles",
+    "Edging to Vivek Ramaswamy"
   ],
 
   "blackCards": [
     {
-      "text": "Insiders are saying _____ will be the primary focus of the GOP in the coming election cycle.",
+      "text": "Insiders are saying _____ will be the GOP's primary focus in this coming election cycle.",
       "blanks": 1
     },
     {
@@ -34,6 +44,10 @@
     },
     {
       "text": "The only thing that can fix our economy is _____ and we need your help!",
+      "blanks": 1
+    },
+    {
+      "text": "What is Fox News worried about today?",
       "blanks": 1
     }
   ]

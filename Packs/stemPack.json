@@ -11,7 +11,18 @@
     "U-Substitution",
     "A five-part AP™ free-response optimization problem",
     "Leetcode",
-    "Programming in assembly because you're a masochist"
+    "Programming in assembly because you're a masochist",
+    "A full bridge rectifier",
+    "Not knowing how to read a datasheet",
+    "Scihub",
+    "A hotel with an infinite number of rooms",
+    "Plus C",
+    "Programming in C-- because you're just cool like that",
+    "Reading through source code and realizing that all the comments have a slight sexual undertone",
+    "Refusing to use any other language because you are a proud Python princess",
+    "Centering a div",
+    "Only using SCSS because you're a girlboss",
+    "Assaulting someone at gunpoint because they use the wrong Linux distro"
   ],
 
   "blackCards": [
@@ -21,6 +32,18 @@
     },
     {
       "text": "Why am I failing Compsci?",
+      "blanks": 1
+    },
+    {
+      "text": "Warning: Unresolved function or method: _____().",
+      "blanks": 1
+    },
+    {
+      "text": "Well, I have no clue how I ended up with _____ as an answer, but at least I remembered +C",
+      "blanks": 1
+    },
+    {
+      "text": "I choose to use _____.js because Node.js is for betas.",
       "blanks": 1
     }
   ]

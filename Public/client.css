@@ -184,7 +184,7 @@ header {
     justify-content: space-between;
     border-style: hidden;
     border-bottom: solid black;
-    overflow: scroll;
+    overflow: hidden;
 }
 
 .player-score-item-username, .player-score-item-score {

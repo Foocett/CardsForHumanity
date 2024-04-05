@@ -58,7 +58,9 @@
     "Toilet doritos",
     "Sprite",
     "tafkat.",
-    "The Holland Hall Graduating Class Of Twenty Twenty Four®."
+    "The Holland Hall Graduating Class Of Twenty Twenty Four®.",
+    "Randal Cobb",
+    "The cum loudly society"
   ],
 
   "blackCards": [
@@ -92,6 +94,10 @@
     },
     {
       "text": "What the FUCK does tafkat mean?!?!",
+      "blanks": "1"
+    },
+    {
+      "text": "And the being mid book award goes to _____",
       "blanks": "1"
     }
   ]

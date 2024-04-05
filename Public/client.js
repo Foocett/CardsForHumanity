@@ -227,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             submittedCard.addEventListener("mouseover", function() {
                 if(this.classList.contains("clickable") && !isHovering) {
-                    let replacementText = "<span id=underline> + submissions[i].text + "</span>"
-                    blackText.innerHTML = blackText.textContent.replace("_____", submissions[i].text);
+                    let replacementText = '<span id="underline">' + submissions[i].text + '</span>';
+                    blackText.innerHTML = blackText.textContent.replace("_____", replacementText);
                 }
             });
 

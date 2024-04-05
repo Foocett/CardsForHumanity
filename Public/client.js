@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let mySubmission = false //used to prevent repetitive vine boomage
     let hasCardBeenSelected = false; //used to prevent submission before selection
     let hasCardBeenSubmitted = false; //used to prevent multiple submissions
+    let isHovering = false; //used for hover animations
 
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
@@ -102,6 +103,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 hasCardBeenSelected = true; //a card has been selected
                 submitButton.disabled = false; //re-enable submit button
             }
+        });
+        handCards[i].addEventListener("mouseover", function() {
+            if(this.classList.contains("clickable") && !isHovering) {
+                let replacementText = '<span id="underline">' + self.hand[i].text + '</span>';
+                blackText.innerHTML = blackText.textContent.replace("_____", replacementText);
+                console.log("on");
+                isHovering = true
+            }
+        });
+
+        handCards[i].addEventListener("mouseleave", function() {
+            console.log("off")
+            isHovering = false
+            blackText.innerHTML = blackText.textContent.replace(self.hand[i].text, "_____");
         });
     }
 
@@ -193,9 +208,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(this.classList.contains('clickable')){
                     selectedIndex = i;
                     selectedText = submittedPublicTextElements[i]; //since text list will always align with card list
+                    /*
                     if(!this.classList.contains("selected-card") && selectedText.includes("vine")) { //play vine boom if vine boom card & card isn't already selected
                         thatMomentWhen();
                     }
+                     */
                     submittedPublicCardElements.forEach(element => { //for each card element
                         element.classList.remove("selected-card"); //remove selected class from all cards
                         element.style.backgroundColor = "white"; //reset card background color
@@ -206,6 +223,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     hasCardBeenSelected = true; //a card has been selected
                     submitButton.disabled = false; //re-enable submit button
                 }
+            });
+
+            submittedCard.addEventListener("mouseover", function() {
+                if(this.classList.contains("clickable") && !isHovering) {
+                    let replacementText = "<span id=underline> + submissions[i].text + "</span>"
+                    blackText.innerHTML = blackText.textContent.replace("_____", submissions[i].text);
+                }
+            });
+
+            submittedCard.addEventListener("mouseleave", function() {
+                blackText.innerHTML = blackText.textContent.replace(submissions[i].text, "_____");
             });
 
             if(showContent){ //if content is to be shown to all

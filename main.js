@@ -60,6 +60,13 @@ io.on('connection', (socket) => {
         ackCallback(responseData); //returns new player object to client
     });
 
+    socket.on('chat message', (msg) => {
+        let payload = {
+            msg: msg,
+            user: game.playerLibrary[socket.id].name
+        }
+        io.emit('chat message', payload);
+    });
 
     socket.on("update-self", (username, ackCallback) => { //returns corresponding player object to client
         const responseData = { //data to be returned to player
@@ -104,6 +111,12 @@ io.on('connection', (socket) => {
                     winningIndex = i;
                     updateClientPlayerLists();
                     game.setGamePhase("displaying");
+                    let payload = {
+                        msg: (cardSubmissions[i].owner.name + " has won the round and their score is now " + cardSubmissions[i].owner.score),
+                        user: "System"
+                    }
+                    io.emit('chat message', payload);
+
                 }
             }
         }
@@ -208,7 +221,7 @@ class Player { //player object
 
 
     topUpCards() {
-        while(this.hand.length < 7) { //draw white cards until hand length equals seven
+        while(this.hand.length < 10) { //draw white cards until hand length equals seven
             this.hand.push(game.deck.drawWhite());
         }
     }
@@ -236,6 +249,11 @@ class Game {
         switch(phase){
             case "submitting":
                 this.startSubmissionPhase();
+                let payload = {
+                    msg: ("The new Card Czar is " + game.czar.name + ", good luck!"),
+                    user: "System"
+                }
+                io.emit("chat message", payload);
                 return;
             case "judging":
                 this.startJudgingPhase();
@@ -296,7 +314,7 @@ function updateClientPlayerLists(){
 }
 
 const gameDeck = new Deck("builtin", "brainrot", "woke", "dutch", "autism", "stem", "festival"); //create game deck with all packs
-//const gameDeck = new Deck("stem", "dutch", "ap"); //create deck with family friendly content
+//const gameDeck = new Deck("builtin"); //create deck with family friendly content
 const game = new Game(gameDeck); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000
     console.log('listening on *:3000');

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let hasCardBeenSelected = false; //used to prevent submission before selection
     let hasCardBeenSubmitted = false; //used to prevent multiple submissions
     let isHovering = false; //used for hover animations
+    let wrapCards = false;
 
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
@@ -28,13 +29,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const publicContainer = document.getElementById("cards-public-container");
     const playerContainer = document.getElementById("score-display-container");
     const vineBoom = document.getElementById("vine-boom");
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
-    for(let i = 1; i<=7; i++){ //get HTML objects for each card
+    for(let i = 1; i<=10; i++){ //get HTML objects for each card
         handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object
         handElementsPack.push(document.getElementById("white-card-"+i+"-pack")); //pack object
     }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+            socket.emit('chat message', input.value);
+            input.value = '';
+        }
+    });
+
+    socket.on('chat message', (payload) => {
+        addMessage(payload.msg, payload.user)
+    });
 
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
         self = response.rawPlayerInfo; //set self equal to returned player object
@@ -78,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
-        for(let i = 0; i<7;i++){ //for each of seven cards
+        for(let i = 0; i<10;i++){ //for each of seven cards
             handElementsText[i].textContent = self.hand[i].text; //set text to card.text
             handElementsPack[i].textContent = getProperName(self.hand[i].pack); //set pack to card.pack's full name
         }
@@ -179,11 +195,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         let firstCard = true; //to track which card is the first card
         let submissionsLength = submissions.length;
+        wrapCards = submissionsLength > 4;
+
         if(displaying) {
             submissionsLength--;
         }
         for(let i=0; i<submissionsLength;i++){
             const submittedCard = document.createElement("div"); //create new card
+            if(!wrapCards){
+                submittedCard.classList.add("tall");
+            }
             const cardText = document.createElement("p"); //create text object child
             const cardPack = document.createElement("p"); //create pack object child
             submittedCard.classList.add("white-card"); //add white card class for CSS formatting
@@ -196,7 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if(displaying && i === winningIndex) {
                 submittedCard.classList.add("selected-card");
                 if(submissions[i].text.includes("vine")) {
-                    thatMomentWhen(); //vine boom if "*vine boom* wins;
+                    for(let i=0; i<10;i++) {
+                        thatMomentWhen(); //vine boom if "*vine boom* wins;
+                        setTimeout(()=>{}, 100);
+                    }
                 }
             }
             submittedPublicCardElements.push(submittedCard); //add to element list
@@ -320,6 +344,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.classList.remove("clickable"); //remove clickable class
             }
         });
+    }
+
+    function scrollToBottom() {
+        messages.scrollTop = messages.scrollHeight;
+    }
+    function addMessage(message, author) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = author + ": " + message;
+        messages.appendChild(messageElement);
+        scrollToBottom();
     }
 
     const thatMomentWhen = () => { vineBoom.play(); }

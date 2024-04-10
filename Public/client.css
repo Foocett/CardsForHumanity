@@ -27,14 +27,13 @@ body{
 .div-3 {
     margin-right: 0;
     grid-area: 2 / 2 / 3 / 3;
-    box-shadow: inset 10px 10px 3px #656a60, /* top-left glow */
-    inset -10px 10px 3px #656a60, /* top-right glow */
-    inset 10px -10px 3px #656a60, /* bottom-left glow */
-    inset -10px -10px 3px #656a60; /* bottom-right glow */
+    box-shadow:
+    inset 3px -3px 5px #878C7FFF, /* bottom-left glow */
+    inset -3px -3px 5px #878C7FFF; /* bottom-right glow */
 }
 .div-4 {
     grid-area: 3 / 1 / 5 / 3;
-    background: #656a60;
+    background: #878C7FFF;
     display: inline-flex;
     align-items: flex-end;
     justify-content: center;
@@ -95,7 +94,7 @@ p {
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-content: space-around;
-    background: #656a60;
+    background: #878C7FFF;
 }
 
 
@@ -133,6 +132,7 @@ p {
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer; /* Encourage user interaction */
     height: 45%;
+    margin-left: 5px;
 }
 
 #black-card{
@@ -184,7 +184,7 @@ p {
 }
 
 #black-card-container {
-    background: #656a60;
+    background: #878C7FFF;
 }
 
 .black-card-text, .black-card-pack {
@@ -221,7 +221,7 @@ p {
     border-width: 1px;
     border-color: black;
     border-style: solid;
-    background: #656a60;
+    background: #878C7FFF;
     backdrop-filter: blur(10px);
 }
 
@@ -268,6 +268,7 @@ p {
     border-width: 1px;
     border-color: black;
     border-style: solid;
+    border-top: hidden;
 }
 
 #chat {
@@ -278,7 +279,7 @@ p {
     grid-row-gap: 0;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #656a60;
+    background: #878c7f;
     backdrop-filter: blur(10px);
 }
 
@@ -292,6 +293,7 @@ p {
     background: rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     width: 100%;
+    border-top: solid black;
 }
 
 #input {
@@ -335,6 +337,11 @@ p {
     border: 1px solid black;
     border-top-style: none;
     border-left-style: none;
+    background: rgba(0, 0, 0,.1);
+}
+
+#messages > div:nth-child(odd) {
+    background: rgba(0, 0, 0,.175);
 }
 
 #page-footer {

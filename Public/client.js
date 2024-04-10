@@ -1,7 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     let username = prompt("Please enter your username:"); //Prompt for username before loading page content
-    while (username === null || username.trim() === "") { //check valid username
-        alert("You must enter a username to continue."); //if input is invalid, prompt again
+    while (username === null || username.trim() === "" || username.length >=20 || username.includes("\\")) { //check valid username
+        if(username.length >=20) {
+            alert("Username must be no longer than 20 characters")
+        } else if(username.includes("\\")){
+            alert("Username cannot contain backslashes")
+        } else {
+            alert("You must enter a username to continue."); //if input is invalid, prompt again
+        }
         username = prompt("Please enter your username:");
     }
 

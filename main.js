@@ -79,6 +79,22 @@ io.on('connection', (socket) => {
     });
 
 
+    socket.on("increase-wager", (payload, ackCallback) => {
+        let player = game.playerLibrary[socket.id];
+        if(player.score >1 && player.wager < player.score) {
+            player.wager++;
+        }
+        ackCallback(player.wager)
+    });
+
+    socket.on("decrease-wager", (payload, ackCallback) => {
+        let player = game.playerLibrary[socket.id];
+        if(player.score > 1) {
+            player.wager--;
+        }
+        ackCallback(player.wager)
+    });
+
     socket.on("begin-game", (packStates) => {
         let enabledPacks = [];
         packStates.forEach(item => {
@@ -118,19 +134,20 @@ io.on('connection', (socket) => {
 
             for(let i = 0; i<cardSubmissions.length;i++) {
                 if(cardSubmissions[i].text === text) {
-                    cardSubmissions[i].owner.score++;
+                    cardSubmissions[i].owner.score+=cardSubmissions[i].owner.wager;
                     cardSubmissions[i].owner.justWon = true;
                     winningIndex = i;
-                    updateClientPlayerLists();
                     game.setGamePhase("displaying");
                     let payload = {
                         msg: (cardSubmissions[i].owner.name + " has won the round and their score is now " + cardSubmissions[i].owner.score),
                         user: "System"
                     }
                     io.emit('chat message', payload);
-
+                } else if(!cardSubmissions[i].owner.czar){
+                    cardSubmissions[i].owner.score -= (cardSubmissions[i].owner.wager -1);
                 }
             }
+            updateClientPlayerLists();
         }
         let data = { //card display information
             submissions: cardSubmissions,
@@ -164,7 +181,6 @@ class Deck { //deck object
         this.blackDeck = []; //all black card objects
         this.whiteDiscard = []; //used white cards
         this.blackDiscard = []; //used black cards
-        console.log(selectedPacks)
 
         selectedPacks.forEach(pack => { //for each selected pack
             allWhiteCards[pack].forEach(white => { //for white text component
@@ -230,6 +246,7 @@ class Player { //player object
         this.czar = false; //false by default, possibly changed on player creation
         this.admin = admin; //grants power to "use start game"
         this.justWon = false;
+        this.wager = 1;
     }
 
 
@@ -297,7 +314,6 @@ class Game {
         game.players.forEach(player => {
             player.justWon = false;
             player.topUpCards();
-            console.log(player.hand)
         });
         game.selectNextCzar(); //assign new card czar
         hasFirstTurnStarted = true; //checks if this is the first turn

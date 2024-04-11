@@ -17,7 +17,7 @@ Windows
 ipconfig
 ```
 
-Currrently this game doesn't have a proper form of player handling, to players cannot join or leave mid-game,
+Currently, this game doesn't have a proper form of player handling, to players cannot join or leave mid-game,
 just make sure all players are connected before the game is started
 The first player to join the lobby is the admin and has control over selected packs and starting the game
 
@@ -25,8 +25,12 @@ The first player to join the lobby is the admin and has control over selected pa
 
 The rules function exactly as they do in Cards Against Humanity, the only notable difference being the hand size of ten instead of seven
 
-Further explaination of the CAH rules can be found [HERE](https://s3.amazonaws.com/cah/CAH_Rules.pdf).
+Further explanation of the CAH rules can be found [HERE](https://s3.amazonaws.com/cah/CAH_Rules.pdf).
 
+Additionally, this version of the game has a wagering system.
+ - Players can set their wager value to some number no less than 1 and no greater than their current score.
+ - When a card is selected at the end of the round, the winning player's score will be increased by their wager value.
+ - All losing players' scores are reduced by their wager values minus one, so wagers of one do not see score reductions.
 
 # Dependencies
 

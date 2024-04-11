@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let hasCardBeenSelected = false; //used to prevent submission before selection
     let hasCardBeenSubmitted = false; //used to prevent multiple submissions
     let isHovering = false; //used for hover animations
-    let wrapCards = false;
+    let wrapCards = false; //Used when displaying submitted cards
+    let packButtons = document.querySelectorAll(".pack-input");
+    let hasHand = false
 
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form');
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
+    const waitingOverlay = document.getElementById('waiting-overlay');
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
@@ -45,6 +48,19 @@ document.addEventListener('DOMContentLoaded', function() {
         handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object
         handElementsPack.push(document.getElementById("white-card-"+i+"-pack")); //pack object
     }
+
+    packButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            if(self.admin){
+                let buttonStates = [];
+                packButtons.forEach(box => {
+                    buttonStates.push(box.checked);
+                });
+                socket.emit("pack-selection", buttonStates);
+            }
+        });
+    });
+
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -58,17 +74,33 @@ document.addEventListener('DOMContentLoaded', function() {
         addMessage(payload.msg, payload.user)
     });
 
+    socket.on('update-packs', (data) => {
+        for(let i=0; i<packButtons.length; i++) {
+            packButtons[i].checked = data[i];
+        }
+    });
+
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
         self = response.rawPlayerInfo; //set self equal to returned player object
-        populateCardsFromHand(self); //convert self.hand into HTML elements
         if(self.admin){ //if admin, show start game button
             startGameButton.style.display = "block";
             startGameButton.onclick = () => {
-                socket.emit("begin-game"); //send begin game signal to server
-                startGameButton.style.display = "none"; //hide after click
+                let packState = [];
+                packButtons.forEach(button => {
+                    let individualPack = {
+                        name: button.id,
+                        checked: button.checked
+                    }
+                   packState.push(individualPack);
+                });
+                socket.emit("begin-game", (packState)); //send begin game signal to server
+                waitingOverlay.style.display = "none"; //hide after click
             };
         } else {
-            startGameButton.style.display = "none"; //hide button
+            startGameButton.disabled = true; //deactivate button
+            packButtons.forEach(button => {
+                button.disabled = true;
+            });
         }
     });
 
@@ -76,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateConnectedPlayers(playerInfo);
     });
 
+    socket.on("hide-waiting-overlay", ()=> {
+        waitingOverlay.style.display = "none";
+    })
 
     socket.on("start-turn", (gameData) => { //on start turn command receive
         hasCardBeenSelected = false; //reset selected cards
@@ -90,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             card.remove();
         });
         updateSelf();
+
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
         if(gameData.currentBlackCard.text.includes("vine")){
@@ -100,13 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
-        for(let i = 0; i<10;i++){ //for each of seven cards
+        for(let i = 0; i<10;i++){ //for each of ten cards
             handElementsText[i].textContent = self.hand[i].text; //set text to card.text
             handElementsPack[i].textContent = getProperName(self.hand[i].pack); //set pack to card.pack's full name
         }
     }
 
-    for(let i=0;i<7;i++){ //add click listeners to each card
+    for(let i=0;i<10;i++){ //add click listeners to each card
         handCards[i].addEventListener('click', function() {
             if(this.classList.contains("clickable")){ //if the card is currently clickable...
                 selectedIndex = i; //set selected card index to position in for loop
@@ -144,8 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
         switch(name){
             case "brainrot":
                 return "Brainrot Pack";
-            case "builtin":
-                return "Built In Pack";
+            case "base":
+                return "Base Pack";
             case "woke":
                 return "Woke Pack";
             case "dutch":
@@ -336,6 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
         socket.emit('update-self', username, (response) => { //requests updated personal info
             self = response.rawPlayerInfo;
             setCardsClickable(!self.czar && !hasCardBeenSubmitted); //if player is czar, make hand cards unclickable
+            populateCardsFromHand(self)
         });
     }
 

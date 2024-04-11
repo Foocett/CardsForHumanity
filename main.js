@@ -6,7 +6,7 @@ let hasFirstPlayerJoined = false; //used to determining czar/admin
 let hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
 let displayTime = 5; //time for cards to be displayed after czar makes a selection (in seconds)
 //import pack files
-const rawBuiltin = require('./Packs/builtinPack.json'); //builtin pack
+const rawBase = require('./Packs/basePack.json'); //base pack
 const rawAutism = require('./Packs/autismPack.json'); //autism pack (based)
 const rawWoke = require('./Packs/wokePack.json'); //woke pack
 const rawDutch = require('./Packs/dutchPack.json'); //dutch pack
@@ -14,7 +14,7 @@ const rawStem = require('./Packs/stemPack.json'); //STEM pack
 const rawBrainrot = require('./Packs/brainrotPack.json'); //Brainrot pack
 const rawFestival = require('./Packs/festivalPack.json'); //festival pack
 const allWhiteCards = { //store white card components for all packs
-    "builtin": rawBuiltin.whiteCards,
+    "base": rawBase.whiteCards,
     "autism": rawAutism.whiteCards,
     "woke": rawWoke.whiteCards,
     "dutch": rawDutch.whiteCards,
@@ -23,7 +23,7 @@ const allWhiteCards = { //store white card components for all packs
     "festival": rawFestival.whiteCards
 };
 const allBlackCards = { //store black card components for all packs
-    "builtin": rawBuiltin.blackCards,
+    "base": rawBase.blackCards,
     "autism": rawAutism.blackCards,
     "woke": rawWoke.blackCards,
     "dutch": rawDutch.blackCards,
@@ -51,13 +51,16 @@ io.on('connection', (socket) => {
     clients[socket.id] = socket; //add new connection to client list
     socket.on("requestPlayerData", (username, ackCallback) => { //create and return new player object from new client username
         const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined); //create player object
-        newPlayer.topUpCards(); //populate player hand
         newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
         game.addPlayer(newPlayer); //add player object to game.players
         const responseData = { //data to be returned to player (formatted as object for possible future features)
             rawPlayerInfo: newPlayer
         };
         ackCallback(responseData); //returns new player object to client
+    });
+
+    socket.on('pack-selection', (data) => {
+        io.emit('update-packs', data);
     });
 
     socket.on('chat message', (msg) => {
@@ -76,7 +79,16 @@ io.on('connection', (socket) => {
     });
 
 
-    socket.on("begin-game", () => {
+    socket.on("begin-game", (packStates) => {
+        let enabledPacks = [];
+        packStates.forEach(item => {
+           if(item.checked){
+               enabledPacks.push(item.name)
+           }
+        });
+        const gameDeck = new Deck(enabledPacks)
+        game.deck = gameDeck
+        io.emit("hide-waiting-overlay");
         game.setGamePhase("submitting"); //begins game
     });
 
@@ -147,11 +159,12 @@ io.on('connection', (socket) => {
 });
 
 class Deck { //deck object
-    constructor(...selectedPacks) { //given all inputted packs
+    constructor(selectedPacks) { //given all inputted packs
         this.whiteDeck = []; //all white card objects
         this.blackDeck = []; //all black card objects
         this.whiteDiscard = []; //used white cards
         this.blackDiscard = []; //used black cards
+        console.log(selectedPacks)
 
         selectedPacks.forEach(pack => { //for each selected pack
             allWhiteCards[pack].forEach(white => { //for white text component
@@ -224,12 +237,13 @@ class Player { //player object
         while(this.hand.length < 10) { //draw white cards until hand length equals seven
             this.hand.push(game.deck.drawWhite());
         }
+        io.emit('update-hand', (this.hand))
     }
 }
 
 class Game {
-    constructor(deck) { //game object (created when file is ran)
-        this.deck = deck; //deck object
+    constructor() { //game object (created when file is ran)
+        this.deck = []; //deck object
         this.players = []; //list of player objects for easier access
         this.playerLibrary = {}; //library of players indexed by socket id
         this.czarIndex = 0; //position in the players list of the current czar
@@ -240,7 +254,6 @@ class Game {
     addPlayer(player) { //adds and updates given player object
         this.players.push(player); //push player object to game array
         this.playerLibrary[player.id] = player; //add to player library as socket id
-        player.topUpCards(this.deck); //top up player cards
         updateClientPlayerLists(); //signals to all clients to update player list
         hasFirstPlayerJoined = true; //used to determine first player to join (admin/first czar)
     }
@@ -283,6 +296,8 @@ class Game {
         this.currentBlackCard = this.deck.drawBlack(); //draw new black card
         game.players.forEach(player => {
             player.justWon = false;
+            player.topUpCards();
+            console.log(player.hand)
         });
         game.selectNextCzar(); //assign new card czar
         hasFirstTurnStarted = true; //checks if this is the first turn
@@ -313,9 +328,8 @@ function updateClientPlayerLists(){
     io.emit("updatePlayerList", (game.players)); //send player list to all clients
 }
 
-const gameDeck = new Deck("builtin", "brainrot", "woke", "dutch", "autism", "stem", "festival"); //create game deck with all packs
-//const gameDeck = new Deck("builtin"); //create deck with family friendly content
-const game = new Game(gameDeck); //create game object using newly created deck object
+//const gameDeck = new Deck("base"); //create deck with family friendly content
+const game = new Game(); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000
     console.log('listening on *:3000');
 });

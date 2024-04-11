@@ -41,8 +41,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
     const waitingOverlay = document.getElementById('waiting-overlay');
+    const wagerLeft = document.getElementById("wager-left");
+    const wagerRight = document.getElementById("wager-right");
+    const wagerValue = document.getElementById("wager-value");
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
+
+    wagerRight.addEventListener("click", function() {
+       socket.emit("increase-wager", 0, (response) =>{
+           wagerValue.textContent = response
+       });
+    });
+
+    wagerLeft.addEventListener("click", function() {
+        socket.emit("decrease-wager", 0, (response) =>{
+            wagerValue.textContent = response
+        });
+    });
 
     for(let i = 1; i<=10; i++){ //get HTML objects for each card
         handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object

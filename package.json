@@ -1,6 +1,6 @@
 {
   "name": "cardsforhumanity",
-  "version": "1.0.0",
+  "version": "0.1.0-alpha",
   "description": "A game based off Cards Against Humanity except I made it so it's generally mediocre.",
   "main": "main.js",
   "scripts": {

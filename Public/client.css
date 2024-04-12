@@ -211,6 +211,10 @@ p {
     text-decoration: underline;
 }
 
+.bold {
+    text-weight: bold;
+}
+
 .white-card-text, .white-card-pack {
     padding-left: 3px;
     margin-bottom: 1px;

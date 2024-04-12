@@ -55,7 +55,11 @@
     "larsony.",
     "microdosing amphetamines."
     "bussy.",
-    "clapping when the plane lands"
+    "clapping when the plane lands",
+    "the male gaze",
+    "the female gays",
+    "yes.",
+    "no."
   ],
 
   "blackCards": [
@@ -142,6 +146,10 @@
     {
       "text": "The snack that smiles back; _____.",
       "blanks": 1
+    },
+    {
+      "text": "Just how white are you?",
+      "blanks: 1
     }
   ]
 }

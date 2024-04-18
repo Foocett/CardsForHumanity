@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const wagerValue = document.getElementById("wager-value");
     const aboutButton = document.getElementById("about");
     const adminButton = document.getElementById("admin-settings");
+    const bugReportButton = document.getElementById("report-a-bug");
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
@@ -69,6 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
     adminButton.addEventListener("click", function() {
        alert("Sorry, this feature is not yet available")
     });
+
+    bugReportButton.addEventListener("click", function() {
+        window.open("https://github.com/Foocett/CardsForHumanity/issues")
+    })
 
     for(let i = 1; i<=10; i++){ //get HTML objects for each card
         handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object

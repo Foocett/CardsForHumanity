@@ -44,19 +44,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const wagerLeft = document.getElementById("wager-left");
     const wagerRight = document.getElementById("wager-right");
     const wagerValue = document.getElementById("wager-value");
+    const aboutButton = document.getElementById("about");
+    const adminButton = document.getElementById("admin-settings");
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
     wagerRight.addEventListener("click", function() {
-       socket.emit("increase-wager", 0, (response) =>{
-           wagerValue.textContent = response
+       socket.emit("increase-wager", 0, (response) => {
+           wagerValue.textContent = response;
        });
+
     });
 
     wagerLeft.addEventListener("click", function() {
-        socket.emit("decrease-wager", 0, (response) =>{
-            wagerValue.textContent = response
+        socket.emit("decrease-wager", 0, (response) => {
+            wagerValue.textContent = response;
         });
+    });
+
+    aboutButton.addEventListener("click", function() {
+       window.open("https://github.com/Foocett/CardsForHumanity/blob/main/README.md")
+    });
+
+    adminButton.addEventListener("click", function() {
+       alert("Sorry, this feature is not yet available")
     });
 
     for(let i = 1; i<=10; i++){ //get HTML objects for each card

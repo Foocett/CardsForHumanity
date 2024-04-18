@@ -1,25 +1,55 @@
 # CardsForHumanity
+__! If you're looking for rules on how to submit cards, they are at the bottom of this file !__
 
 This is a personal project I decided to take on to help myself learn web development.
 To be honest, I never thought I'd make it to this point, and I'm so excited to see where I can take it from here.
+I'm in the process of learning React.js, so at some point, I might do some major reworks with that, but I can't say for sure.
 I owe a lot of thanks to my friends who showed interest in this stupid project of mine; it really helped me push through some of the tougher parts
 
 To play the game, run the [main.js](main.js) file
-Local players can join by connecting to your computer's local IP on port 3000
-The following shell commands can be ran to find your local IP
+Local players can join by connecting to your computer's local IP on port 3000 (this can be changed manually in [main.js](main.js))
 
-Mac/Linux
+If you want to play 
+
+The following shell commands can be run to find your local and global IP addresses
+
+**Mac/Linux**
 ```
 ifconig
 ```
-Windows 
+**Windows** 
 ```
 ipconfig
 ```
 
-Currently, this game doesn't have a proper form of player handling, to players cannot join or leave mid-game,
+Currently, this game doesn't have a proper form of player handling, as players cannot join or leave mid-game,
 just make sure all players are connected before the game is started
 The first player to join the lobby is the admin and has control over selected packs and starting the game
+
+# About
+In its current state, this game has seven unique packs to play with; here's a brief rundown of them all
+
+[Autism Pack](autismPack.json)
+ - I added this one for personal reasons, I am diagnosed with ASD (autism spectrum disorder), and I think it plays a really big role in who I am as a person, so I wanted to add a pack that's targeted specifically towards people like me. At the moment, it's the smallest pack, but I plan on working on it soon.
+
+[Base Pack](basePack.json)
+ - This is really just the general pack for whatever stupid ideas I might have. There aren't really any rules for this pack.
+
+[Brainrot Pack](brainrotPack.json)
+ - This is by far the stupidest pack I have. It speaks for itself, and I will not elaborate.
+
+[Dutch Pack](dutchPack.json)
+ - I can't go into too much detail, but this pack is pretty much just inside jokes from my high school; it's best if you ignore this one.
+
+[Festival Pack](festivalPack.json)
+ - This pack was created by my friend and me, who share an interest in EDM music and whatnot.
+
+[STEM Pack](stemPack.json)
+ - This pack is for anything STEM-related. Personally, I'm a massive nerd who loves programming, math, engineering, etc., so I made this pack to contain all my obscure nerd jokes.
+
+[Woke Pack](wokePack.json)
+ - This pack contains anything that could be political in nature. Personally, I'm a pretty openly progressive person, which definitely shows in some of the cards, but I definitely don't mind bashing both political parties.
+
 
 # Rules
 
@@ -40,3 +70,65 @@ These can be installed with
 ```
 npm install express http socket.io
 ```
+
+# How to Submit Cards
+this guide is for people who don't have a background in GitHub; if you already know what a pull request is, you're probably good to skip this
+
+### 1. **Create a GitHub Account**
+If you don't have one already, sign up at [GitHub](https://github.com).
+
+### 2. **Fork the Repository**
+- Navigate to the main repository page [here](https://github.com/Foocett/CardsForHumanity).
+- Click the **Fork** button at the top right to create your own copy of the repository.
+
+### 3. **Edit the JSON File**
+- In your forked repository, navigate to the Packs folder and choose the json file you wish to edit.
+- Click the file, then click the pencil icon (Edit) to start making changes.
+- Be careful to maintain the formatting of the file, or else everything breaks
+  - White cards are simply comma-separated string values surrounded in quotes; make sure the last card does **not** have a comma after it
+```
+{
+  "whiteCards": [
+    "card text",
+    "other card text",
+    "final card text"
+  ],
+```
+  - Black cards are a bit trickier, as they contain two properties and thus are formatted as objects
+```
+  "blackCards": [
+    {
+     "text": "black card text",
+     "blanks": 1
+    },
+    {
+     "text": "other black card text",
+     "blanks": 1
+    },
+    {
+     "text": "final black card text",
+     "blanks": 1
+    }
+  ]
+}
+```
+  - Funny enough, the game actually does not currently support cards with more than one blank, so idk why I even formatted it like that lol
+
+### 4. **Commit Your Changes**
+- After editing, scroll to the bottom of the page.
+- Provide a brief description of your changes in the **Commit changes** box.
+- Choose "Create a new branch for this commit and start a pull request," then click **Propose changes**.
+
+### 5. **Open a Pull Request**
+- On the new page, click **Create pull request**.
+- Add a suitable title and a detailed description of your changes.
+- Click **Create pull request** again to submit your changes for review.
+
+### 6. **Await Approval**
+ - There's Not a whole lot to say here; cards with content that contains slurs or other clearly malicious language will be removed
+ - To clarify, this game is supposed to be crude and funny, but not at the expense of specific groups or people based solely on their nature.
+
+
+# Final Words
+
+Once again, huge thanks to everyone who's helped out with this; it means the world to me <3

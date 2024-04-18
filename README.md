@@ -29,25 +29,25 @@ The first player to join the lobby is the admin and has control over selected pa
 # About
 In its current state, this game has seven unique packs to play with; here's a brief rundown of them all
 
-[Autism Pack](autismPack.json)
+[Autism Pack](Packs/autismPack.json)
  - I added this one for personal reasons, I am diagnosed with ASD (autism spectrum disorder), and I think it plays a really big role in who I am as a person, so I wanted to add a pack that's targeted specifically towards people like me. At the moment, it's the smallest pack, but I plan on working on it soon.
 
-[Base Pack](basePack.json)
+[Base Pack](Packs/basePack.json)
  - This is really just the general pack for whatever stupid ideas I might have. There aren't really any rules for this pack.
 
-[Brainrot Pack](brainrotPack.json)
+[Brainrot Pack](Packs/brainrotPack.json)
  - This is by far the stupidest pack I have. It speaks for itself, and I will not elaborate.
 
-[Dutch Pack](dutchPack.json)
+[Dutch Pack](Packs/dutchPack.json)
  - I can't go into too much detail, but this pack is pretty much just inside jokes from my high school; it's best if you ignore this one.
 
-[Festival Pack](festivalPack.json)
+[Festival Pack](Packs/festivalPack.json)
  - This pack was created by my friend and me, who share an interest in EDM music and whatnot.
 
-[STEM Pack](stemPack.json)
+[STEM Pack](Packs/stemPack.json)
  - This pack is for anything STEM-related. Personally, I'm a massive nerd who loves programming, math, engineering, etc., so I made this pack to contain all my obscure nerd jokes.
 
-[Woke Pack](wokePack.json)
+[Woke Pack](Packs/wokePack.json)
  - This pack contains anything that could be political in nature. Personally, I'm a pretty openly progressive person, which definitely shows in some of the cards, but I definitely don't mind bashing both political parties.
 
 

@@ -20,8 +20,10 @@ body{
 .div-1 {
     grid-area: 1 / 1 / 2 / 4;
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: repeat(2, 1fr) 3fr repeat(2, 1fr);
     grid-template-rows: 1fr;
+    grid-column-gap: 0;
+    grid-row-gap: 0;
 }
 .div-2 {
     grid-area: 2 / 1 / 3 / 2;
@@ -61,11 +63,12 @@ p {
 #header-div {
     background-color: black;
     fill: black;
+    margin: 0;
     justify-content: center;
     align-content: center;
     justify-items: center;
     align-items: center;
-    box-shadow: 0 3px 15px rgba(75, 74, 74, 0.93); /* Adjusts the x-offset, y-offset, blur radius, and color for the glow */
+    box-shadow: 0 3px 15px rgba(108, 108, 108, 0.93); /* Adjusts the x-offset, y-offset, blur radius, and color for the glow */
 }
 
 #start-turn-button {
@@ -74,13 +77,126 @@ p {
 }
 
 #header-title{
-    grid-area: 1 / 2 / 2 / 3;
     display: inline;
     color: white;
+    width: 100%;
+    height: 100%;
+    margin: 0;
     font-size: xxx-large;
     text-align: center;
     letter-spacing: 5px;
-    margin: 10px;
+    grid-area: 1 / 3 / 2 / 4;
+    border: solid #333333;
+    border-width: 0 3px 0 3px;
+}
+
+.navbar-elements {
+    font-family: "Helvetica Neue", sans-serif ;
+    display: flex;
+    color: white;
+    transition: 500ms;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    border-right: #333333 solid 3px;
+}
+
+.navbar-elements:hover {
+    background: #303338;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+/* Links inside the navbar */
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+    grid-area: 1 / 1 / 2 / 2;
+    float: left;
+    overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit; /* Important for vertical align on mobile phones */
+    margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+#about {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+#navbar-undecided {
+    grid-area: 1 / 4 / 2 / 5;
+}
+
+#admin-settings {
+    grid-area: 1 / 5 / 2 / 6;
+}
+
+#wager-box {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    background: rgba(61, 61, 61, 0.8);
+    border-radius: 5px;
+    padding: 0 5px 3px 5px;
+    grid-area: 1 / 2 / 2 / 3;
 }
 
 #wager-label {
@@ -89,28 +205,18 @@ p {
     display: inline;
 }
 
-#wager-box {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
-    background: rgba(30, 30, 30, 0.8);
-    border-radius: 5px;
-}
-
 #wager-elements {
     display: inline-flex;
     flex-direction: row;
 }
 
-#wager > #wager-elements > p {
+#wager-box > #wager-elements > p {
     display: inline-flex;
     color: white;
     font-size: xx-large;
     height: min-content;
     margin: 5px;
 }
-
 
 
 .tall {

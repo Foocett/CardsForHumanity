@@ -9,7 +9,7 @@
         <script src="client.js"></script>
         <link rel="stylesheet" href="client.css">
     </head>
-    <body>
+    <body id="body">
         <audio src="Assets/vine-boom.mp3" id="vine-boom"></audio>
         <div id="waiting-overlay">
             <div id="overlay-content">
@@ -57,6 +57,48 @@
                 </div>
                 <div id="start-turn-button-div">
                     <button id="start-turn-button">Start Game</button>
+                </div>
+            </div>
+        </div>
+        <div id="admin-overlay">
+            <div id="admin-content">
+                <div id="admin-header">
+                    <p id="admin-title">
+                        Admin Settings
+                    </p>
+                    <p id="admin-subtitle">
+                        bruh moment
+                    </p>
+                </div>
+                <div id="admin-box">
+                    <div id="admin-buttons-1-4" class="admin-buttons-row">
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="nuke">Nuke Game</button>
+                        </div>
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="setScore">Set Score</button>
+                        </div>
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="kickPlayer">Kick Player</button>
+                        </div>
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="forceNextTurn">Force Next Turn</button>
+                        </div>
+                    </div>
+                    <div id="admin-buttons-5-7" class="buttons-row">
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="dumpHand">Dump Hand</button>
+                        </div>
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="warnPlayers">Warn Player</button>
+                        </div>
+                        <div class="admin-buttons">
+                            <button class="admin-command" id="warnLobby">Warn Lobby</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="exit-admin-div">
+                    <button id="exit-admin-button">Close</button>
                 </div>
             </div>
         </div>

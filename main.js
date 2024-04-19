@@ -1,11 +1,13 @@
 //Global thingies
 let clients = {}; //keeps track of connected socket objects
+let clientIDs = [];
 let cardSubmissions = []; //holds received cards
 let submissionCount = 0; //counts card submissions
 let hasFirstPlayerJoined = false; //used to determining czar/admin
 let hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
 let displayTime = 5; //time for cards to be displayed after czar makes a selection (in seconds)
 //import pack files
+const config = require("./config.json");
 const rawBase = require('./Packs/basePack.json'); //base pack
 const rawAutism = require('./Packs/autismPack.json'); //autism pack (based)
 const rawWoke = require('./Packs/wokePack.json'); //woke pack
@@ -48,16 +50,23 @@ app.use(express.static('public'));
 
 //handle client events
 io.on('connection', (socket) => {
-    clients[socket.id] = socket; //add new connection to client list
-    socket.on("requestPlayerData", (username, ackCallback) => { //create and return new player object from new client username
-        const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined); //create player object
-        newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
-        game.addPlayer(newPlayer); //add player object to game.players
-        const responseData = { //data to be returned to player (formatted as object for possible future features)
-            rawPlayerInfo: newPlayer
-        };
-        ackCallback(responseData); //returns new player object to client
-    });
+    const ipAddress = socket.handshake.address;
+    if(!game.bannedIPs.includes(ipAddress)) {
+        clients[socket.id] = socket; //add new connection to client list
+        socket.on("requestPlayerData", (username, ackCallback) => { //create and return new player object from new client username
+            const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined, ipAddress); //create player object
+            console.log('A user connected:', username); //display when socket connection is made
+            clientIDs.push(socket.id)
+            newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
+            game.addPlayer(newPlayer); //add player object to game.players
+            const responseData = { //data to be returned to player (formatted as object for possible future features)
+                rawPlayerInfo: newPlayer
+            };
+            ackCallback(responseData); //returns new player object to client
+        });
+    } else {
+        socket.emit("deactivatePageKicked")
+    }
 
     socket.on('pack-selection', (data) => {
         io.emit('update-packs', data);
@@ -78,6 +87,37 @@ io.on('connection', (socket) => {
         ackCallback(responseData); //returns player data to requesting client
     });
 
+    socket.on("verifyAdminPassword", (input, ackCallback) => { //returns corresponding player object to client
+        ackCallback(input === config.adminPassword);
+    });
+
+    socket.on("nukeGame", () => {
+        Admin.nukeGame();
+    });
+
+    socket.on("setScore", (packet) => {
+        Admin.setPlayerScore(packet.player, packet.val);
+    });
+
+    socket.on("kickPlayer", (player) => {
+        Admin.kickPlayer(player);
+    });
+
+    socket.on("forceNextTurn", () => {
+        Admin.forceNextTurn();
+    });
+
+    socket.on("dumpHand", (player) => {
+        Admin.dumpHand(player);
+    });
+
+    socket.on("warnPlayers", (packet) => {
+        Admin.warnPlayers(packet.players, packet.warningMessage);
+    });
+
+    socket.on("warnLobby", (warningMessage) => {
+        Admin.warnLobby(warningMessage)
+    });
 
     socket.on("increase-wager", (payload, ackCallback) => {
         let player = game.playerLibrary[socket.id];
@@ -102,8 +142,7 @@ io.on('connection', (socket) => {
                enabledPacks.push(item.name)
            }
         });
-        const gameDeck = new Deck(enabledPacks)
-        game.deck = gameDeck
+        game.deck = new Deck(enabledPacks)
         io.emit("hide-waiting-overlay");
         game.setGamePhase("submitting"); //begins game
     });
@@ -161,18 +200,27 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => { //on player disconnect
         let playerIndex;
-        game.players.forEach(player => { //for each player
-            if(player.name === game.playerLibrary[socket.id].name) { //if name matches DC-ing socket's associated name...
-                playerIndex = game.players.indexOf(player); //get index of removed player
+        if(clientIDs.includes(socket.id)) {
+            game.players.forEach(player => { //for each player
+                if (game.playerLibrary[socket.id] != null) {
+                    if (player.name === game.playerLibrary[socket.id].name) { //if name matches DC-ing socket's associated name...
+                        playerIndex = game.players.indexOf(player); //get index of removed player
+                    }
+                }
+            });
+            console.log("A user has disconnected: " + game.playerLibrary[socket.id].name);
+            game.players.splice(playerIndex, 1); //remove player from game list
+            if(game.playerLibrary[socket.id].czar) { //starts next turn if card czar leaves
+                Admin.forceNextTurn(); //technically an issue could arise if player has already submitted however an admin can just start turn manually
             }
-        });
-        game.players.splice(playerIndex, 1); //remove player from game list
-        delete game.playerLibrary[socket.id]; //remove player from game library
-        delete clients[socket.id]; //remove player from global clients library
-        console.log("A user has disconnected: " + socket.id);
-        updateClientPlayerLists(); //push changes to all clients
+            delete game.playerLibrary[socket.id]; //remove player from game library
+            delete clients[socket.id]; //remove player from global clients library
+            updateClientPlayerLists(); //push changes to all clients
+            if(game.playerLibrary.length === undefined) {
+                hasFirstPlayerJoined = false;
+            }
+        }
     });
-    console.log('A user connected:', socket.id); //display when socket connection is made
 });
 
 class Deck { //deck object
@@ -228,7 +276,6 @@ class WhiteCard { //white card object
 class BlackCard { //black card object
     constructor(text, blanks, pack) {
         this.text = text;
-        this.blanks = blanks;
         this.pack = pack;
     }
 
@@ -238,7 +285,7 @@ class BlackCard { //black card object
 }
 
 class Player { //player object
-    constructor(username, id, admin) {
+    constructor(username, id, admin, ip) {
         this.name = username; //inputted player username
         this.id = id; //player socket id
         this.score = 0; //player score
@@ -247,6 +294,7 @@ class Player { //player object
         this.admin = admin; //grants power to "use start game"
         this.justWon = false;
         this.wager = 1;
+        this.ip = ip
     }
 
 
@@ -262,15 +310,18 @@ class Game {
     constructor() { //game object (created when file is ran)
         this.deck = []; //deck object
         this.players = []; //list of player objects for easier access
+        this.usedUsernames = []; //list of usernames for easy access
         this.playerLibrary = {}; //library of players indexed by socket id
         this.czarIndex = 0; //position in the players list of the current czar
         this.czar = 0; //current card czar; will later be set to a player object
         this.currentBlackCard = 0; //current black card; will later be set to black card object
+        this.bannedIPs = [];
     }
 
     addPlayer(player) { //adds and updates given player object
         this.players.push(player); //push player object to game array
         this.playerLibrary[player.id] = player; //add to player library as socket id
+        this.usedUsernames.push(player.name.toLowerCase());
         updateClientPlayerLists(); //signals to all clients to update player list
         hasFirstPlayerJoined = true; //used to determine first player to join (admin/first czar)
     }
@@ -331,7 +382,64 @@ class Game {
             game.setGamePhase("submitting");
         }, (displayTime*1000));
     }
+}
 
+class Admin { //Static commands that can be run from the admin console
+    static nukeGame(){ //completely resets game
+        io.emit("deactivatePage");
+        io.disconnectSockets();
+        clients = {}; //keeps track of connected socket objects
+        cardSubmissions = []; //holds received cards
+        submissionCount = 0; //counts card submissions
+        hasFirstPlayerJoined = false; //used to determining czar/admin
+        hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
+        game = new Game();
+    }
+
+    static setPlayerScore(player, val) { //can be used to manually change a player's score
+        game.players.forEach(playerObj => {
+            if(playerObj.name === player){
+                playerObj.score = val
+            }
+        })
+        updateClientPlayerLists();
+    }
+
+    static kickPlayer(player) {
+        game.players.forEach(playerObj => {
+            if(playerObj.name === player){
+                io.to(playerObj.id).emit("kick")
+                game.bannedIPs.push(playerObj.ip);
+            }
+        });
+    }
+
+    static forceNextTurn() { //throws out current round and starts new round with next czar
+        game.setGamePhase("submission")
+        game.startSubmissionPhase();
+    }
+
+    static dumpHand(player) {
+        game.players.forEach(playerObj => {
+            if(playerObj.name === player){
+                playerObj.hand = [];
+                playerObj.topUpCards();
+                io.to(playerObj.id).emit("forceSelfUpdate");
+            }
+        })
+    }
+
+    static warnPlayers(players, warningMessage) {
+        game.players.forEach(player => {
+            if(players.includes(player.name)){
+                io.to(player.id).emit("triggerAlert", warningMessage);
+            }
+        })
+    }
+
+    static warnLobby(warningMessage) {
+        io.emit("triggerAlert", warningMessage);
+    }
 }
 function getRandom(min, max) { //shortcut function to make my life easier
     //currently I only use this for drawing cards, but I might use it for something else after
@@ -345,8 +453,8 @@ function updateClientPlayerLists(){
 }
 
 //const gameDeck = new Deck("base"); //create deck with family friendly content
-const game = new Game(); //create game object using newly created deck object
+let game = new Game(); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000
     console.log('listening on *:3000');
 });
-module.exports = { Deck, WhiteCard, BlackCard }; // Exporting the classes for use in other files
+module.exports = { Deck, WhiteCard, BlackCard}; // Exporting the classes for use in other files

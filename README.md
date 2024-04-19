@@ -1,4 +1,4 @@
-# CardsForHumanity
+# CardsForHumanity V1.1.0
 __! If you're looking for rules on how to submit cards, they are at the bottom of this file !__
 
 This is a personal project I decided to take on to help myself learn web development.
@@ -6,10 +6,11 @@ To be honest, I never thought I'd make it to this point, and I'm so excited to s
 I'm in the process of learning React.js, so at some point, I might do some major reworks with that, but I can't say for sure.
 I owe a lot of thanks to my friends who showed interest in this stupid project of mine; it really helped me push through some of the tougher parts
 
-To play the game, run the [main.js](main.js) file
-Local players can join by connecting to your computer's local IP on port 3000 (this can be changed manually in [main.js](main.js))
+To play the game, simply run the [main.js](main.js) file
+By default, the admin password is "js is mid", however it is recommended that you change the admin password before hosting a game, this can be done in [config.json](config.json)
+More information can be found about admin commands below
 
-If you want to play 
+Local players can join by connecting to your computer's local IP on port 3000 (this can be changed manually in [main.js](main.js))
 
 The following shell commands can be run to find your local and global IP addresses
 
@@ -21,10 +22,12 @@ ifconig
 ```
 ipconfig
 ```
+If you want to play with people on a non-local network, you need to set up port forwarding on your router, I won't elaborate on how you do that, but it's pretty simple so just google it
 
 Currently, this game doesn't have a proper form of player handling, as players cannot join or leave mid-game,
 just make sure all players are connected before the game is started
 The first player to join the lobby is the admin and has control over selected packs and starting the game
+Note that this 'admin' is different that the admin commands, which are protected by a password set by the server host in [config.json](config.json)
 
 # About
 In its current state, this game has seven unique packs to play with; here's a brief rundown of them all
@@ -69,7 +72,44 @@ This project runs off of [Express](https://github.com/expressjs/expressjs.com), 
 These can be installed with
 ```
 npm install express http socket.io
-```
+``` 
+
+# Admin Commands
+Admin commands were added in v1.1.0
+Here is a brief list of all of them 
+
+### Nuke Game
+ - This command effectively restarts the server, reverting all global variables back to their initial state and force-reloading all players
+ - Inputs:
+   - None
+### Set Score
+ - This command allows a specified player's score to be manually set
+ - Inputs:
+   - Player Name : String
+   - Score Value : Number
+### Kick Player
+  - This command allows a specified player to be kicked and banned from the lobby until the game is reloaded (see Nuke Game)
+  - Inputs: 
+    - Player Name : String
+### Force Next Turn
+  - This command automatically begins the submission phase of the next round, useful for players disconnecting mid-round
+  - Inputs:
+    - None
+### Dump Hand
+  - This command allows a specified player's hand to be completely refreshed
+  - Inputs:
+    - Player : String
+### Warn Player
+  - This command sends a browser alert to all specified players
+  - Inputs:
+    - Players : String (comma separated)
+        - ``"PlayerFoo, PlayerBar"`` 
+        - (note the space after the comma, that's important)
+    - Message : String
+### Warn Lobby
+  - This command Functions exactly the same as warn player, however the message is sent to the whole lobby
+  - Inputs:
+      - Message : String
 
 # How to Submit Cards
 this guide is for people who don't have a background in GitHub; if you already know what a pull request is, you're probably good to skip this
@@ -125,7 +165,7 @@ If you don't have one already, sign up at [GitHub](https://github.com).
 - Click **Create pull request** again to submit your changes for review.
 
 ### 6. **Await Approval**
- - There's Not a whole lot to say here; cards with content that contains slurs or other clearly malicious language will be removed
+ - There's Not a lot to say here; cards with content that contains slurs or other clearly malicious language will be removed
  - To clarify, this game is supposed to be crude and funny, but not at the expense of specific groups or people based solely on their nature.
 
 

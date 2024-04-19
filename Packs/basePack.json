@@ -154,6 +154,10 @@
     {
       "text": "Just how white are you?",
       "blanks": 1
+    },
+    {
+      "text": "And then God said, \"Let There Be _____\"",
+      "blanks": 1
     }
   ]
 }

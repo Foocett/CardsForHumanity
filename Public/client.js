@@ -1,3 +1,4 @@
+const socket = io(); // Connect to the server
 document.addEventListener('DOMContentLoaded', function() {
     let username = prompt("Please enter your username:"); //Prompt for username before loading page content
     while (username === null || username.trim() === "" || username.length >=20 || username.includes("\\")) { //check valid username
@@ -5,13 +6,18 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("Username must be no longer than 20 characters")
         } else if(username.includes("\\")){
             alert("Username cannot contain backslashes")
+        } else if(username.includes(",")){
+            alert("Username cannot contain commas")
+        } else if(username.startsWith(" ")){
+            alert("Username cannot start with a space")
+        } else if(usedUsernames.includes()) {
+
         } else {
             alert("You must enter a username to continue."); //if input is invalid, prompt again
         }
         username = prompt("Please enter your username:");
     }
 
-    const socket = io(); // Connect to the server
     let self; //will be given value after client is initialized with server
     const handCards = document.querySelectorAll(".white-card"); //all cards in hand
     let handElementsText = []; //white card text objects
@@ -27,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let isHovering = false; //used for hover animations
     let wrapCards = false; //Used when displaying submitted cards
     let packButtons = document.querySelectorAll(".pack-input");
-    let hasHand = false
+    let adminButtons = document.querySelectorAll(".admin-command");
 
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
@@ -47,8 +53,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const aboutButton = document.getElementById("about");
     const adminButton = document.getElementById("admin-settings");
     const bugReportButton = document.getElementById("report-a-bug");
+    const adminOverlay = document.getElementById("admin-overlay");
+    const adminCloseButton = document.getElementById("exit-admin-button");
+    const nukeButton = document.getElementById("nuke");
+    const setScoreButton = document.getElementById("setScore");
+    const kickButton = document.getElementById("kickPlayer");
+    const forceTurnButton = document.getElementById("forceNextTurn");
+    const dumpHandButton = document.getElementById("dumpHand");
+    const warnPlayerButton = document.getElementById("warnPlayers");
+    const warnLobbyButton = document.getElementById("warnLobby");
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
+
 
     wagerRight.addEventListener("click", function() {
        socket.emit("increase-wager", 0, (response) => {
@@ -67,12 +83,100 @@ document.addEventListener('DOMContentLoaded', function() {
        window.open("https://github.com/Foocett/CardsForHumanity/blob/main/README.md")
     });
 
+
+
+
     adminButton.addEventListener("click", function() {
-       alert("Sorry, this feature is not yet available")
+       let passwordInput = prompt("Enter Admin Password");
+       socket.emit("verifyAdminPassword", passwordInput, (response) => {
+            if(response) {
+                adminOverlay.style.display = "flex";
+            } else {
+                alert("Sorry, that password is incorrect\nIf you are the host, you can configure the password in config.json");
+            }
+        });
+    });
+
+    adminCloseButton.addEventListener("click", function() {
+        adminOverlay.style.display = 'none';
+    })
+
+    nukeButton.onclick = () => {
+        let warning = prompt("Warning, this will completely reset the server and kick all players\nRe-enter admin password to continue...")
+        socket.emit("verifyAdminPassword", warning, (response) => {
+            if(response) {
+                socket.emit("nukeGame");
+            } else {
+                alert("Incorrect Password");
+            }
+        });
+    }
+
+    setScoreButton.onclick = () => {
+        let player = prompt("Input target player's username: ");
+        let val = prompt("Input score value: ");
+        let packet = {
+            player: player,
+            val: val
+        }
+        socket.emit("setScore", packet);
+    }
+
+    kickButton.onclick = () => {
+        let player = prompt("Input target player's username: ");
+        socket.emit("kickPlayer", player);
+    }
+
+    socket.on('kick', () => {
+        alert("You have been removed from the lobby. The page will now reload.");
+        setTimeout(function() {
+            window.location.reload();
+        }, 2000);  // Delay reload by 3 seconds to allow user to read message.
+    });
+
+    forceTurnButton.onclick = () => {
+        socket.emit("forceNextTurn");
+    }
+
+    dumpHandButton.onclick = () => {
+        let player = prompt("Input target player's username: ");
+        socket.emit("dumpHand", player);
+    }
+
+    warnPlayerButton.onclick = () => {
+        let player = prompt("Input target players' usernames (comma separated): ");
+        let playersList = parseCSV(player);
+        let message = prompt("Input warning message: ");
+        let packet = {
+            players: playersList,
+            warningMessage: message
+        }
+        socket.emit("warnPlayers", packet);
+    }
+
+    warnLobbyButton.onclick = () => {
+        let warningMessage = prompt("Input warning message to be sent to the entire lobby: ");
+        socket.emit("warnLobby", warningMessage)
+    }
+
+    function parseCSV(csvString) { //assumes that commas have spaces after them
+        return  csvString.split(", ");
+    }
+    document.onkeyup = function(e) {
+        e = e || window.event;
+        if (e.keyCode === 27) {
+            if(adminOverlay.style.display === 'flex') {
+                adminOverlay.style.display = 'none';
+            }
+        }
+    }
+
+    socket.on('triggerAlert', (message) => {
+        alert(message);
     });
 
     bugReportButton.addEventListener("click", function() {
-        window.open("https://github.com/Foocett/CardsForHumanity/issues")
+        window.open("https://github.com/Foocett/CardsForHumanity/issues");
     })
 
     for(let i = 1; i<=10; i++){ //get HTML objects for each card
@@ -109,6 +213,29 @@ document.addEventListener('DOMContentLoaded', function() {
         for(let i=0; i<packButtons.length; i++) {
             packButtons[i].checked = data[i];
         }
+    });
+
+    socket.on("forceSelfUpdate", () => {
+        updateSelf();
+    })
+
+    socket.on("deactivatePage", () => {
+        alert("The game has been reset, please refresh your page");
+       document.addEventListener("click", function() {
+           alert("The game has been reset, please refresh your page")
+        });
+        document.addEventListener("keyup", function() {
+            alert("You have been banned from this session")
+        })
+    });
+
+    socket.on("deactivatePageKicked", () => {
+        document.addEventListener("click", function() {
+            alert("You have been banned from this session")
+        });
+        document.addEventListener("keyup", function() {
+            alert("You have been banned from this session")
+        })
     });
 
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
@@ -206,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
             blackText.innerHTML = blackText.textContent.replace(self.hand[i].text, "_____");
         });
     }
-
     function getProperName(name){ //returns the full formatted name of a pack given an inputted shorthand
         switch(name){
             case "brainrot":

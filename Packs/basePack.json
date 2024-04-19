@@ -73,7 +73,12 @@
     "An ungodly quantity of anthrax",
     "PETA",
     "A mesothelioma PSA",
-    "Shamelessly dismissing the amber alert and going about your day"
+    "Shamelessly dismissing the amber alert and going about your day",
+    "MLA Formatted, 12pt, Times New Roman, Double Spaced",
+    "A favor that will \"only take a minute\"",
+    "Holding the flashlight for your dad",
+    "Barbemhimer",
+    "Ze German language"
   ],
 
   "blackCards": [
@@ -167,6 +172,10 @@
     },
     {
       "text": "And then God said, \"Let There Be _____\"",
+      "blanks": 1
+    },
+    {
+      "text": "Damn shawty, you _____",
       "blanks": 1
     }
   ]

@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("Username cannot contain commas")
         } else if(username.startsWith(" ")){
             alert("Username cannot start with a space")
-        } else if(usedUsernames.includes()) {
-
         } else {
             alert("You must enter a username to continue."); //if input is invalid, prompt again
         }
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let isHovering = false; //used for hover animations
     let wrapCards = false; //Used when displaying submitted cards
     let packButtons = document.querySelectorAll(".pack-input");
-    let adminButtons = document.querySelectorAll(".admin-command");
 
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
@@ -163,10 +160,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return  csvString.split(", ");
     }
     document.onkeyup = function(e) {
-        e = e || window.event;
-        if (e.keyCode === 27) {
+        //e = e || window.event;
+        if(e.key === "Escape") {
             if(adminOverlay.style.display === 'flex') {
                 adminOverlay.style.display = 'none';
+            }
+        }
+        if(e.key === "Enter") {
+            if (!startGameButton.disabled && !(waitingOverlay.style.display === "none")) {
+                e.preventDefault();
+                startGameButton.click();
             }
         }
     }
@@ -196,6 +199,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    document.addEventListener("keydown", function(e){
+        let num = parseInt(e.key);
+        if(self.admin && waitingOverlay.style.display !== "none" && typeof(num) === "number") {
+            if(num > 0 && num < packButtons.length+1) {
+                packButtons[num-1].checked = !packButtons[num-1].checked;
+                let buttonStates = [];
+                packButtons.forEach(box => {
+                    buttonStates.push(box.checked);
+                });
+                socket.emit("pack-selection", buttonStates);
+            }
+        }
+    })
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -210,8 +226,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     socket.on('update-packs', (data) => {
+        let noneAreChecked = true;
         for(let i=0; i<packButtons.length; i++) {
             packButtons[i].checked = data[i];
+            if(data[i] && self.admin) {
+                startGameButton.disabled = false;
+                noneAreChecked = false;
+            }
+        }
+        if(self.admin && noneAreChecked) {
+            startGameButton.disabled = true;
         }
     });
 
@@ -240,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
         self = response.rawPlayerInfo; //set self equal to returned player object
+        startGameButton.disabled = true; //deactivate button
         if(self.admin){ //if admin, show start game button
             startGameButton.style.display = "block";
             startGameButton.onclick = () => {
@@ -255,12 +280,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 waitingOverlay.style.display = "none"; //hide after click
             };
         } else {
-            startGameButton.disabled = true; //deactivate button
             packButtons.forEach(button => {
                 button.disabled = true;
             });
         }
     });
+
 
     socket.on("updatePlayerList", (playerInfo) => { //updates list of connected players
         updateConnectedPlayers(playerInfo);

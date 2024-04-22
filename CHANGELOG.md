@@ -1,55 +1,24 @@
-# CHANGELOG V1.1.0
+# CHANGELOG V1.1.1
 
 ## Overview
-  - Added admin window
-  - Added Admin Commands
-  - Major bugfixes with player handling
-  - Changed username requirements
-  - Added cards as usual (this will never not be here lol)
-  - Revamped [README.md](README.md) a lil bit, I think it looks a lot better now
+  - Added keybinds
+  - Major and minor bugfixes
 
+# Keybinds
+  - Rewrote admin menu closing keybind to remove deprecated code
+  - Pack selection form can now be submitted with enter key
+  - Pack selection can now be done with number buttons instead of clicking boxes
 
-# Admin Window
-  - Added the admin window and password protection, found in [config.json](config.json)
-  - The admin window is literally just a clone of the pack selection window but yeah
+# Bugfixes
+  - Fixed bug where pack selection submitting was not activating/deactivating properly
+  - Fixed bug where game breaks if all players leave
+    - Problem arose as server tried to set player.czar property on nonexistent player object
+    - As solution, game now resets (server runs Admin.nuke()) when no players are present in game
 
-# Admin Commands
+# Known Issues
+  - Despite major bugfixes in the last two updates mostly resolving the problem, the server does still occasionally crash when the last player disconnects
+  - Card czar submit button isn't deactivated, clicking doesn't cause problems so only visual
+  - Players joining after game starts are not properly dealt in and are stuck on waiting screen
 
-### Nuke Game
-- This command effectively restarts the server, reverting all global variables back to their initial state and force-reloading all players
-- Inputs:
-    - None
-### Set Score
-- This command allows a specified player's score to be manually set
-- Inputs:
-    - Player Name : String
-    - Score Value : Number
-### Kick Player
-- This command allows a specified player to be kicked and banned from the lobby until the game is reloaded (see Nuke Game)
-- Inputs:
-    - Player Name : String
-### Force Next Turn
-- This command automatically begins the submission phase of the next round, useful for players disconnecting mid-round
-- Inputs:
-    - None
-### Dump Hand
-- This command allows a specified player's hand to be completely refreshed
-- Inputs:
-    - Player : String
-### Warn Player
-- This command sends a browser alert to all specified players
-- Inputs:
-    - Players : String (comma separated)
-        - ``"PlayerFoo, PlayerBar"``
-        - (note the space after the comma, that's important)
-    - Message : String
-### Warn Lobby
-- This command Functions exactly the same as warn player, however the message is sent to the whole lobby
-- Inputs:
-    - Message : String
-
-# Other Bugfixes
-  - Fixed bug where players leaving causes server crash (idk how it took me this long to fix, it was one line)
-  - Fixed a bug that arose while implementing admin features where game does not correctly track player counts
-  - Made it so that socket.on("disconnect") is only active when socket.id has been initialized as a player object before
-  - Fixed a bug so that admin role can be reassigned if player count reaches zero
+# Likely coming in next few updates
+  - More keybinds for choosing and submitting cards, mice are for losers anyway lmao

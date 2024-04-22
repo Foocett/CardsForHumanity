@@ -42,6 +42,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
+io.disconnectSockets()
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/client.html');
 });
@@ -60,7 +61,8 @@ io.on('connection', (socket) => {
             newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
             game.addPlayer(newPlayer); //add player object to game.players
             const responseData = { //data to be returned to player (formatted as object for possible future features)
-                rawPlayerInfo: newPlayer
+                rawPlayerInfo: newPlayer,
+                gameStarted: hasFirstTurnStarted
             };
             ackCallback(responseData); //returns new player object to client
         });
@@ -357,7 +359,11 @@ class Game {
             this.czarIndex = (this.czarIndex + 1) % this.players.length; //iterate czar index, jump to zero if at end of list
             this.czar = this.players[this.czarIndex]; //set game.czar to new czar player object
         }
-        this.czar.czar = true; //set player.czar to true for selected player
+        if(this.czar != null) {
+            this.czar.czar = true; //set player.czar to true for selected player
+        } else {
+            Admin.nukeGame();
+        }
     }
 
     startSubmissionPhase() {
@@ -386,6 +392,7 @@ class Game {
 
 class Admin { //Static commands that can be run from the admin console
     static nukeGame(){ //completely resets game
+        console.log("Game Nuked")
         io.emit("deactivatePage");
         io.disconnectSockets();
         clients = {}; //keeps track of connected socket objects
@@ -393,6 +400,7 @@ class Admin { //Static commands that can be run from the admin console
         submissionCount = 0; //counts card submissions
         hasFirstPlayerJoined = false; //used to determining czar/admin
         hasFirstTurnStarted = false; //used to maintain properties between waiting phase and first turn
+        delete game.deck;
         game = new Game();
     }
 

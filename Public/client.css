@@ -247,7 +247,7 @@ p {
     border-color: black;
     border-width: 2px;
     justify-content: flex-start;
-
+    overflow-y: scroll;
 }
 
 #template-card{
@@ -368,6 +368,7 @@ p {
     border-style: solid;
     background: #878C7FFF;
     backdrop-filter: blur(10px);
+    overflow: scroll;
 }
 
 .player-score-item {
@@ -375,7 +376,6 @@ p {
     justify-content: space-between;
     border-style: hidden;
     border-bottom: solid black;
-    overflow: hidden;
     border-left: solid black;
 }
 
@@ -414,6 +414,7 @@ p {
     border-color: black;
     border-style: solid;
     border-top: hidden;
+    border-bottom: hidden;
 }
 
 #chat {
@@ -493,12 +494,7 @@ p {
     background-color: #7a7e85;
     align-content: center;
     padding-left: 5px;
-}
-
-#page-footer {
-    background-color: #7a7e85;
-    align-content: center;
-    padding-left: 5px;
+    border-top: solid black 1px;
 }
 
 #footer-link {

@@ -63,17 +63,22 @@ document.addEventListener('DOMContentLoaded', function() {
     submitButton.disabled = true; //disable submit button by default
 
 
-    wagerRight.addEventListener("click", function() {
-       socket.emit("increase-wager", 0, (response) => {
-           wagerValue.textContent = response;
-       });
-
+    wagerRight.addEventListener("click", function(e) {
+        e.preventDefault()
+        if(!hasCardBeenSubmitted) {
+            socket.emit("increase-wager", 0, (response) => {
+                wagerValue.textContent = response.toString();
+            });
+        }
     });
 
-    wagerLeft.addEventListener("click", function() {
-        socket.emit("decrease-wager", 0, (response) => {
-            wagerValue.textContent = response;
-        });
+    wagerLeft.addEventListener("click", function(e) {
+        e.preventDefault()
+        if(!hasCardBeenSubmitted) {
+            socket.emit("decrease-wager", 0, (response) => {
+                wagerValue.textContent = response.toString();
+            });
+        }
     });
 
     aboutButton.addEventListener("click", function() {
@@ -85,10 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     adminButton.addEventListener("click", function() {
        let passwordInput = prompt("Enter Admin Password");
+       console.log(passwordInput)
        socket.emit("verifyAdminPassword", passwordInput, (response) => {
             if(response) {
                 adminOverlay.style.display = "flex";
-            } else {
+            } else if(passwordInput !== null) {
                 alert("Sorry, that password is incorrect\nIf you are the host, you can configure the password in config.json");
             }
         });
@@ -388,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             mySubmission = true
             socket.emit('submit-cards', payload, (response) => { //send cards to server
+                wagerValue.textContent = "1";
                 self = response.rawPlayerInfo; //update self based on server callback
                 populateCardsFromHand(self); //reset cards in hand
                 submittedText = selectedText; //set global submitted text to currently selected text

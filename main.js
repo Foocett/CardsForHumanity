@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
 
     socket.on("increase-wager", (payload, ackCallback) => {
         let player = game.playerLibrary[socket.id];
-        if(player.score >1 && player.wager < player.score) {
+        if(player.score > 1 && player.wager < player.score) {
             player.wager++;
         }
         ackCallback(player.wager)
@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
 
     socket.on("decrease-wager", (payload, ackCallback) => {
         let player = game.playerLibrary[socket.id];
-        if(player.score > 1) {
+        if(player.score > 1 && player.wager > 1 ) {
             player.wager--;
         }
         ackCallback(player.wager)
@@ -150,6 +150,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
+        game.playerLibrary[socket.id].wager = 1;
         submissionCount++; //add to total submitted count
         let newCard = new WhiteCard(payload.submission, payload.submissionPack);
         newCard.setOwner(game.playerLibrary[socket.id]);
@@ -296,7 +297,7 @@ class Player { //player object
         this.admin = admin; //grants power to "use start game"
         this.justWon = false;
         this.wager = 1;
-        this.ip = ip
+        this.ip = ip;
     }
 
 
@@ -406,8 +407,8 @@ class Admin { //Static commands that can be run from the admin console
 
     static setPlayerScore(player, val) { //can be used to manually change a player's score
         game.players.forEach(playerObj => {
-            if(playerObj.name === player){
-                playerObj.score = val
+            if(playerObj.name === player && typeof(parseInt(val)) === "number"){
+                playerObj.score = parseInt(val);
             }
         })
         updateClientPlayerLists();
@@ -465,4 +466,4 @@ let game = new Game(); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000
     console.log('listening on *:3000');
 });
-module.exports = { Deck, WhiteCard, BlackCard}; // Exporting the classes for use in other files
+module.exports = {Deck, WhiteCard, BlackCard, Game, Player}; // Exporting the classes for use in other files

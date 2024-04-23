@@ -3,8 +3,9 @@
 
 This is a personal project I decided to take on to help myself learn web development.
 To be honest, I never thought I'd make it to this point, and I'm so excited to see where I can take it from here.
-I'm in the process of learning React.js, so at some point, I might do some major reworks with that, but I can't say for sure.
-I owe a lot of thanks to my friends who showed interest in this stupid project of mine; it really helped me push through some of the tougher parts
+As of the most recent update, this project consists of ~2000 lines of code (closer to 3000 if you count extra files like card packs), 
+and I owe a lot of thanks to my friends who showed interest in this stupid project of mine; it really helped me push through some of 
+the tougher parts, because there were some moments when I didn't think I was going to be able to do it
 
 To play the game, simply run the [main.js](main.js) file
 By default, the admin password is "js is mid", however it is recommended that you change the admin password before hosting a game, this can be done in [config.json](config.json)
@@ -167,6 +168,16 @@ If you don't have one already, sign up at [GitHub](https://github.com).
 ### 6. **Await Approval**
  - There's Not a lot to say here; cards with content that contains slurs or other clearly malicious language will be removed
  - To clarify, this game is supposed to be crude and funny, but not at the expense of specific groups or people based solely on their nature.
+
+
+# Known Issues
+- Despite major bugfixes in the last two updates mostly resolving the problem, the server does still occasionally crash when the last player disconnects
+- Card czar submit button isn't deactivated, clicking doesn't cause problems so only visual
+- Players joining after game starts are not properly dealt in and are stuck on waiting screen
+
+# Likely coming in next few update(s)
+- More keybinds for choosing and submitting cards, mice are for losers anyway lmao
+- Themes (maybe idk?)
 
 
 # Final Words

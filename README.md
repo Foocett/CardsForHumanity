@@ -1,6 +1,6 @@
 # CardsForHumanity V1.2.0
-### __Submit Cards [HERE](https://forms.gle/JD7iUcmttC9GB4gU6) !__
-(Read submission rules at the bottom of this file before submitting)
+### __Suggest Features [HERE](https://forms.gle/wMJ3wAkWuBf9xk5c6)!__
+### __Submit Cards [HERE](https://forms.gle/JD7iUcmttC9GB4gU6)!__ (Read submission rules at the bottom of this file before submitting)
 _____
 
 This is a personal project I decided to take on to help myself learn web development.
@@ -52,10 +52,10 @@ For help or assistance, contact me at ajfawcett@gmail.com
     - Windows: ```ipconfig```
   - You're going to see a lot of information when you do this, but the bit you're looking for is 'inet'; it should look something like this, somewhat near the top
     - <img width="437" alt="Screenshot 2024-04-24 at 1 42 32 PM" src="https://github.com/Foocett/CardsForHumanity/assets/141191160/b1d08fbc-7b50-44f5-91cf-78cf0fcfc74f">
-  - The first number is the one we're after and it's the address off the server that players need to connect to
+  - The first number is the one we're after, and it's the address off the server that players need to connect to
   - In the case of that screenshot, the address you need to connect to will be ```172.16.53.216:3000```, connect to it like any other website by putting it in your browser search bar
   - Lucky for you, if you're the one hosting the server, you might be able to connect to the server by putting ```localhost:3000``` in your search bar, but all other players need to use the full IP
-  - Keep in mind this only works for devices on the same WiFi network as you, if you would like to play with people on different networks, you will have to set up a port forwarding rule on your router, this shouldn't be too technical but I'll spare the details here because they're slightly different for every router; google has very good guides on how to do it though.
+  - Keep in mind this only works for devices on the same Wi-Fi network as you, if you would like to play with people on different networks, you will have to set up a port forwarding rule on your router, this shouldn't be too technical, but I'll spare the details here because they're slightly different for every router; Google has very good guides on how to do it though.
 
 ### 8) Extra bits for server hosts
   - By default, the admin password is "js is mid", however it is recommended that you change the admin password before hosting a game, this can be done in [config.json](config.json), you can just open it in any text editor

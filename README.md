@@ -148,8 +148,9 @@ Here is a brief list of all of them
   - Inputs:
       - Message : String
 
-# How to Submit Cards
-this guide is for people who don't have a background in GitHub; if you already know what a pull request is, you're probably good to skip this
+# How to Submit Cards (manually)
+You can submit cards through the Google form at the top of this file, alternatively, for adding multiple cards, you can fork the
+GitHub repository and add multiple cards at once, here's a short guide on how to do that
 
 ### 1. **Create a GitHub Account**
 If you don't have one already, sign up at [GitHub](https://github.com).

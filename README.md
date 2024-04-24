@@ -1,5 +1,7 @@
 # CardsForHumanity V1.2.0
-### __! If you're looking for rules on how to submit cards, they are at the bottom of this file !__
+### __Submit Cards [HERE](https://forms.gle/JD7iUcmttC9GB4gU6) !__
+(Read submission rules at the bottom of this file before submitting)
+_____
 
 This is a personal project I decided to take on to help myself learn web development.
 To be honest, I never thought I'd make it to this point, and I'm so excited to see where I can take it from here.

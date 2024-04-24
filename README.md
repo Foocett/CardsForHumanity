@@ -1,4 +1,4 @@
-# CardsForHumanity V1.1.0
+# CardsForHumanity V1.2.0
 ### __! If you're looking for rules on how to submit cards, they are at the bottom of this file !__
 
 This is a personal project I decided to take on to help myself learn web development.
@@ -7,23 +7,57 @@ As of the most recent update, this project consists of ~2000 lines of code (clos
 and I owe a lot of thanks to my friends who showed interest in this stupid project of mine; it really helped me push through some of 
 the tougher parts, because there were some moments when I didn't think I was going to be able to do it
 
-To play the game, simply run the [main.js](main.js) file
-By default, the admin password is "js is mid", however it is recommended that you change the admin password before hosting a game, this can be done in [config.json](config.json)
+# How To Play!
+For help or assistance, contact me at ajfawcett@gmail.com
+
+### 1) Download Node.js and run the installer
+  - Download for Mac x64 [Here](https://nodejs.org/dist/v20.12.2/node-v20.12.2.pkg)
+  - Download for Windows x64 [Here](https://nodejs.org/dist/v20.12.2/node-v20.12.2-x64.msi)
+  - If you have trouble with those, view all download options [Here](https://nodejs.org/en/download)
+
+### 2) Install The Latest Release From GitHub
+  - Navigate to the latest release [Here]
+  - (https://github.com/Foocett/CardsForHumanity(https://github.com/Foocett/CardsForHumanity/releases/tag/v1.1.0))
+
+### 3) Scroll to the bottom and download src.zip, then unzip the file
+<img width="1218" alt="Screenshot 2024-04-24 at 12 58 48 PM" src="https://github.com/Foocett/CardsForHumanity/assets/141191160/7408308c-a70f-425f-97a3-e958d8a7f354">
+
+### 4) Open Terminal or Command Prompt
+ - On Mac
+   - Open spotlight search with command + space
+   - Search for Terminal
+ - On Windows
+   - Open search with window key
+   - Type "cmd" and hit enter
+
+### 5) Navigate to Cards For Humanity Folder
+- This process is basically the same on Windows and Mac
+  - use the "cd" command (short for current directory) to navigate to the app folder
+  - If the app folder is still in your Downloads folder, your command should look something like this
+  - ```cd Downloads/CardsForHumanity-1.2.0 ```
+  - More info about the cd command can be found [Here](https://tutorials.codebar.io/command-line/introduction/tutorial.html#:~:text=The%20cd%20command%20allows%20you,%24%20ls)
+
+### 6) Run the server file
+  - Once you're in the folder, run this command
+  - ```Node Main.js```
+  - If it worked it should return ```"Listening on *:3000```
+
+### 7) Connect to the Server
+  - Players can connect to the lobby by putting in your device's local IP address followed by :3000
+  - To find your IP address, open a NEW instance of terminal (it won't work in the one you already have open) and run the following commands
+  - Local players can join by connecting to your computer's local IP on port 3000 (this can be changed manually in [main.js](main.js))
+    - Mac/Linux:  ```ifconig```
+    - Windows: ```ipconfig```
+  - You're going to see a lot of information when you do this, but the bit you're looking for is 'inet'; it should look something like this, somewhat near the top
+    - <img width="437" alt="Screenshot 2024-04-24 at 1 42 32 PM" src="https://github.com/Foocett/CardsForHumanity/assets/141191160/b1d08fbc-7b50-44f5-91cf-78cf0fcfc74f">
+  - The first number is the one we're after and it's the address off the server that players need to connect to
+  - In the case of that screenshot, the address you need to connect to will be ```172.16.53.216:3000```, connect to it like any other website by putting it in your browser search bar
+  - Lucky for you, if you're the one hosting the server, you might be able to connect to the server by putting ```localhost:3000``` in your search bar, but all other players need to use the full IP
+  - Keep in mind this only works for devices on the same WiFi network as you, if you would like to play with people on different networks, you will have to set up a port forwarding rule on your router, this shouldn't be too technical but I'll spare the details here because they're slightly different for every router; google has very good guides on how to do it though.
+
+### 8) Extra bits for server hosts
+  - By default, the admin password is "js is mid", however it is recommended that you change the admin password before hosting a game, this can be done in [config.json](config.json), you can just open it in any text editor
 More information can be found about admin commands below
-
-Local players can join by connecting to your computer's local IP on port 3000 (this can be changed manually in [main.js](main.js))
-
-The following shell commands can be run to find your local and global IP addresses
-
-**Mac/Linux**
-```
-ifconig
-```
-**Windows** 
-```
-ipconfig
-```
-If you want to play with people on a non-local network, you need to set up port forwarding on your router, I won't elaborate on how you do that, but it's pretty simple so just google it
 
 Currently, this game doesn't have a proper form of player handling, as players cannot join or leave mid-game,
 just make sure all players are connected before the game is started

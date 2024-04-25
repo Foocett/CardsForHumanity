@@ -1,5 +1,6 @@
 const socket = io(); // Connect to the server
 document.addEventListener('DOMContentLoaded', function() {
+    populateThemeDropdown();
     let username = prompt("Please enter your username:"); //Prompt for username before loading page content
     while (username === null || username.trim() === "" || username.length >=20 || username.includes("\\")) { //check valid username
         if(username.length >=20) {
@@ -49,9 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const wagerValue = document.getElementById("wager-value");
     const aboutButton = document.getElementById("about");
     const adminButton = document.getElementById("admin-settings");
-    const bugReportButton = document.getElementById("report-a-bug");
+    const themesButton = document.getElementById("themes");
     const adminOverlay = document.getElementById("admin-overlay");
     const adminCloseButton = document.getElementById("exit-admin-button");
+    const themeCloseButton = document.getElementById("exit-theme-button");
     const nukeButton = document.getElementById("nuke");
     const setScoreButton = document.getElementById("setScore");
     const kickButton = document.getElementById("kickPlayer");
@@ -59,6 +61,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dumpHandButton = document.getElementById("dumpHand");
     const warnPlayerButton = document.getElementById("warnPlayers");
     const warnLobbyButton = document.getElementById("warnLobby");
+    const themeOverlay = document.getElementById("theme-overlay");
+    const themeDropdown = document.getElementById("theme-select");
+    themeDropdown.onchange = function() {
+        loadTheme(this.value)
+    }
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
@@ -70,6 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 wagerValue.textContent = response.toString();
             });
         }
+    });
+
+    themesButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        themeOverlay.style.display = "flex";
     });
 
     wagerLeft.addEventListener("click", function(e) {
@@ -90,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     adminButton.addEventListener("click", function() {
        let passwordInput = prompt("Enter Admin Password");
-       console.log(passwordInput)
        socket.emit("verifyAdminPassword", passwordInput, (response) => {
             if(response) {
                 adminOverlay.style.display = "flex";
@@ -103,6 +114,11 @@ document.addEventListener('DOMContentLoaded', function() {
     adminCloseButton.addEventListener("click", function() {
         adminOverlay.style.display = 'none';
     })
+
+    themeCloseButton.addEventListener("click", function() {
+        themeOverlay.style.display = 'none';
+    })
+
 
     nukeButton.onclick = () => {
         let warning = prompt("Warning, this will completely reset the server and kick all players\nRe-enter admin password to continue...")
@@ -171,6 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if(adminOverlay.style.display === 'flex') {
                 adminOverlay.style.display = 'none';
             }
+            if(themeOverlay.style.display === 'flex') {
+                themeOverlay.style.display = 'none';
+            }
         }
         if(e.key === "Enter") {
             if (!startGameButton.disabled && !(waitingOverlay.style.display === "none")) { //If the start button is clickable and overlay is visible
@@ -183,10 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.on('triggerAlert', (message) => {
         alert(message);
     });
-
-    bugReportButton.addEventListener("click", function() {
-        window.open("https://github.com/Foocett/CardsForHumanity/issues");
-    })
 
     for(let i = 1; i<=10; i++){ //get HTML objects for each card
         handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object
@@ -206,10 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    /*
-    * TODO: - Submit on enter button press
-    *  - Submit on space bar press also?
-    * */
     document.addEventListener("keydown", function(e){
         let num = parseInt(e.key);
         if(self.admin && waitingOverlay.style.display !== "none" && typeof(num) === "number") { // if admin and waiting overlay is visible and button pressed is a number
@@ -331,9 +342,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         updateSelf();
 
-        /*
-         * FIXME: - Submit Button doesn't deactivate for czar
-         */
 
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
@@ -345,6 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
+        submitButton.disabled = true;
         for(let i = 0; i<10;i++){ //for each of ten cards
             handElementsText[i].textContent = self.hand[i].text; //set text to card.text
             handElementsPack[i].textContent = getProperName(self.hand[i].pack); //set pack to card.pack's full name
@@ -613,4 +622,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const thatMomentWhen = () => { vineBoom.play(); }
+
+    let themesLib = {}
+    function populateThemeDropdown() {
+        fetch('themes.json')
+            .then(response => response.json())
+            .then(themes => {
+
+                console.log(themes)
+                const lightOptions = document.getElementById("light-optgroup");
+                const darkOptions = document.getElementById("dark-optgroup");
+                for(let key in themes) {
+                    let theme = themes[key];
+                    const newOption = document.createElement("option");
+                    newOption.textContent = theme["name"];
+                    if(theme["category"] === "dark"){
+                        darkOptions.appendChild(newOption);
+                    } else {
+                        lightOptions.appendChild(newOption);
+                    }
+                }
+            });
+    }
+
+
+    function loadTheme(themeName) {
+        fetch('./themes.json')
+            .then(response => response.json())
+            .then(themes => {
+                let theme = themes[themeName];
+                document.documentElement.style.setProperty('--themeGradient', theme["themeGradient"]);
+                document.documentElement.style.setProperty('--activeBefore', theme["activeBefore"]);
+                document.documentElement.style.setProperty('--buttonHover', theme["buttonHover"]);
+                document.documentElement.style.setProperty('--darkeningFactor', theme["darkeningFactor"]);
+
+
+            })
+            .catch(error => console.error('Error loading the themes:', error));
+    }
 });

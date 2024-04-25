@@ -213,9 +213,7 @@ If you don't have one already, sign up at [GitHub](https://github.com).
 - Players joining after game starts are not properly dealt in and are stuck on waiting screen
 
 # Likely coming in next few update(s)
-- More keybinds for choosing and submitting cards, mice are for losers anyway lmao
-- Themes (maybe idk?)
-
+- Waiting player queue
 
 # Final Words
 

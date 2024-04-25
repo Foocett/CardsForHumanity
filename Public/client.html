@@ -9,10 +9,10 @@
         <script src="client.js"></script>
         <link rel="stylesheet" href="client.css">
     </head>
-    <body id="body">
+    <body id="body" class="gradientBG">
         <audio src="Assets/vine-boom.mp3" id="vine-boom"></audio>
         <div id="waiting-overlay">
-            <div id="overlay-content">
+            <div id="overlay-content" class="gradientBG">
                 <div id="waiting-header">
                     <p id="waiting-overlay-title">
                         Cards <span class="underlined">For</span> Humanity
@@ -22,7 +22,7 @@
                     </p>
                 </div>
                 <div id="pack-selection-box">
-                    <div id="buttons-1-4" class="buttons-row">
+                    <div id="top-pack-buttons" class="buttons-row">
                         <div class="pack-button">
                             <input type="checkbox" class="pack-input" id="autism">
                             <label for="autism">Autism Pack</label>
@@ -40,7 +40,7 @@
                             <label for="dutch">Dutch Pack</label>
                         </div>
                     </div>
-                    <div id="buttons-5-7" class="buttons-row">
+                    <div id="bottom-pack-buttons" class="buttons-row">
                         <div class="pack-button">
                             <input type="checkbox" class="pack-input" id="festival">
                             <label for="festival">Festival Pack</label>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div id="admin-overlay">
-            <div id="admin-content">
+            <div id="admin-content" class="gradientBG">
                 <div id="admin-header">
                     <p id="admin-title">
                         Admin Settings
@@ -71,7 +71,7 @@
                     </p>
                 </div>
                 <div id="admin-box">
-                    <div id="admin-buttons-1-4" class="admin-buttons-row">
+                    <div id="top-admin-buttons" class="admin-buttons-row">
                         <div class="admin-buttons">
                             <button class="admin-command" id="nuke">Nuke Game</button>
                         </div>
@@ -85,7 +85,7 @@
                             <button class="admin-command" id="forceNextTurn">Force Next Turn</button>
                         </div>
                     </div>
-                    <div id="admin-buttons-5-7" class="buttons-row">
+                    <div id="bottom-admin-buttons" class="buttons-row">
                         <div class="admin-buttons">
                             <button class="admin-command" id="dumpHand">Dump Hand</button>
                         </div>
@@ -99,6 +99,24 @@
                 </div>
                 <div id="exit-admin-div">
                     <button id="exit-admin-button">Close</button>
+                </div>
+            </div>
+        </div>
+        <div id="theme-overlay">
+            <div id="theme-content" class="gradientBG">
+                <div id="theme-header">
+                    <label for="theme-select" id="theme-title">
+                        Themes
+                    </label>
+                </div>
+                <select id="theme-select">
+                    <optgroup label="Dark Themes" id="dark-optgroup">
+                    </optgroup>
+                    <optgroup label="Light Themes" id="light-optgroup">
+                    </optgroup>
+                </select>
+                <div id="exit-theme-div">
+                    <button id="exit-theme-button">Close</button>
                 </div>
             </div>
         </div>
@@ -117,8 +135,8 @@
             <p id="header-title">
                 Cards <span id="for-span">For</span> Humanity
             </p>
-            <div class="navbar-elements" id="report-a-bug">
-                Report a Bug
+            <div class="navbar-elements" id="themes">
+                Themes
             </div>
             <div class="navbar-elements" id="admin-settings">
                 Admin Settings
@@ -196,12 +214,12 @@
         <div id="chat" class="div-7">
             <div id="messages"></div>
             <form id="form" action="">
-                <label for="input"></label><input id="input" placeholder="chat" autocomplete="off" /><button>Send</button>
+                <label for="input"></label><input id="input" placeholder="Chat" autocomplete="off" /><button>Send</button>
             </form>
         </div>
         <div id="page-footer" class="div-8">
-            <a id="footer-link" href="https://github.com/Foocett/CardsForHumanity" target="_blank">
-                Cards For Humanity
+            <a id="footer-link" href="https://github.com/Foocett/CardsForHumanity/issues" target="_blank">
+                Report a Bug
             </a>
         </div>
     </body>

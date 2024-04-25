@@ -9,6 +9,7 @@
   - Rewrote admin menu closing keybind to remove deprecated code
   - Pack selection form can now be submitted with enter key
   - Pack selection can now be done with number buttons instead of clicking boxes
+  - Card submission can now be done with the enter button
 
 # Bugfixes
   - Fixed bug where pack selection submitting was not activating/deactivating properly
@@ -24,6 +25,9 @@
  - Added top border to page footer
  - Changed card submission container to scroll on overflow
  - Changed player/score container to scroll on overflow
+ - Complete color overhaul, background is now based on a single gradient on the body object
+ - Changed player score objects to take on a transparent color instead of hard coded grey
+ - Added button design, will be changing color soon dw
 
 # Known Issues
   - Despite major bugfixes in the last two updates mostly resolving the problem, the server does still occasionally crash when the last player disconnects

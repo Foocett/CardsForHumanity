@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         if(e.key === "Enter") {
-            if (!startGameButton.disabled && !(waitingOverlay.style.display === "none")) {
+            if (!startGameButton.disabled && !(waitingOverlay.style.display === "none")) { //If the start button is clickable and overlay is visible
                 e.preventDefault();
                 startGameButton.click();
             }
@@ -205,9 +205,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+
+    /*
+    * TODO: - Submit on enter button press
+    *  - Submit on space bar press also?
+    * */
     document.addEventListener("keydown", function(e){
         let num = parseInt(e.key);
-        if(self.admin && waitingOverlay.style.display !== "none" && typeof(num) === "number") {
+        if(self.admin && waitingOverlay.style.display !== "none" && typeof(num) === "number") { // if admin and waiting overlay is visible and button pressed is a number
             if(num > 0 && num < packButtons.length+1) {
                 packButtons[num-1].checked = !packButtons[num-1].checked;
                 let buttonStates = [];
@@ -216,6 +221,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 socket.emit("pack-selection", buttonStates);
             }
+        }
+        if(e.key === "Enter" && !submitButton.disabled) {
+            submitButton.click();
         }
     })
 
@@ -297,6 +305,14 @@ document.addEventListener('DOMContentLoaded', function() {
         updateConnectedPlayers(playerInfo);
     });
 
+
+    /*
+     * FIXME: - Auto hide overlay if game has already started
+     */
+
+    /*
+     * TODO: - After fixing above issue, create mid-game player queue
+     */
     socket.on("hide-waiting-overlay", ()=> {
         waitingOverlay.style.display = "none";
     })
@@ -314,6 +330,10 @@ document.addEventListener('DOMContentLoaded', function() {
             card.remove();
         });
         updateSelf();
+
+        /*
+         * FIXME: - Submit Button doesn't deactivate for czar
+         */
 
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
@@ -457,6 +477,10 @@ document.addEventListener('DOMContentLoaded', function() {
             submittedPublicCardElements.push(submittedCard); //add to element list
             submittedPublicTextElements.push(cardText);
 
+
+            /*
+             * TODO: - If clicked card is already selected, deselect card
+             */
             submittedCard.addEventListener('click', function() {
                 if(this.classList.contains('clickable')){
                     selectedIndex = i;
@@ -536,13 +560,13 @@ document.addEventListener('DOMContentLoaded', function() {
             newPlayerObjectUsername.textContent = playerInfo[i].name; //set username text content
             newPlayerObjectScore.textContent = playerInfo[i].score; //set score text content
             if(i % 2 === 1)  { //change color every other iteration (disabled right now, might add back later)
-                newPlayerObject.style.backgroundColor = "#cfcfd3";
+                newPlayerObject.style.backgroundColor = "rgba(0,0,0,.2)";
             } else {
-                newPlayerObject.style.backgroundColor = "#cfcfd3";
+                newPlayerObject.style.backgroundColor = "rgba(0,0,0,.1)";
             }
 
             if(playerInfo[i].czar) { //if player is czar, set color to gray
-                newPlayerObject.style.backgroundColor = "#99999a";
+                newPlayerObject.style.backgroundColor = "rgba(0,0,0,.35)";
                 newPlayerObjectUsername.textContent = (playerInfo[i].name + " [Card Czar]");
             }
 

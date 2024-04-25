@@ -3,7 +3,8 @@
 ## Overview
   - Added keybinds
   - Major and minor bugfixes
-  - Small Visual Changes
+  - Complete Visual Overhaul
+  - Added themes
 
 # Keybinds
   - Rewrote admin menu closing keybind to remove deprecated code
@@ -20,6 +21,7 @@
   - Fixed bug where wager could be changed after card was submitted
   - Fixed bug to that wager value is reset on card submission
   - Fixed bug where Admin.setScore() set player score to a string value
+  - Fixed bug where submit button wasn't deactivating properly
 
 # Visual Changes
  - Added top border to page footer
@@ -27,7 +29,14 @@
  - Changed player/score container to scroll on overflow
  - Complete color overhaul, background is now based on a single gradient on the body object
  - Changed player score objects to take on a transparent color instead of hard coded grey
- - Added button design, will be changing color soon dw
+ - Added button design, will be changing color soon dw (update I did)
+ - Changed pack and admin overlays to rely on same color as body gradient
+ - Moved bug report button to footer
+ - Made the buttons not ugly
+ - Added theme functionality
+
+# Other
+  - Refactored pack button and admin button names
 
 # Known Issues
   - Despite major bugfixes in the last two updates mostly resolving the problem, the server does still occasionally crash when the last player disconnects

@@ -1,7 +1,34 @@
 {
-  "Themes": [
-    {
-      "name": "placeholder"
-    }
-  ]
+  "Mole Hall": {
+    "name": "Mole Hall",
+    "category": "dark",
+    "themeGradient": "linear-gradient(-20deg, #616161 0%, #9bc5c3 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(-20deg, #616161 0%, #9bc5c3 100%)",
+    "buttonHover": "linear-gradient(-20deg, #808080 0%, #acdad8 100%)",
+    "darkeningFactor": "rgba(0,0,0,.5)"
+  },
+  "Royal Garden": {
+    "name": "Royal Garden",
+    "category": "light",
+    "themeGradient": "linear-gradient(to right, #ff75ac 0%, #ff9670 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(to right, #ed6ea0 0%, #ec8c69 100%)",
+    "buttonHover": "linear-gradient(to right, #fc74aa 0%, #fc956f 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Warm Flame": {
+    "name": "Warm Flame",
+    "category": "light",
+    "themeGradient": "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(45deg, #db8689 0%, #dbb7ad 99%, #dbb7ad 100%)",
+    "buttonHover": "linear-gradient(45deg, #faa7aa 0%, #fad5ca 99%, #fad5ca 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Rich Metal": {
+    "name": "Rich Metal",
+    "category": "dark",
+    "themeGradient": "linear-gradient(to right, #d7d2cc 0%, #304352 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(to right, #b8b3ae 0%, #212e38 100%)",
+    "buttonHover": "linear-gradient(to right, #e8e3dc 0%, #3a5163 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  }
 }

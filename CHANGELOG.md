@@ -37,6 +37,19 @@
  - Made the buttons not ugly
  - Added theme functionality
 
+# Themes
+  - Added Mole Hall
+  - Added Royal Garden
+  - Added Warm Flame
+  - Added Rich Metal
+  - Added Witch Dance
+  - Added Slick Carbon
+  - Added Rainy Ashville
+  - Added Malibu Beach
+  - Added Kind Steel
+  - Added Soft Grass
+  - Added Gray Whale
+
 # Other
   - Refactored pack button and admin button names
   - Added a cookie to store last selected theme

@@ -1,11 +1,19 @@
 {
-  "Mole Hall": {
-    "name": "Mole Hall",
+  "Dark (default)": {
+    "name": "Dark (default)",
     "category": "dark",
     "themeGradient": "linear-gradient(-20deg, #616161 0%, #9bc5c3 100%)",
     "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(-20deg, #616161 0%, #9bc5c3 100%)",
     "buttonHover": "linear-gradient(-20deg, #808080 0%, #acdad8 100%)",
     "darkeningFactor": "rgba(0,0,0,.5)"
+  },
+  "Light (default)": {
+    "name": "Light (default)",
+    "category": "light",
+    "themeGradient": "linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), linear-gradient(-20deg, #eee6fa 0%, #fcfce3 100%)",
+    "buttonHover": "linear-gradient(-20deg, #dcc8fa 0%, #f6f7c3 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
   },
   "Royal Garden": {
     "name": "Royal Garden",
@@ -29,6 +37,62 @@
     "themeGradient": "linear-gradient(to right, #d7d2cc 0%, #304352 100%)",
     "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(to right, #b8b3ae 0%, #212e38 100%)",
     "buttonHover": "linear-gradient(to right, #e8e3dc 0%, #3a5163 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Witch Dance": {
+    "name": "Witch Dance",
+    "category": "dark",
+    "themeGradient": "linear-gradient(-225deg, #A8BFFF 0%, #884D80 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(-225deg, #9bb0eb 0%, #70406a 100%)",
+    "buttonHover": "linear-gradient(-225deg, #b1c5fc 0%, #995790 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Slick Carbon": {
+    "name": "Slick Carbon",
+    "category": "dark",
+    "themeGradient": "linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(to right, #b8b3ae 0%, #212e38 100%)",
+    "buttonHover": "linear-gradient(to right, #e8e3dc 0%, #3a5163 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Rainy Ashville": {
+    "name": "Rainy Ashville",
+    "category": "light",
+    "themeGradient": "linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(to top, #ebb5db 0%, #9ab2db 100%)",
+    "buttonHover": "linear-gradient(to top, #f7d7ee 0%, #b3cfff 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Malibu Beach": {
+    "name": "Malibu Beach",
+    "category": "light",
+    "themeGradient": "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(to right, #499feb 0%, #02d1db 100%)",
+    "buttonHover": "linear-gradient(to right, #73bbfa 0%, #5ff3fa 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Soft Grass": {
+    "name": "Soft Grass",
+    "category": "light",
+    "themeGradient": "linear-gradient(to top, #c1dfc4 0%, #deecdd 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), linear-gradient(to top, #cadecc 0%, #eefaed 100%)",
+    "buttonHover": "linear-gradient(to top, #a7c2a9 0%, #c1cfc0 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Grey Whale": {
+    "name": "Grey Whale",
+    "category": "dark",
+    "themeGradient": "linear-gradient(to top, #a3bded 0%, #6991c7 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), linear-gradient(to top, #aec3eb 0%, #7ba9e8 100%)",
+    "buttonHover": "linear-gradient(to top, #90a7d1 0%, #5677a3 100%)",
+    "darkeningFactor": "rgba(0,0,0,.2)"
+  },
+  "Lady Lips": {
+    "name": "Lady Lips",
+    "category": "light",
+    "themeGradient": "linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)",
+    "activeBefore": "linear-gradient(0deg, rgba(0, 0, 0, .2), linear-gradient(to top, #f7a8ab 0%, #fadef1 99%, #fecfef 100%)",
+    "buttonHover": "linear-gradient(to top, #de878a 0%, #fecfef 99%, #d9b0cc 100%)",
     "darkeningFactor": "rgba(0,0,0,.2)"
   }
 }

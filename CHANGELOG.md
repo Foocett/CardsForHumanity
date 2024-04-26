@@ -38,17 +38,18 @@
  - Added theme functionality
 
 # Themes
-  - Added Mole Hall
-  - Added Royal Garden
-  - Added Warm Flame
-  - Added Rich Metal
-  - Added Witch Dance
-  - Added Slick Carbon
-  - Added Rainy Ashville
-  - Added Malibu Beach
-  - Added Kind Steel
-  - Added Soft Grass
-  - Added Gray Whale
+  - Added Default Dark
+  - Added Light Default
+  - Added Sunset
+  - Added Peach
+  - Added Cold Steel
+  - Added Grape
+  - Added Cotton Candy
+  - Added Charcoal
+  - Added Clear Skies
+  - Added Seafoam
+  - Added Rosé
+  - Added Blue Whale
 
 # Other
   - Refactored pack button and admin button names

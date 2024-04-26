@@ -150,7 +150,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on("submit-cards", (payload, ackCallback) => { //handles client card submission
-        game.playerLibrary[socket.id].wager = 1;
         submissionCount++; //add to total submitted count
         let newCard = new WhiteCard(payload.submission, payload.submissionPack);
         newCard.setOwner(game.playerLibrary[socket.id]);
@@ -226,6 +225,9 @@ io.on('connection', (socket) => {
     });
 });
 
+/*
+ * FIXME: - Weird crash when players leave caused by drawBlack() somehow, most likely drawing null from deck
+ */
 class Deck { //deck object
     constructor(selectedPacks) { //given all inputted packs
         this.whiteDeck = []; //all white card objects
@@ -341,6 +343,8 @@ class Game {
                 return;
             case "judging":
                 this.startJudgingPhase();
+                game.players.forEach(player => {
+                })
                 return;
             case "displaying":
                 this.startDisplayCount();
@@ -348,6 +352,9 @@ class Game {
         }
     }
 
+    /*
+     * FIXME: - Sometimes next czar is selected when player joins I have no idea why lmao
+     */
     selectNextCzar() { //selects next card czar
         this.players.forEach(player => { //remove czar status from all players
             player.czar = false;
@@ -368,6 +375,7 @@ class Game {
     }
 
     startSubmissionPhase() {
+        game.resetPlayerWagers();
         this.currentBlackCard = this.deck.drawBlack(); //draw new black card
         game.players.forEach(player => {
             player.justWon = false;
@@ -388,6 +396,13 @@ class Game {
         setTimeout(function() {
             game.setGamePhase("submitting");
         }, (displayTime*1000));
+    }
+
+    resetPlayerWagers() {
+        io.emit("reset-wager");
+        this.players.forEach(player => {
+            player.wager = 1;
+        });
     }
 }
 

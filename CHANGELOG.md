@@ -3,8 +3,9 @@
 ## Overview
   - Added keybinds
   - Major and minor bugfixes
-  - Complete Visual Overhaul
+  - Complete visual overhaul
   - Added themes
+  - Added theme cookie
 
 # Keybinds
   - Rewrote admin menu closing keybind to remove deprecated code
@@ -22,6 +23,7 @@
   - Fixed bug to that wager value is reset on card submission
   - Fixed bug where Admin.setScore() set player score to a string value
   - Fixed bug where submit button wasn't deactivating properly
+  - Fixed "bug" (my stupidity) where wager values were reset prematurely
 
 # Visual Changes
  - Added top border to page footer
@@ -46,7 +48,5 @@
   - Czar can be changed when new player joins
 
 # Likely coming in next few update(s)
-  - More keybinds for choosing and submitting cards, mice are for losers anyway lmao
-  - Themes (maybe idk?)
   - I will attempt to create a queue for players joining mid-game, storing on server and pushing info to clients only at the start of a round
     - Note for myself, make sure to check queue size when players leave so new turn starts instead of game restarting if there aren't enough players

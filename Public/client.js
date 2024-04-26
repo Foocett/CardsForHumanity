@@ -71,23 +71,23 @@ document.addEventListener('DOMContentLoaded', function() {
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
+    themesButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        themeOverlay.style.display = "flex";
+    });
+
     wagerRight.addEventListener("click", function(e) {
         e.preventDefault()
-        if(!hasCardBeenSubmitted) {
+        if(!hasCardBeenSubmitted && !self.czar) {
             socket.emit("increase-wager", 0, (response) => {
                 wagerValue.textContent = response.toString();
             });
         }
     });
 
-    themesButton.addEventListener("click", function(e) {
-        e.preventDefault();
-        themeOverlay.style.display = "flex";
-    });
-
     wagerLeft.addEventListener("click", function(e) {
         e.preventDefault()
-        if(!hasCardBeenSubmitted) {
+        if(!hasCardBeenSubmitted && !self.czar) {
             socket.emit("decrease-wager", 0, (response) => {
                 wagerValue.textContent = response.toString();
             });
@@ -98,7 +98,9 @@ document.addEventListener('DOMContentLoaded', function() {
        window.open("https://github.com/Foocett/CardsForHumanity/blob/main/README.md")
     });
 
-
+    socket.on("reset-wager" ,() => {
+        wagerValue.textContent = "1"
+    })
 
 
     adminButton.addEventListener("click", function() {
@@ -424,7 +426,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             mySubmission = true
             socket.emit('submit-cards', payload, (response) => { //send cards to server
-                wagerValue.textContent = "1";
                 self = response.rawPlayerInfo; //update self based on server callback
                 populateCardsFromHand(self); //reset cards in hand
                 submittedText = selectedText; //set global submitted text to currently selected text
@@ -630,7 +631,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(themes => {
 
-                console.log(themes)
                 const lightOptions = document.getElementById("light-optgroup");
                 const darkOptions = document.getElementById("dark-optgroup");
                 for(let key in themes) {

@@ -37,6 +37,7 @@
 
 # Other
   - Refactored pack button and admin button names
+  - Added a cookie to store last selected theme
 
 # Known Issues
   - Despite major bugfixes in the last two updates mostly resolving the problem, the server does still occasionally crash when the last player disconnects

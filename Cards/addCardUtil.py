@@ -47,12 +47,7 @@ def save_data():
             print('backup file written')
 
         # Clear input fields after submission
-        card_color.set("")
         text.set("")
-        pack.set("")
-        credit.set("")
-        credit_platform.set("")
-        activate_credit.set(False)
     else:
         # Display error message if not all required fields are filled
         tk.messagebox.showerror("Error", "Please fill in all required fields.")

@@ -11,26 +11,40 @@ def save_data():
     }
 
     # Check if all required fields are filled
-    if color and data["Text"] and data["Pack"] and (not activate_credit.get() or (data["Credit"] and data["Credit-Platform"])):
+    if color and data["Text"] and (not activate_credit.get() or (data["Credit"] and data["Credit-Platform"])):
         # Load existing data from the JSON file, if it exists
         try:
             with open("Cards/cards.json", "r") as f:
                 existing_data = json.load(f)
                 print("file found")
         except FileNotFoundError:
-            print("file not found")
+            print("Cards.json not found")
             existing_data = {"WhiteCards": [], "BlackCards": []}
+
+        try:
+            with open("Cards/userSubmittedCards.json", "r") as p:
+                backup_existing_data = json.load(p)
+                print("file found")
+        except FileNotFoundError:
+            print("userSubmittedCards.json not found")
+            backup_existing_data = {"WhiteCards": [], "BlackCards": []}
 
         # Determine which array to append the new data to based on card color
         if color == "White":
             existing_data["WhiteCards"].append(data)
+            backup_existing_data["WhiteCards"].append(data)
         elif color == "Black":
             existing_data["BlackCards"].append(data)
+            backup_existing_data["BlackCards"].append(data)
 
         # Write the updated data back to the JSON file
         with open("Cards/cards.json", "w") as f:
             json.dump(existing_data, f, indent=4)
-            print('file written')
+            print('main file written')
+
+        with open("Cards/userSubmittedCards.json", "w") as p:
+            json.dump(existing_data, p, indent=4)
+            print('backup file written')
 
         # Clear input fields after submission
         card_color.set("")

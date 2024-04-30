@@ -8,6 +8,7 @@
   - Added theme cookie
   - Complete change in how cards are handled
   - Card packs now have a pack name property
+  - Clicking on a selected card now deselects it
 
 # Keybinds
   - Rewrote admin menu closing keybind to remove deprecated code
@@ -27,6 +28,8 @@
   - Fixed bug where submit button wasn't deactivating properly
   - Fixed "bug" (my stupidity) where wager values were reset prematurely
   - Fixed a bug where cards would be submitted with enter key while chat box was focused
+  - Fixed a bug where cards would wrap when a winner is chosen
+  - Fixed a bug where submit button would be disabled when other players submit cards
 
 # Visual Changes
  - Added top border to page footer
@@ -68,3 +71,5 @@
 # Likely coming in next few update(s)
   - I will attempt to create a queue for players joining mid-game, storing on server and pushing info to clients only at the start of a round
     - Note for myself, make sure to check queue size when players leave so new turn starts instead of game restarting if there aren't enough players
+  - Not likely soon but I might add a lobby system at some point
+  - 

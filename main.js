@@ -1,3 +1,23 @@
+const { readdir } = require('node:fs/promises');
+let folderData = [];
+let packs = [];
+let packNames = [];
+async function getPacks() {
+    try {
+        const files = await readdir("./Packs");
+        for (const file of files)
+            folderData.push(require("./Packs/" + file.slice(0,file.length-5)))
+    } catch (err) {
+        console.error(err);
+    }
+}
+getPacks().then(() => {
+    folderData.forEach(obj => {
+        packs[obj["packName"]] = obj;
+        packNames.push(obj["packName"]);
+    })
+});
+
 //Global thingies
 let clients = {}; //keeps track of connected socket objects
 let clientIDs = [];
@@ -8,31 +28,6 @@ let hasFirstTurnStarted = false; //used to maintain properties between waiting p
 let displayTime = 5; //time for cards to be displayed after czar makes a selection (in seconds)
 //import pack files
 const config = require("./config.json");
-const rawBase = require('./Packs/basePack.json'); //base pack
-const rawAutism = require('./Packs/autismPack.json'); //autism pack (based)
-const rawWoke = require('./Packs/wokePack.json'); //woke pack
-const rawDutch = require('./Packs/dutchPack.json'); //dutch pack
-const rawStem = require('./Packs/stemPack.json'); //STEM pack
-const rawBrainrot = require('./Packs/brainrotPack.json'); //Brainrot pack
-const rawFestival = require('./Packs/festivalPack.json'); //festival pack
-const allWhiteCards = { //store white card components for all packs
-    "base": rawBase.whiteCards,
-    "autism": rawAutism.whiteCards,
-    "woke": rawWoke.whiteCards,
-    "dutch": rawDutch.whiteCards,
-    "stem": rawStem.whiteCards,
-    "brainrot": rawBrainrot.whiteCards,
-    "festival": rawFestival.whiteCards
-};
-const allBlackCards = { //store black card components for all packs
-    "base": rawBase.blackCards,
-    "autism": rawAutism.blackCards,
-    "woke": rawWoke.blackCards,
-    "dutch": rawDutch.blackCards,
-    "stem": rawStem.blackCards,
-    "brainrot": rawBrainrot.blackCards,
-    "festival": rawFestival.blackCards
-};
 
 //Create server
 // This section was sourced from the official Socket.IO documentation (https://socket.io/docs/v4/server-api/)
@@ -62,7 +57,8 @@ io.on('connection', (socket) => {
             game.addPlayer(newPlayer); //add player object to game.players
             const responseData = { //data to be returned to player (formatted as object for possible future features)
                 rawPlayerInfo: newPlayer,
-                gameStarted: hasFirstTurnStarted
+                gameStarted: hasFirstTurnStarted,
+                packNames: packNames,
             };
             ackCallback(responseData); //returns new player object to client
         });
@@ -139,9 +135,11 @@ io.on('connection', (socket) => {
 
     socket.on("begin-game", (packStates) => {
         let enabledPacks = [];
+        let i = 0
         packStates.forEach(item => {
            if(item.checked){
-               enabledPacks.push(item.name)
+               enabledPacks.push(packNames[i])
+               i++
            }
         });
         game.deck = new Deck(enabledPacks)
@@ -236,11 +234,12 @@ class Deck { //deck object
         this.blackDiscard = []; //used black cards
 
         selectedPacks.forEach(pack => { //for each selected pack
-            allWhiteCards[pack].forEach(white => { //for white text component
+            let curPack = packs[pack]
+            curPack["whiteCards"].forEach(white => { //for white text component
                 this.whiteDeck.push(new WhiteCard(white, pack)); //create new white card objects
             });
-            allBlackCards[pack].forEach(black => { //for each black card object
-                this.blackDeck.push(new BlackCard(black["text"], black["blanks"], pack)); //create new black card object
+            curPack["blackCards"].forEach(black => { //for each black card object
+                this.blackDeck.push(new BlackCard(black["text"], pack)); //create new black card object
             });
         });
     }

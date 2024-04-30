@@ -1,16 +1,23 @@
-const socket = io(); // Connect to the server
-document.addEventListener('DOMContentLoaded', function() {
+const socket = io();
+let self; //will be given value after client is initialized with server
+let buttonStates = [];
+const packButtons = function () {
+    return(document.querySelectorAll(".pack-input"))
+}
+// Connect to the server
+document.addEventListener('DOMContentLoaded', function () {
+    const waitingOverlay = document.getElementById('waiting-overlay');
     populateThemeDropdown();
     loadTheme(getCookie("themeName"));
     let username = prompt("Please enter your username:"); //Prompt for username before loading page content
-    while (username === null || username.trim() === "" || username.length >=20 || username.includes("\\")) { //check valid username
-        if(username.length >=20) {
+    while (username === null || username.trim() === "" || username.length >= 20 || username.includes("\\")) { //check valid username
+        if (username.length >= 20) {
             alert("Username must be no longer than 20 characters")
-        } else if(username.includes("\\")){
+        } else if (username.includes("\\")) {
             alert("Username cannot contain backslashes")
-        } else if(username.includes(",")){
+        } else if (username.includes(",")) {
             alert("Username cannot contain commas")
-        } else if(username.startsWith(" ")){
+        } else if (username.startsWith(" ")) {
             alert("Username cannot start with a space")
         } else {
             alert("You must enter a username to continue."); //if input is invalid, prompt again
@@ -18,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
         username = prompt("Please enter your username:");
     }
 
-    let self; //will be given value after client is initialized with server
     const handCards = document.querySelectorAll(".white-card"); //all cards in hand
     let handElementsText = []; //white card text objects
     let handElementsPack = []; //white card pack objects
@@ -32,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let hasCardBeenSubmitted = false; //used to prevent multiple submissions
     let isHovering = false; //used for hover animations
     let wrapCards = false; //Used when displaying submitted cards
-    let packButtons = document.querySelectorAll(".pack-input");
-
     //get HTML objects from document
     const startGameButton = document.getElementById("start-turn-button");
     const blackText = document.getElementById("black-card-text");
@@ -45,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form');
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
-    const waitingOverlay = document.getElementById('waiting-overlay');
     const wagerLeft = document.getElementById("wager-left");
     const wagerRight = document.getElementById("wager-right");
     const wagerValue = document.getElementById("wager-value");
@@ -64,61 +67,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const warnLobbyButton = document.getElementById("warnLobby");
     const themeOverlay = document.getElementById("theme-overlay");
     const themeDropdown = document.getElementById("theme-select");
-    themeDropdown.onchange = function() {
+
+    themeDropdown.onchange = function () {
         loadTheme(this.value)
         setCookie("themeName", this.value);
     }
     vineBoom.volume = 1;
     submitButton.disabled = true; //disable submit button by default
 
-    themesButton.addEventListener("click", function(e) {
+    themesButton.addEventListener("click", function (e) {
         e.preventDefault();
         themeOverlay.style.display = "flex";
     });
 
-    wagerRight.addEventListener("click", function(e) {
+    wagerRight.addEventListener("click", function (e) {
         e.preventDefault()
-        if(!hasCardBeenSubmitted && !self.czar) {
+        if (!hasCardBeenSubmitted && !self.czar) {
             socket.emit("increase-wager", 0, (response) => {
                 wagerValue.textContent = response.toString();
             });
         }
     });
 
-    wagerLeft.addEventListener("click", function(e) {
+    wagerLeft.addEventListener("click", function (e) {
         e.preventDefault()
-        if(!hasCardBeenSubmitted && !self.czar) {
+        if (!hasCardBeenSubmitted && !self.czar) {
             socket.emit("decrease-wager", 0, (response) => {
                 wagerValue.textContent = response.toString();
             });
         }
     });
 
-    aboutButton.addEventListener("click", function() {
-       window.open("https://github.com/Foocett/CardsForHumanity/blob/main/README.md")
+    aboutButton.addEventListener("click", function () {
+        window.open("https://github.com/Foocett/CardsForHumanity/blob/main/README.md")
     });
 
-    socket.on("reset-wager" ,() => {
+    socket.on("reset-wager", () => {
         wagerValue.textContent = "1"
     })
 
 
-    adminButton.addEventListener("click", function() {
-       let passwordInput = prompt("Enter Admin Password");
-       socket.emit("verifyAdminPassword", passwordInput, (response) => {
-            if(response) {
+    adminButton.addEventListener("click", function () {
+        let passwordInput = prompt("Enter Admin Password");
+        socket.emit("verifyAdminPassword", passwordInput, (response) => {
+            if (response) {
                 adminOverlay.style.display = "flex";
-            } else if(passwordInput !== null) {
+            } else if (passwordInput !== null) {
                 alert("Sorry, that password is incorrect\nIf you are the host, you can configure the password in config.json");
             }
         });
     });
 
-    adminCloseButton.addEventListener("click", function() {
+    adminCloseButton.addEventListener("click", function () {
         adminOverlay.style.display = 'none';
     })
 
-    themeCloseButton.addEventListener("click", function() {
+    themeCloseButton.addEventListener("click", function () {
         themeOverlay.style.display = 'none';
     })
 
@@ -126,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     nukeButton.onclick = () => {
         let warning = prompt("Warning, this will completely reset the server and kick all players\nRe-enter admin password to continue...")
         socket.emit("verifyAdminPassword", warning, (response) => {
-            if(response) {
+            if (response) {
                 socket.emit("nukeGame");
             } else {
                 alert("Incorrect Password");
@@ -151,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     socket.on('kick', () => {
         alert("You have been removed from the lobby. The page will now reload.");
-        setTimeout(function() {
+        setTimeout(function () {
             window.location.reload();
         }, 2000);  // Delay reload by 3 seconds to allow user to read message.
     });
@@ -182,19 +186,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function parseCSV(csvString) { //assumes that commas have spaces after them
-        return  csvString.split(", ");
+        return csvString.split(", ");
     }
-    document.onkeyup = function(e) {
+
+    document.onkeyup = function (e) {
         //e = e || window.event;
-        if(e.key === "Escape") {
-            if(adminOverlay.style.display === 'flex') {
+        if (e.key === "Escape") {
+            if (adminOverlay.style.display === 'flex') {
                 adminOverlay.style.display = 'none';
             }
-            if(themeOverlay.style.display === 'flex') {
+            if (themeOverlay.style.display === 'flex') {
                 themeOverlay.style.display = 'none';
             }
         }
-        if(e.key === "Enter") {
+        if (e.key === "Enter") {
             if (!startGameButton.disabled && !(waitingOverlay.style.display === "none")) { //If the start button is clickable and overlay is visible
                 e.preventDefault();
                 startGameButton.click();
@@ -206,42 +211,19 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(message);
     });
 
-    for(let i = 1; i<=10; i++){ //get HTML objects for each card
-        handElementsText.push(document.getElementById("white-card-"+i+"-text")); //text object
-        handElementsPack.push(document.getElementById("white-card-"+i+"-pack")); //pack object
+    for (let i = 1; i <= 10; i++) { //get HTML objects for each card
+        handElementsText.push(document.getElementById("white-card-" + i + "-text")); //text object
+        handElementsPack.push(document.getElementById("white-card-" + i + "-pack")); //pack object
     }
 
-    packButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            if(self.admin){
-                let buttonStates = [];
-                packButtons.forEach(box => {
-                    buttonStates.push(box.checked);
-                });
-                socket.emit("pack-selection", buttonStates);
-            }
-        });
-    });
 
-
-    document.addEventListener("keydown", function(e){
-        let num = parseInt(e.key);
-        if(self.admin && waitingOverlay.style.display !== "none" && typeof(num) === "number") { // if admin and waiting overlay is visible and button pressed is a number
-            if(num > 0 && num < packButtons.length+1) {
-                packButtons[num-1].checked = !packButtons[num-1].checked;
-                let buttonStates = [];
-                packButtons.forEach(box => {
-                    buttonStates.push(box.checked);
-                });
-                socket.emit("pack-selection", buttonStates);
-            }
-        }
-        if(e.key === "Enter" && !submitButton.disabled) {
+    document.addEventListener("keydown", function (e) {
+        if ((e.key === "Enter" || e.key === "Space") && !submitButton.disabled) {
             submitButton.click();
         }
     })
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (input.value) {
             socket.emit('chat message', input.value);
@@ -254,15 +236,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     socket.on('update-packs', (data) => {
+        console.log("update packs");
         let noneAreChecked = true;
-        for(let i=0; i<packButtons.length; i++) {
-            packButtons[i].checked = data[i];
-            if(data[i] && self.admin) {
+        for (let i = 0; i < packButtons().length; i++) {
+            packButtons()[i].checked = data[i];
+            if (data[i] && self.admin) {
                 startGameButton.disabled = false;
                 noneAreChecked = false;
             }
         }
-        if(self.admin && noneAreChecked) {
+        if (self.admin && noneAreChecked) {
             startGameButton.disabled = true;
         }
     });
@@ -273,19 +256,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     socket.on("deactivatePage", () => {
         alert("The game has been reset, please refresh your page");
-       document.addEventListener("click", function() {
-           alert("The game has been reset, please refresh your page")
+        document.addEventListener("click", function () {
+            alert("The game has been reset, please refresh your page")
         });
-        document.addEventListener("keyup", function() {
+        document.addEventListener("keyup", function () {
             alert("You have been banned from this session")
         })
     });
 
     socket.on("deactivatePageKicked", () => {
-        document.addEventListener("click", function() {
+        document.addEventListener("click", function () {
             alert("You have been banned from this session")
         });
-        document.addEventListener("keyup", function() {
+        document.addEventListener("keyup", function () {
             alert("You have been banned from this session")
         })
     });
@@ -293,22 +276,23 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
         self = response.rawPlayerInfo; //set self equal to returned player object
         startGameButton.disabled = true; //deactivate button
-        if(self.admin){ //if admin, show start game button
+        populatePacks(response.packNames);
+        if (self.admin) { //if admin, show start game button
             startGameButton.style.display = "block";
             startGameButton.onclick = () => {
                 let packState = [];
-                packButtons.forEach(button => {
+                packButtons().forEach(button => {
                     let individualPack = {
                         name: button.id,
                         checked: button.checked
                     }
-                   packState.push(individualPack);
+                    packState.push(individualPack);
                 });
                 socket.emit("begin-game", (packState)); //send begin game signal to server
                 waitingOverlay.style.display = "none"; //hide after click
             };
         } else {
-            packButtons.forEach(button => {
+            packButtons().forEach(button => {
                 button.disabled = true;
             });
         }
@@ -327,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /*
      * TODO: - After fixing above issue, create mid-game player queue
      */
-    socket.on("hide-waiting-overlay", ()=> {
+    socket.on("hide-waiting-overlay", () => {
         waitingOverlay.style.display = "none";
     })
 
@@ -336,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
         hasCardBeenSubmitted = false;
         handCards.forEach(card => { //remove selected class from all HTML objects
             card.classList.remove("selected-card");
-            if(!self.czar) {
+            if (!self.czar) {
                 card.classList.add("clickable");
             }
         });
@@ -348,28 +332,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         submitButton.disabled = self.czar; //if player is czar, disable submit button
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
-        if(gameData.currentBlackCard.text.includes("vine")){
+        if (gameData.currentBlackCard.text.includes("vine")) {
             thatMomentWhen();
         }
-        blackPack.textContent =  getProperName(gameData.currentBlackCard.pack); //get full pack name
+        blackPack.textContent = gameData.currentBlackCard.pack; //get full pack name
         updateConnectedPlayers(gameData.players); //updates connected players
     });
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
         submitButton.disabled = true;
-        for(let i = 0; i<10;i++){ //for each of ten cards
+        for (let i = 0; i < 10; i++) { //for each of ten cards
             handElementsText[i].textContent = self.hand[i].text; //set text to card.text
-            handElementsPack[i].textContent = getProperName(self.hand[i].pack); //set pack to card.pack's full name
+            handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
         }
     }
 
-    for(let i=0;i<10;i++){ //add click listeners to each card
-        handCards[i].addEventListener('click', function() {
-            if(this.classList.contains("clickable")){ //if the card is currently clickable...
+    for (let i = 0; i < 10; i++) { //add click listeners to each card
+        handCards[i].addEventListener('click', function () {
+            if (this.classList.contains("clickable")) { //if the card is currently clickable...
                 selectedIndex = i; //set selected card index to position in for loop
                 selectedText = self.hand[i].text; //set global selected text
                 selectedPack = self.hand[i].pack; //set global selected pack
-                if(!this.classList.contains("selected-card") && selectedText.includes("vine")) { //play vine boom if vine boom card & card isn't already selected
+                if (!this.classList.contains("selected-card") && selectedText.includes("vine")) { //play vine boom if vine boom card & card isn't already selected
                     thatMomentWhen();
                 }
                 handCards.forEach(element => { //for each card element
@@ -383,40 +367,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitButton.disabled = false; //re-enable submit button
             }
         });
-        handCards[i].addEventListener("mouseover", function() {
-            if(this.classList.contains("clickable") && !isHovering) {
+        handCards[i].addEventListener("mouseover", function () {
+            if (this.classList.contains("clickable") && !isHovering) {
                 let replacementText = '<span class="underlined">' + self.hand[i].text + '</span>';
                 blackText.innerHTML = blackText.textContent.replace("_____", replacementText);
                 isHovering = true
             }
         });
 
-        handCards[i].addEventListener("mouseleave", function() {
+        handCards[i].addEventListener("mouseleave", function () {
             isHovering = false
             blackText.innerHTML = blackText.textContent.replace(self.hand[i].text, "_____");
         });
     }
-    function getProperName(name){ //returns the full formatted name of a pack given an inputted shorthand
-        switch(name){
-            case "brainrot":
-                return "Brainrot Pack";
-            case "base":
-                return "Base Pack";
-            case "woke":
-                return "Woke Pack";
-            case "dutch":
-                return "Dutch Pack";
-            case "autism":
-                return "Autism Pack";
-            case "stem":
-                return "STEM Pack";
-            case "festival":
-                return "EDM Festival Pack";
-        }
-    }
 
     submitButton.onclick = () => { //on submit button click
-        if(hasCardBeenSelected) { //only execute if a card is selected
+        if (hasCardBeenSelected) { //only execute if a card is selected
             let payload = { //data to be sent to server
                 username: self.name,
                 submission: selectedText,
@@ -447,7 +413,8 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.on("pushSubmittedCards", (payload) => {
         displaySubmittedCards(payload.submissions, payload.showContent, payload.displaying, payload.winningIndex); //display all clients' submitted cards
     });
-    function displaySubmittedCards(submissions, showContent, displaying, winningIndex){
+
+    function displaySubmittedCards(submissions, showContent, displaying, winningIndex) {
         updateSelf();
         submittedPublicCardElements.forEach(card => { //remove all current elements
             card.remove();
@@ -459,12 +426,12 @@ document.addEventListener('DOMContentLoaded', function() {
         let submissionsLength = submissions.length;
         wrapCards = submissionsLength > 4;
 
-        if(displaying) {
+        if (displaying) {
             submissionsLength--;
         }
-        for(let i=0; i<submissionsLength;i++){
+        for (let i = 0; i < submissionsLength; i++) {
             const submittedCard = document.createElement("div"); //create new card
-            if(!wrapCards){
+            if (!wrapCards) {
                 submittedCard.classList.add("tall");
             }
             const cardText = document.createElement("p"); //create text object child
@@ -475,13 +442,14 @@ document.addEventListener('DOMContentLoaded', function() {
             cardText.classList.add("submitted-card-text"); //designate card text
             cardPack.classList.add("white-card-pack"); //add white card pack class for CSS formatting
             cardText.textContent = submissions[i].text; //set card text content
-            cardPack.textContent = getProperName(submissions[i].pack); //set pack text
-            if(displaying && i === winningIndex) {
+            cardPack.textContent = submissions[i].pack; //set pack text
+            if (displaying && i === winningIndex) {
                 submittedCard.classList.add("selected-card");
-                if(submissions[i].text.includes("vine")) {
-                    for(let i=0; i<10;i++) {
+                if (submissions[i].text.includes("vine")) {
+                    for (let i = 0; i < 10; i++) {
                         thatMomentWhen(); //vine boom if "*vine boom* wins;
-                        setTimeout(()=>{}, 100);
+                        setTimeout(() => {
+                        }, 100);
                     }
                 }
             }
@@ -492,8 +460,8 @@ document.addEventListener('DOMContentLoaded', function() {
             /*
              * TODO: - If clicked card is already selected, deselect card
              */
-            submittedCard.addEventListener('click', function() {
-                if(this.classList.contains('clickable')){
+            submittedCard.addEventListener('click', function () {
+                if (this.classList.contains('clickable')) {
                     selectedIndex = i;
                     selectedText = submittedPublicTextElements[i]; //since text list will always align with card list
                     /*
@@ -513,24 +481,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            submittedCard.addEventListener("mouseover", function() {
-                if(this.classList.contains("clickable") && !isHovering) {
+            submittedCard.addEventListener("mouseover", function () {
+                if (this.classList.contains("clickable") && !isHovering) {
                     let replacementText = '<span class="underlined">' + submissions[i].text + '</span>';
                     blackText.innerHTML = blackText.textContent.replace("_____", replacementText);
                 }
             });
 
-            submittedCard.addEventListener("mouseleave", function() {
+            submittedCard.addEventListener("mouseleave", function () {
                 blackText.innerHTML = blackText.textContent.replace(submissions[i].text, "_____");
             });
 
-            if(showContent){ //if content is to be shown to all
-                if(cardText.textContent.includes("vine")){
+            if (showContent) { //if content is to be shown to all
+                if (cardText.textContent.includes("vine")) {
                     thatMomentWhen();
                 }
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
-                if(self.czar  && !hasCardBeenSubmitted) {
+                if (self.czar && !hasCardBeenSubmitted) {
                     submittedPublicCardElements.forEach(card => {
                         card.classList.add("clickable");
                     });
@@ -538,11 +506,11 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
                 firstCard = false; //disable first card
                 cardText.textContent = submittedText; //display personal submission text on first card
-                if(submittedText.includes("vine") && mySubmission) {
+                if (submittedText.includes("vine") && mySubmission) {
                     thatMomentWhen();
                     mySubmission = false;
                 }
-                cardPack.textContent = getProperName(submittedPack); //display personal submission pack on first card
+                cardPack.textContent = submittedPack; //display personal submission pack on first card
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
             } else { //else do not show any text content; display blank card, applies to czar and unsubmitted players
@@ -570,18 +538,18 @@ document.addEventListener('DOMContentLoaded', function() {
             newPlayerObjectScore.classList.add("player-score-item-score"); //add class for CSS
             newPlayerObjectUsername.textContent = playerInfo[i].name; //set username text content
             newPlayerObjectScore.textContent = playerInfo[i].score; //set score text content
-            if(i % 2 === 1)  { //change color every other iteration (disabled right now, might add back later)
+            if (i % 2 === 1) { //change color every other iteration (disabled right now, might add back later)
                 newPlayerObject.style.backgroundColor = "rgba(0,0,0,.2)";
             } else {
                 newPlayerObject.style.backgroundColor = "rgba(0,0,0,.1)";
             }
 
-            if(playerInfo[i].czar) { //if player is czar, set color to gray
+            if (playerInfo[i].czar) { //if player is czar, set color to gray
                 newPlayerObject.style.backgroundColor = "rgba(0,0,0,.35)";
                 newPlayerObjectUsername.textContent = (playerInfo[i].name + " [Card Czar]");
             }
 
-            if(playerInfo[i].justWon) { //if player has justWon status, highlight their item
+            if (playerInfo[i].justWon) { //if player has justWon status, highlight their item
                 newPlayerObject.style.backgroundColor = "#dea2bd";
             }
 
@@ -600,14 +568,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setCardsClickable(state){ //set all cards' clickability
+    function setCardsClickable(state) { //set all cards' clickability
         handCards.forEach(card => { //for each card
-            if(state) { //if set to true
+            if (state) { //if set to true
                 if (!card.classList.contains("clickable")) { //if card does not have clickable class
                     card.classList.add("clickable"); //add clickable class
                 }
-            }
-            else {
+            } else {
                 card.classList.remove("clickable"); //remove clickable class
             }
         });
@@ -616,6 +583,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function scrollToBottom() {
         messages.scrollTop = messages.scrollHeight;
     }
+
     function addMessage(message, author) {
         const messageElement = document.createElement('div');
         messageElement.textContent = author + ": " + message;
@@ -623,9 +591,11 @@ document.addEventListener('DOMContentLoaded', function() {
         scrollToBottom();
     }
 
-    const thatMomentWhen = () => { vineBoom.play(); }
+    const thatMomentWhen = () => {
+        vineBoom.play();
+    }
 
-    let themesLib = {}
+
     function populateThemeDropdown() {
         fetch('themes.json')
             .then(response => response.json())
@@ -633,17 +603,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const lightOptions = document.getElementById("light-optgroup");
                 const darkOptions = document.getElementById("dark-optgroup");
-                for(let key in themes) {
+                for (let key in themes) {
                     let theme = themes[key];
                     const newOption = document.createElement("option");
                     newOption.textContent = theme["name"];
-                    if(theme["category"] === "dark"){
+                    if (theme["category"] === "dark") {
                         darkOptions.appendChild(newOption);
                     } else {
                         lightOptions.appendChild(newOption);
                     }
                 }
-                if(getCookie("themeName")) {
+                if (getCookie("themeName")) {
                     themeDropdown.value = getCookie("themeName");
                 }
             });
@@ -673,7 +643,7 @@ function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) === ' ') {
             c = c.substring(1);
@@ -682,5 +652,51 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+}
+
+function populatePacks(packs) {
+    const packSelectionBox = document.getElementById("pack-selection-box")
+    packs.forEach(pack => {
+        const buttonsDiv = document.createElement("div")
+        buttonsDiv.classList.add("pack-buttons");
+        buttonsDiv.style.display = "flex";
+        buttonsDiv.style.flexWrap = "wrap";
+        buttonsDiv.style.flexDirection = "column"
+        buttonsDiv.id = pack;
+        const packLabel = document.createElement('label')
+        packLabel.for = pack;
+        packLabel.textContent = pack
+        const packCheck = document.createElement('input');
+        packCheck.type = "checkbox";
+        packCheck.classList.add("pack-input")
+        buttonsDiv.appendChild(packCheck);
+        buttonsDiv.appendChild(packLabel);
+        console.log("pack added:" + pack)
+        packSelectionBox.appendChild(buttonsDiv);
+    })
+    packButtons().forEach(button => {
+        button.addEventListener("click", function () {
+            if (self.admin) {
+                let buttonStates = [];
+                packButtons().forEach(box => {
+                    buttonStates.push(box.checked);
+                });
+                socket.emit("pack-selection", buttonStates);
+                console.log("manual click")
+            }
+        });
+    });
+    document.addEventListener("keydown", function (e) {
+        let num = parseInt(e.key);
+        if (self.admin && document.getElementById("pack-selection-box").style.display !== "none" && typeof (num) === "number") { // admin// and waiting overlay is visible and button pressed is a number
+            if (num > 0 && num < packButtons().length + 1) {
+                buttonStates = []
+                packButtons()[num - 1].checked = !packButtons()[num - 1].checked;
+                packButtons().forEach(box => {
+                    buttonStates.push(box.checked);
+                });
+                socket.emit("pack-selection", buttonStates);
+            }
+        }
+    })
 }

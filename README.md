@@ -40,6 +40,12 @@ For help or assistance, contact me at ajfawcett@gmail.com
   - More info about the cd command can be found [Here](https://tutorials.codebar.io/command-line/introduction/tutorial.html#:~:text=The%20cd%20command%20allows%20you,%24%20ls)
 
 ### 6) Run the server file
+  - First make sure you have all dependencies installed
+    - This project runs off of [Express](https://github.com/expressjs/expressjs.com),  [HTTP](https://nodejs.org/api/http.html), and [Socket.io](https://github.com/socketio/socket.io)
+    - These can be installed with this command in terminal
+      ```
+      npm install express http socket.io
+      ``` 
   - Once you're in the folder, run this command
   - ```Node Main.js```
   - If it worked it should return ```"Listening on *:3000```
@@ -101,15 +107,6 @@ Additionally, this version of the game has a wagering system.
  - Players can set their wager value to some number no less than 1 and no greater than their current score.
  - When a card is selected at the end of the round, the winning player's score will be increased by their wager value.
  - All losing players' scores are reduced by their wager values minus one, so wagers of one do not see score reductions.
-
-# Dependencies
-
-This project runs off of [Express](https://github.com/expressjs/expressjs.com),  [HTTP](https://nodejs.org/api/http.html), and [Socket.io](https://github.com/socketio/socket.io)
-
-These can be installed with
-```
-npm install express http socket.io
-``` 
 
 # Admin Commands
 Admin commands were added in v1.1.0

@@ -67,6 +67,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const warnLobbyButton = document.getElementById("warnLobby");
     const themeOverlay = document.getElementById("theme-overlay");
     const themeDropdown = document.getElementById("theme-select");
+    const textBox = document.getElementById("input")
+    let isTextBoxFocused = false;
+
+    textBox.addEventListener('focus', () => {
+        isTextBoxFocused = true;
+    });
+
+// Event listener for when the text box loses focus
+    textBox.addEventListener('blur', () => {
+        isTextBoxFocused = false;
+    });
 
     themeDropdown.onchange = function () {
         loadTheme(this.value)
@@ -199,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 themeOverlay.style.display = 'none';
             }
         }
-        if (e.key === "Enter") {
+        if ((e.key === "Enter" || e.key === " ") && !isTextBoxFocused) {
             if (!startGameButton.disabled && !(waitingOverlay.style.display === "none")) { //If the start button is clickable and overlay is visible
                 e.preventDefault();
                 startGameButton.click();
@@ -218,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     document.addEventListener("keydown", function (e) {
-        if ((e.key === "Enter" || e.key === "Space") && !submitButton.disabled) {
+        if ((e.key === "Enter" || e.key === " ") && !submitButton.disabled && !isTextBoxFocused) {
             submitButton.click();
         }
     })
@@ -236,7 +247,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     socket.on('update-packs', (data) => {
-        console.log("update packs");
         let noneAreChecked = true;
         for (let i = 0; i < packButtons().length; i++) {
             packButtons()[i].checked = data[i];
@@ -671,7 +681,6 @@ function populatePacks(packs) {
         packCheck.classList.add("pack-input")
         buttonsDiv.appendChild(packCheck);
         buttonsDiv.appendChild(packLabel);
-        console.log("pack added:" + pack)
         packSelectionBox.appendChild(buttonsDiv);
     })
     packButtons().forEach(button => {
@@ -682,7 +691,6 @@ function populatePacks(packs) {
                     buttonStates.push(box.checked);
                 });
                 socket.emit("pack-selection", buttonStates);
-                console.log("manual click")
             }
         });
     });

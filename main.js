@@ -153,7 +153,7 @@ io.on('connection', (socket) => {
         newCard.setOwner(game.playerLibrary[socket.id]);
         cardSubmissions.push(newCard); //creates card object from client data
         const submittingPlayer = game.playerLibrary[payload.id]; //gets corresponding player for submitting client
-        if(!submittingPlayer.czar) {
+        if(submittingPlayer !== null && !submittingPlayer.czar) {
             submittingPlayer.hand.splice(payload.submissionIndex, 1); //removes submitted card from player hand
             submittingPlayer.topUpCards(game.deck); //repopulates player hand
         }
@@ -165,7 +165,10 @@ io.on('connection', (socket) => {
         if (showContent) {
             game.setGamePhase("judging"); //if all cards received, set phase to judging
         }
-        let displaying = submittingPlayer.czar;
+        let displaying;
+        if(submittingPlayer) {
+            displaying = submittingPlayer.czar;
+        }
         let text = payload.submission;
         let winningIndex;
         if(displaying) {
@@ -240,8 +243,6 @@ class Deck { //deck object
             });
             curPack["blackCards"].forEach(black => { //for each black card object
                 this.blackDeck.push(new BlackCard(black["text"], pack)); //create new black card object
-                console.log("new black card created")
-                console.log(black["text"], pack)
             });
         });
     }
@@ -344,8 +345,6 @@ class Game {
                 return;
             case "judging":
                 this.startJudgingPhase();
-                game.players.forEach(player => {
-                })
                 return;
             case "displaying":
                 this.startDisplayCount();

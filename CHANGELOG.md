@@ -6,12 +6,14 @@
   - Complete visual overhaul
   - Added themes
   - Added theme cookie
+  - Complete change in how cards are handled
+  - Card packs now have a pack name property
 
 # Keybinds
   - Rewrote admin menu closing keybind to remove deprecated code
   - Pack selection form can now be submitted with enter key
   - Pack selection can now be done with number buttons instead of clicking boxes
-  - Card submission can now be done with the enter button
+  - Card and form submission can now be done with the enter button and space button
 
 # Bugfixes
   - Fixed bug where pack selection submitting was not activating/deactivating properly
@@ -24,6 +26,7 @@
   - Fixed bug where Admin.setScore() set player score to a string value
   - Fixed bug where submit button wasn't deactivating properly
   - Fixed "bug" (my stupidity) where wager values were reset prematurely
+  - Fixed a bug where cards would be submitted with enter key while chat box was focused
 
 # Visual Changes
  - Added top border to page footer
@@ -36,6 +39,7 @@
  - Moved bug report button to footer
  - Made the buttons not ugly
  - Added theme functionality
+ - Pack buttons now layout differently in game staring overlay
 
 # Themes
   - Added Default Dark

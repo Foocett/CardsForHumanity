@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const themeOverlay = document.getElementById("theme-overlay");
     const themeDropdown = document.getElementById("theme-select");
     const textBox = document.getElementById("input")
+    submitButton.disabled = true; //disable submit button by default
     let isTextBoxFocused = false;
 
     textBox.addEventListener('focus', () => {
@@ -84,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setCookie("themeName", this.value);
     }
     vineBoom.volume = 1;
-    submitButton.disabled = true; //disable submit button by default
 
     themesButton.addEventListener("click", function (e) {
         e.preventDefault();
@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateSelf();
 
 
-        submitButton.disabled = self.czar; //if player is czar, disable submit button
+        submitButton.disabled = true
         blackText.textContent = gameData.currentBlackCard.text; //set black card text
         if (gameData.currentBlackCard.text.includes("vine")) {
             thatMomentWhen();
@@ -350,7 +350,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
-        submitButton.disabled = true;
         for (let i = 0; i < 10; i++) { //for each of ten cards
             handElementsText[i].textContent = self.hand[i].text; //set text to card.text
             handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
@@ -366,15 +365,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!this.classList.contains("selected-card") && selectedText.includes("vine")) { //play vine boom if vine boom card & card isn't already selected
                     thatMomentWhen();
                 }
+                let wasSelectedAlready = this.classList.contains("selected-card");
                 handCards.forEach(element => { //for each card element
                     element.classList.remove("selected-card"); //remove selected class from all cards
                     element.style.backgroundColor = "white"; //reset card background color
                     element.style.color = "black"; //reset card text color
                 });
                 // Add the selected class to the clicked card
-                this.classList.add("selected-card"); //add selected card class to clicked card
-                hasCardBeenSelected = true; //a card has been selected
-                submitButton.disabled = false; //re-enable submit button
+                if(!wasSelectedAlready) {
+                    this.classList.add("selected-card"); //add selected card class to clicked card
+                    hasCardBeenSelected = true; //a card has been selected
+                    submitButton.disabled = false; //re-enable submit button
+                } else {
+                    this.classList.remove("selected-card"); //add selected card class to clicked card
+                    hasCardBeenSelected = false; //a card has been selected
+                    submitButton.disabled = true; //re-enable submit button
+                }
             }
         });
         handCards[i].addEventListener("mouseover", function () {
@@ -434,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         let firstCard = true; //to track which card is the first card
         let submissionsLength = submissions.length;
-        wrapCards = submissionsLength > 4;
+        wrapCards = submissionsLength > 4 && !displaying;
 
         if (displaying) {
             submissionsLength--;
@@ -548,19 +554,18 @@ document.addEventListener('DOMContentLoaded', function () {
             newPlayerObjectScore.classList.add("player-score-item-score"); //add class for CSS
             newPlayerObjectUsername.textContent = playerInfo[i].name; //set username text content
             newPlayerObjectScore.textContent = playerInfo[i].score; //set score text content
-            if (i % 2 === 1) { //change color every other iteration (disabled right now, might add back later)
+            if (i % 2 === 1) { //change color every other iteration
                 newPlayerObject.style.backgroundColor = "rgba(0,0,0,.2)";
             } else {
                 newPlayerObject.style.backgroundColor = "rgba(0,0,0,.1)";
             }
 
             if (playerInfo[i].czar) { //if player is czar, set color to gray
-                newPlayerObject.style.backgroundColor = "rgba(0,0,0,.35)";
                 newPlayerObjectUsername.textContent = (playerInfo[i].name + " [Card Czar]");
             }
 
             if (playerInfo[i].justWon) { //if player has justWon status, highlight their item
-                newPlayerObject.style.backgroundColor = "#dea2bd";
+                newPlayerObject.style.backgroundColor = "rgba(0,0,0,.5)";
             }
 
             newPlayerObject.appendChild(newPlayerObjectUsername); //add username as child of player object

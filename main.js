@@ -240,6 +240,8 @@ class Deck { //deck object
             });
             curPack["blackCards"].forEach(black => { //for each black card object
                 this.blackDeck.push(new BlackCard(black["text"], pack)); //create new black card object
+                console.log("new black card created")
+                console.log(black["text"], pack)
             });
         });
     }
@@ -278,7 +280,7 @@ class WhiteCard { //white card object
 }
 
 class BlackCard { //black card object
-    constructor(text, blanks, pack) {
+    constructor(text, pack) {
         this.text = text;
         this.pack = pack;
     }

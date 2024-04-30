@@ -68,5 +68,3 @@
 # Likely coming in next few update(s)
   - I will attempt to create a queue for players joining mid-game, storing on server and pushing info to clients only at the start of a round
     - Note for myself, make sure to check queue size when players leave so new turn starts instead of game restarting if there aren't enough players
-  - Revamp card handling/importing
-  - Will make a python app to create custom cards to a master json file

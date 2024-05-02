@@ -376,7 +376,9 @@ class Game {
 
     startSubmissionPhase() {
         game.resetPlayerWagers();
-        this.currentBlackCard = this.deck.drawBlack(); //draw new black card
+        if(this.deck) {
+            this.currentBlackCard = this.deck.drawBlack(); //draw new black card
+        }
         game.players.forEach(player => {
             player.justWon = false;
             player.topUpCards();
@@ -476,7 +478,6 @@ function updateClientPlayerLists(){
     io.emit("updatePlayerList", (game.players)); //send player list to all clients
 }
 
-//const gameDeck = new Deck("base"); //create deck with family friendly content
 let game = new Game(); //create game object using newly created deck object
 server.listen(3000, () => { //listen for client connections and interactions @ port 3000
     console.log('listening on *:3000');

@@ -219,7 +219,7 @@ io.on('connection', (socket) => {
             console.log("A user has disconnected: " + game.playerLibrary[socket.id].name);
             game.players.splice(playerIndex, 1); //remove player from game list
             game.usedUsernames.splice(playerIndex, 1);
-            if(game.playerLibrary[socket.id].czar) { //starts next turn if card czar leaves
+            if(game.playerLibrary[socket.id].czar && game.blackDeck) { //starts next turn if card czar leaves
                 Admin.forceNextTurn(); //technically an issue could arise if player has already submitted however an admin can just start turn manually
             }
             delete game.playerLibrary[socket.id]; //remove player from game library
@@ -232,11 +232,9 @@ io.on('connection', (socket) => {
     });
 });
 
-/*
- * FIXME: - Weird crash when players leave caused by drawBlack() somehow, most likely drawing null from deck (still broken)
- */
 class Deck { //deck object
     constructor(selectedPacks) { //given all inputted packs
+        this.whiteDeck = []; //all white card objects
         this.whiteDeck = []; //all white card objects
         this.blackDeck = []; //all black card objects
         this.whiteDiscard = []; //used white cards

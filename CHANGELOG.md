@@ -1,7 +1,17 @@
-# CHANGELOG V1.3.0
+# CHANGELOG V1.2.1
 
-## Overview
-- Content
+## Visual Changes
+  - Added effect on text box select
+  - Added effect on checkboxes
+  - Other minor visual bugfixes
+
+## Other Changes
+  - Chat can be focused with "/"
+  - Added duplicate username validation
+
+## Bugfixes
+  - Possible fix to server crashing when players leave idk I still cant consistently recreate the bug
+  - I think I finally fixed the server crashing issue when players leave oh my god
 
 # CHANGELOG V1.2.0      
 

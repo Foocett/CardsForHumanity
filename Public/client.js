@@ -1,7 +1,7 @@
 const socket = io();
 let self; //will be given value after client is initialized with server
 let buttonStates = [];
-const packButtons = function () {
+const packButtons = () => {
     return(document.querySelectorAll(".pack-input"))
 }
 // Connect to the server
@@ -231,6 +231,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener("keydown", function (e) {
         if ((e.key === "Enter" || e.key === " ") && !submitButton.disabled && !isTextBoxFocused) {
             submitButton.click();
+        } else if( e.key === "/" && !isTextBoxFocused) {
+            e.preventDefault();
+            textBox.focus();
         }
     })
 
@@ -473,9 +476,6 @@ document.addEventListener('DOMContentLoaded', function () {
             submittedPublicTextElements.push(cardText);
 
 
-            /*
-             * TODO: - If clicked card is already selected, deselect card
-             */
             submittedCard.addEventListener('click', function () {
                 if (this.classList.contains('clickable')) {
                     selectedIndex = i;
@@ -643,8 +643,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.documentElement.style.setProperty('--activeBefore', theme["activeBefore"]);
                 document.documentElement.style.setProperty('--buttonHover', theme["buttonHover"]);
                 document.documentElement.style.setProperty('--darkeningFactor', theme["darkeningFactor"]);
-
-
+                document.documentElement.style.setProperty('--primaryColor', theme["primaryColor"])
             })
             .catch(error => console.error('Error loading the themes:', error));
     }
@@ -678,14 +677,24 @@ function populatePacks(packs) {
         buttonsDiv.style.flexWrap = "wrap";
         buttonsDiv.style.flexDirection = "column"
         buttonsDiv.id = pack;
+        buttonsDiv.style.alignItems = 'center';
         const packLabel = document.createElement('label')
+        packLabel.id = pack + "Visual"
+        packLabel.classList.add("checkBox")
         packLabel.for = pack;
-        packLabel.textContent = pack
         const packCheck = document.createElement('input');
+        const packDiv = document.createElement('div');
+        const visualPackLabel = document.createElement("label")
+        visualPackLabel.for = pack + "Visual";
+        visualPackLabel.textContent = pack
+        visualPackLabel.style.marginTop = "5px"
+        packDiv.classList.add("transition");
         packCheck.type = "checkbox";
         packCheck.classList.add("pack-input")
-        buttonsDiv.appendChild(packCheck);
         buttonsDiv.appendChild(packLabel);
+        packLabel.appendChild(packCheck);
+        packLabel.appendChild(packDiv);
+        buttonsDiv.appendChild(visualPackLabel)
         packSelectionBox.appendChild(buttonsDiv);
     })
     packButtons().forEach(button => {

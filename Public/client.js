@@ -67,18 +67,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const warnLobbyButton = document.getElementById("warnLobby");
     const themeOverlay = document.getElementById("theme-overlay");
     const themeDropdown = document.getElementById("theme-select");
-    const textBox = document.getElementById("input")
     submitButton.disabled = true; //disable submit button by default
     let isTextBoxFocused = false;
 
-    textBox.addEventListener('focus', () => {
+    input.addEventListener('focus', () => {
         isTextBoxFocused = true;
     });
 
 // Event listener for when the text box loses focus
-    textBox.addEventListener('blur', () => {
+    input.addEventListener('blur', () => {
         isTextBoxFocused = false;
     });
+
 
     themeDropdown.onchange = function () {
         loadTheme(this.value)
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
             submitButton.click();
         } else if( e.key === "/" && !isTextBoxFocused) {
             e.preventDefault();
-            textBox.focus();
+            input.focus();
         }
     })
 

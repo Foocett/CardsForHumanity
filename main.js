@@ -18,6 +18,7 @@ getPacks().then(() => {
     })
 });
 
+
 //Global thingies
 let clients = {}; //keeps track of connected socket objects
 let clientIDs = [];
@@ -50,17 +51,21 @@ io.on('connection', (socket) => {
     if(!game.bannedIPs.includes(ipAddress)) {
         clients[socket.id] = socket; //add new connection to client list
         socket.on("requestPlayerData", (username, ackCallback) => { //create and return new player object from new client username
-            const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined, ipAddress); //create player object
-            console.log('A user connected:', username); //display when socket connection is made
-            clientIDs.push(socket.id)
-            newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
-            game.addPlayer(newPlayer); //add player object to game.players
-            const responseData = { //data to be returned to player (formatted as object for possible future features)
-                rawPlayerInfo: newPlayer,
-                gameStarted: hasFirstTurnStarted,
-                packNames: packNames,
-            };
-            ackCallback(responseData); //returns new player object to client
+            if(!game.usedUsernames.includes(username.toLowerCase())) {
+                const newPlayer = new Player(username, socket.id, !hasFirstPlayerJoined, ipAddress); //create player object
+                console.log('A user connected:', username); //display when socket connection is made
+                clientIDs.push(socket.id)
+                newPlayer.czar = !hasFirstPlayerJoined; //if client is first player, make czar for first round
+                game.addPlayer(newPlayer); //add player object to game.players
+                const responseData = { //data to be returned to player (formatted as object for possible future features)
+                    rawPlayerInfo: newPlayer,
+                    gameStarted: hasFirstTurnStarted,
+                    packNames: packNames,
+                };
+                ackCallback(responseData); //returns new player object to client
+            } else {
+                ackCallback(false);
+            }
         });
     } else {
         socket.emit("deactivatePageKicked")
@@ -213,6 +218,7 @@ io.on('connection', (socket) => {
             });
             console.log("A user has disconnected: " + game.playerLibrary[socket.id].name);
             game.players.splice(playerIndex, 1); //remove player from game list
+            game.usedUsernames.splice(playerIndex, 1);
             if(game.playerLibrary[socket.id].czar) { //starts next turn if card czar leaves
                 Admin.forceNextTurn(); //technically an issue could arise if player has already submitted however an admin can just start turn manually
             }
@@ -227,7 +233,7 @@ io.on('connection', (socket) => {
 });
 
 /*
- * FIXME: - Weird crash when players leave caused by drawBlack() somehow, most likely drawing null from deck
+ * FIXME: - Weird crash when players leave caused by drawBlack() somehow, most likely drawing null from deck (still broken)
  */
 class Deck { //deck object
     constructor(selectedPacks) { //given all inputted packs

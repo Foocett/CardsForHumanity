@@ -287,27 +287,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
-        self = response.rawPlayerInfo; //set self equal to returned player object
-        startGameButton.disabled = true; //deactivate button
-        populatePacks(response.packNames);
-        if (self.admin) { //if admin, show start game button
-            startGameButton.style.display = "block";
-            startGameButton.onclick = () => {
-                let packState = [];
-                packButtons().forEach(button => {
-                    let individualPack = {
-                        name: button.id,
-                        checked: button.checked
-                    }
-                    packState.push(individualPack);
-                });
-                socket.emit("begin-game", (packState)); //send begin game signal to server
-                waitingOverlay.style.display = "none"; //hide after click
-            };
+        console.log(response)
+        if(!response) {
+            alert("Someone with this username already exists")
+            window.location.reload()
         } else {
-            packButtons().forEach(button => {
-                button.disabled = true;
-            });
+            self = response.rawPlayerInfo; //set self equal to returned player object
+            startGameButton.disabled = true; //deactivate button
+            populatePacks(response.packNames);
+            if (self.admin) { //if admin, show start game button
+                startGameButton.style.display = "block";
+                startGameButton.onclick = () => {
+                    let packState = [];
+                    packButtons().forEach(button => {
+                        let individualPack = {
+                            name: button.id,
+                            checked: button.checked
+                        }
+                        packState.push(individualPack);
+                    });
+                    socket.emit("begin-game", (packState)); //send begin game signal to server
+                    waitingOverlay.style.display = "none"; //hide after click
+                };
+            } else {
+                packButtons().forEach(button => {
+                    button.disabled = true;
+                });
+            }
         }
     });
 

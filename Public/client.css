@@ -251,6 +251,9 @@ p {
     cursor: pointer; /* Encourage user interaction */
     height: 45%;
     margin-left: 5px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #black-card{
@@ -1002,5 +1005,4 @@ button:disabled {
 .transition {
     transition: 300ms ease;
 }
-
 

@@ -132,3 +132,4 @@ dist
 # everything else
 *notes.txt
 exportToHTML
+Public/Assets/gifCompressor.py

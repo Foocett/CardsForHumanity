@@ -1,3 +1,13 @@
+# CHANGELOG V1.2.2
+
+## HOTFIX
+  - Turns out the pack selection introduced in 1.2.0 just didn't work and I was completely unaware
+  - Due to an incorrectly placed 'i++', packs were determined by the number of checked boxes which ones were checked
+  - This has now been fixed
+
+## Other Changes
+  - The brainrot pack now has a 'subway surfers card', the background of which is a gif of subway surfers gameplay
+
 # CHANGELOG V1.2.1
 
 ## Visual Changes
@@ -10,7 +20,6 @@
   - Added duplicate username validation
 
 ## Bugfixes
-  - Possible fix to server crashing when players leave idk I still cant consistently recreate the bug
   - I think I finally fixed the server crashing issue when players leave oh my god
 
 # CHANGELOG V1.2.0      

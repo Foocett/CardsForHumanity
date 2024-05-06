@@ -7,6 +7,7 @@
 
 ## Other Changes
   - The brainrot pack now has a 'subway surfers card', the background of which is a gif of subway surfers gameplay
+  - 'Light' and 'dark' categories removed from theme dropdown, it was a little too ambiguous
 
 # CHANGELOG V1.2.1
 

@@ -16,12 +16,21 @@
     "An autistic superiority complex.",
     "Being really bad at whispering.",
     "Neurotypicals.", 
-    "Sorting shit because nobody else understands."
+    "Sorting shit because nobody else understands.",
+    "Learning an entire javascript framework because you thought it'd be funny to make a shitty cards against humanity clone"
   ],
 
   "blackCards": [
     {
       "text": "What's your special interest?",
+      "blanks": 1
+    },
+    {
+      "text": "I'm definitely familiar with the flapping stim, me personally though, I typically turn to _____.",
+      "blanks": 1
+    },
+    {
+      "text": "Autism be damned, my boy can _____.",
       "blanks": 1
     }
   ]

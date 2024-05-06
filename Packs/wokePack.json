@@ -46,7 +46,8 @@
     "The draft.",
     "A megachurch pastor.",
     "White Jesus.",
-    "The bible."
+    "The bible.",
+    "Toyotathon"
   ],
 
   "blackCards": [
@@ -76,6 +77,22 @@
     },
     {
       "text": "Those damn liberals are always _____.",
+      "blanks": 1
+    },
+    {
+      "text": "What's gonna spark WWIII?",
+      "blanks": 1
+    },
+    {
+      "text": "_____ is a perfect example of the horrors of communism.",
+      "blanks": 1
+    },
+    {
+      "text": "What is the key to world peace?",
+      "blanks": 1
+    },
+    {
+      "text": "Some damn clear bag policy won't stop me from exercising my constitutional right to bring _____ into JC Penney.",
       "blanks": 1
     }
   ]

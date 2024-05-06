@@ -84,7 +84,9 @@
     "Bees, a wall of bees, bees as far as the eye can see.",
     "A particularly fat bumble bee.",
     "Being born French :(",
-    "The reason my tummy hurts."
+    "The reason my tummy hurts.",
+    "A homosexual.",
+    "A squat plug"
   ],
 
   "blackCards": [
@@ -186,6 +188,30 @@
     },
     {
       "text": "Frankly, _____ slaps to an unreasonable degree.",
+      "blanks": 1
+    },
+    {
+      "text": "Why are you depressed?",
+      "blanks": 1
+    },
+    {
+      "text": "Life just hasn't been the same since _____ came out.",
+      "blanks": 1
+    },
+    {
+      "text": "Fellas, is it gay to be _____?",
+      "blanks": 1
+    },
+    {
+      "text": "I love a nice piping hot _____.",
+      "blanks": 1
+    },
+    {
+      "text": "No John, this isn't about your drinking, we're holding an intervention because keep _____ing yourself in public.",
+      "blanks": 1
+    },
+    {
+      "text": "What's worse than stubbing your toe?",
       "blanks": 1
     }
   ]

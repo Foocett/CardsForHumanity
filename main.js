@@ -144,8 +144,8 @@ io.on('connection', (socket) => {
         packStates.forEach(item => {
            if(item.checked){
                enabledPacks.push(packNames[i])
-               i++
            }
+           i++
         });
         game.deck = new Deck(enabledPacks)
         io.emit("hide-waiting-overlay");

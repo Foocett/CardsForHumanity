@@ -359,13 +359,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
         for (let i = 0; i < 10; i++) { //for each of ten cards
-            if(self.hand[i].text === "Subway surfers.") {
-                handElementsText[i].parentElement.backgroundImage = 'url("./Assets/SubwaySurfersLong.gif")'
-                handElementsText[i].textContent = "" //set text to card.text
-                handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
+            if(self.hand[i].text === "Subway Surfers.") {
+                handElementsText[i].parentElement.classList.add("subway")
                 handElementsPack[i].color = "white";
+                handElementsText[i].textContent = self.hand[i].text; //set text to card.text
+                handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full nam
             } else {
-                handElementsText[i].parentElement.backgroundImage = "white"
+                handElementsText[i].parentElement.classList.remove("subway")
                 handElementsPack[i].color = "black";
                 handElementsText[i].textContent = self.hand[i].text; //set text to card.text
                 handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
@@ -467,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!wrapCards) {
                 submittedCard.classList.add("tall");
             }
+            let subway = submissions[i].text === "Subway Surfers.";
             const cardText = document.createElement("p"); //create text object child
             const cardPack = document.createElement("p"); //create pack object child
             submittedCard.classList.add("white-card"); //add white card class for CSS formatting
@@ -523,6 +524,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             if (showContent) { //if content is to be shown to all
+                if(subway) {
+                    submittedCard.classList.add('subway')
+                }
                 if (cardText.textContent.includes("vine")) {
                     thatMomentWhen();
                 }
@@ -534,11 +538,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
+                submittedCard.classList.add('subway')
                 firstCard = false; //disable first card
                 cardText.textContent = submittedText; //display personal submission text on first card
                 if (submittedText.includes("vine") && mySubmission) {
                     thatMomentWhen();
                     mySubmission = false;
+                }
+                if(subway) {
+
                 }
                 cardPack.textContent = submittedPack; //display personal submission pack on first card
                 cardText.style.display = "p"; //make card text visible

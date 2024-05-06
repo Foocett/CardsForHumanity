@@ -245,6 +245,7 @@ p {
     flex-direction: column;
     justify-content: space-between;
     background-color: white;
+    background-image: none;
     color: black;
     border-style: solid;
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -1006,3 +1007,6 @@ button:disabled {
     transition: 300ms ease;
 }
 
+.subway {
+    background-image: url("./Assets/SubwaySurfers.gif"); !important;
+}

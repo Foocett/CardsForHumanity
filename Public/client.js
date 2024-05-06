@@ -287,7 +287,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     socket.emit('requestPlayerData', username, (response) => { //send username to server and get self player object back
-        console.log(response)
         if(!response) {
             alert("Someone with this username already exists")
             window.location.reload()
@@ -360,8 +359,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function populateCardsFromHand(self) { //update HTML cards with info in hand
         for (let i = 0; i < 10; i++) { //for each of ten cards
-            handElementsText[i].textContent = self.hand[i].text; //set text to card.text
-            handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
+            if(self.hand[i].text === "Subway surfers.") {
+                handElementsText[i].parentElement.backgroundImage = 'url("./Assets/SubwaySurfersLong.gif")'
+                handElementsText[i].textContent = "" //set text to card.text
+                handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
+                handElementsPack[i].color = "white";
+            } else {
+                handElementsText[i].parentElement.backgroundImage = "white"
+                handElementsPack[i].color = "black";
+                handElementsText[i].textContent = self.hand[i].text; //set text to card.text
+                handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
+            }
         }
     }
 
@@ -621,18 +629,11 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('themes.json')
             .then(response => response.json())
             .then(themes => {
-
-                const lightOptions = document.getElementById("light-optgroup");
-                const darkOptions = document.getElementById("dark-optgroup");
                 for (let key in themes) {
                     let theme = themes[key];
                     const newOption = document.createElement("option");
                     newOption.textContent = theme["name"];
-                    if (theme["category"] === "dark") {
-                        darkOptions.appendChild(newOption);
-                    } else {
-                        lightOptions.appendChild(newOption);
-                    }
+                    themeDropdown.appendChild(newOption);
                 }
                 if (getCookie("themeName")) {
                     themeDropdown.value = getCookie("themeName");
@@ -682,13 +683,13 @@ function populatePacks(packs) {
         buttonsDiv.style.display = "flex";
         buttonsDiv.style.flexWrap = "wrap";
         buttonsDiv.style.flexDirection = "column"
-        buttonsDiv.id = pack;
         buttonsDiv.style.alignItems = 'center';
         const packLabel = document.createElement('label')
         packLabel.id = pack + "Visual"
         packLabel.classList.add("checkBox")
         packLabel.for = pack;
         const packCheck = document.createElement('input');
+        packCheck.id = pack;
         const packDiv = document.createElement('div');
         const visualPackLabel = document.createElement("label")
         visualPackLabel.for = pack + "Visual";

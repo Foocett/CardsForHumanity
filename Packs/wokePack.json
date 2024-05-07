@@ -47,7 +47,10 @@
     "A megachurch pastor.",
     "White Jesus.",
     "The bible.",
-    "Toyotathon"
+    "Toyotathon",
+    "Getting your crackpipe from the government then selling it to a crackhead <br>(@hello.josh.12)",
+    "Watching Steven Crowder completely unironically. <br>(@hello.josh.12)",
+    "The american school system."
   ],
 
   "blackCards": [
@@ -93,6 +96,10 @@
     },
     {
       "text": "Some damn clear bag policy won't stop me from exercising my constitutional right to bring _____ into JC Penney.",
+      "blanks": 1
+    },
+    {
+      "text": "_____: Change my mind. <br>(@hello.josh.12)",
       "blanks": 1
     }
   ]

@@ -65,7 +65,18 @@
     "Admiring yourself in the reflection of Parks' head whilst pegging him from behind.",
     "JB's parking spot.",
     "A very safe, wholesome, and rule-abiding ISAS.",
-    "Being Shenough."
+    "Being Shenough.",
+    "The graveyard incident of '24<br>(-Kelbert)",
+    "Album day. <br>(-Kelbert)",
+    "Lane Mack's fabulous tie pin collection <br>(-Kelbert)",
+    "The unrivaled swagger of Lane Mack <br>(-Kelbert)",
+    "THE Kelbert.",
+    "A rendition of 'what do you do with a drunken sailor', entitled 'what do you do with a zoinked out freshman'<br>(-Kelbert)",
+    "Campbell telling you to go fuck yourself.<br>(@hello.josh.12)",
+    "The third floor.<br>(-Kelbert)",
+    "Being bald.<br>(@emily.kbigelow)",
+    "The GPA crusher Oscar.",
+    "ISAS food poisoning.<br>(@dragons.at.the.dogpark)"
   ],
 
   "blackCards": [
@@ -104,6 +115,23 @@
     {
       "text": "And the being mid book award goes to _____",
       "blanks": "1"
+    },
+    {
+      "text": "What lies on the third floor?",
+      "blanks": "1"
+    },
+    {
+      "text": "What is Dutch The Lion's catchphrase?",
+      "blanks": "1"
+    },
+    {
+      "text": "The dean is coming! Quick, _____!",
+      "blanks": 1
+    },
+    {
+      "text": "Dude, I can't believe you convinced Bloom to _____.",
+      "blanks": 1
     }
+
   ]
 }

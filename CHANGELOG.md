@@ -1,7 +1,14 @@
+# CHANGELOG V1.2.3
+
+## Other Changes
+  - Began adding community cards
+  - Added shake animation for when non-clickable cards are clicked
+
+
 # CHANGELOG V1.2.2
 
 ## HOTFIX
-  - Turns out the pack selection introduced in 1.2.0 just didn't work and I was completely unaware
+  - Turns out the pack selection introduced in 1.2.0 just didn't work, and I was completely unaware
   - Due to an incorrectly placed 'i++', packs were determined by the number of checked boxes which ones were checked
   - This has now been fixed
 

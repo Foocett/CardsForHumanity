@@ -477,7 +477,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!wrapCards) {
                 submittedCard.classList.add("tall");
             }
-            let subway = submissions[i].text === "Subway Surfers.";
             const cardText = document.createElement("p"); //create text object child
             const cardPack = document.createElement("p"); //create pack object child
             submittedCard.classList.add("white-card"); //add white card class for CSS formatting
@@ -544,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             if (showContent) { //if content is to be shown to all
-                if(subway) {
+                if(cardText.textContent === "Subway Surfers.") {
                     submittedCard.classList.add('subway')
                 }
                 if (cardText.innerHTML.includes("vine")) {
@@ -558,15 +557,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
-                submittedCard.classList.add('subway')
+                if(submittedText === "Subway Surfers.") {
+                    submittedCard.classList.add('subway')
+                }
                 firstCard = false; //disable first card
                 cardText.innerHTML = submittedText; //display personal submission text on first card
                 if (submittedText.includes("vine") && mySubmission) {
                     thatMomentWhen();
                     mySubmission = false;
-                }
-                if(subway) {
-
                 }
                 cardPack.innerHTML = submittedPack; //display personal submission pack on first card
                 cardText.style.display = "p"; //make card text visible

@@ -1010,3 +1010,21 @@ button:disabled {
 .subway {
     background-image: url("./Assets/SubwaySurfers.gif"); !important;
 }
+
+.white-card.shake {
+    --scale-factor: 1; /* Default scale factor when not hovering */
+    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0) scale(var(--scale-factor));
+    }
+    25%, 75% {
+        transform: translateX(-8px) scale(var(--scale-factor));
+    }
+    50% {
+        transform: translateX(8px) scale(var(--scale-factor));
+    }
+}
+

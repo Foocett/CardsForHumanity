@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault()
         if (!hasCardBeenSubmitted && !self.czar) {
             socket.emit("increase-wager", 0, (response) => {
-                wagerValue.textContent = response.toString();
+                wagerValue.innerHTML = response.toString();
             });
         }
     });
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault()
         if (!hasCardBeenSubmitted && !self.czar) {
             socket.emit("decrease-wager", 0, (response) => {
-                wagerValue.textContent = response.toString();
+                wagerValue.innerHTML = response.toString();
             });
         }
     });
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     socket.on("reset-wager", () => {
-        wagerValue.textContent = "1"
+        wagerValue.innerHTML = "1"
     })
 
 
@@ -349,11 +349,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         submitButton.disabled = true
-        blackText.textContent = gameData.currentBlackCard.text; //set black card text
+        blackText.innerHTML = gameData.currentBlackCard.text; //set black card text
         if (gameData.currentBlackCard.text.includes("vine")) {
             thatMomentWhen();
         }
-        blackPack.textContent = gameData.currentBlackCard.pack; //get full pack name
+        blackPack.innerHTML = gameData.currentBlackCard.pack; //get full pack name
         updateConnectedPlayers(gameData.players); //updates connected players
     });
 
@@ -362,13 +362,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if(self.hand[i].text === "Subway Surfers.") {
                 handElementsText[i].parentElement.classList.add("subway")
                 handElementsPack[i].color = "white";
-                handElementsText[i].textContent = self.hand[i].text; //set text to card.text
-                handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full nam
+                handElementsText[i].innerHTML = self.hand[i].text; //set text to card.text
+                handElementsPack[i].innerHTML = self.hand[i].pack; //set pack to card.pack's full nam
             } else {
                 handElementsText[i].parentElement.classList.remove("subway")
                 handElementsPack[i].color = "black";
-                handElementsText[i].textContent = self.hand[i].text; //set text to card.text
-                handElementsPack[i].textContent = self.hand[i].pack; //set pack to card.pack's full name
+                handElementsText[i].innerHTML = self.hand[i].text; //set text to card.text
+                handElementsPack[i].innerHTML = self.hand[i].pack; //set pack to card.pack's full name
             }
         }
     }
@@ -399,18 +399,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     submitButton.disabled = true; //re-enable submit button
                 }
             }
+            if (!this.classList.contains('clickable')) {
+                // Check if the card is currently being hovered
+                const isHovering = this.matches(':hover');
+                this.style.setProperty('--scale-factor', isHovering ? '1.05' : '1');
+                this.classList.add('shake');
+                setTimeout(() => {
+                    this.classList.remove('shake');
+                    this.style.removeProperty('--scale-factor');
+                }, 350); // slightly longer than the animation duration
+            }
         });
         handCards[i].addEventListener("mouseover", function () {
             if (this.classList.contains("clickable") && !isHovering) {
                 let replacementText = '<span class="underlined">' + self.hand[i].text + '</span>';
-                blackText.innerHTML = blackText.textContent.replace("_____", replacementText);
+                blackText.innerHTML = blackText.innerHTML.replace("_____", replacementText);
                 isHovering = true
             }
         });
 
         handCards[i].addEventListener("mouseleave", function () {
             isHovering = false
-            blackText.innerHTML = blackText.textContent.replace(self.hand[i].text, "_____");
+            blackText.innerHTML = blackText.innerHTML.replace(self.hand[i].text, "_____");
         });
     }
 
@@ -475,8 +485,8 @@ document.addEventListener('DOMContentLoaded', function () {
             cardText.classList.add("white-card-text"); //add white card text class for CSS formatting
             cardText.classList.add("submitted-card-text"); //designate card text
             cardPack.classList.add("white-card-pack"); //add white card pack class for CSS formatting
-            cardText.textContent = submissions[i].text; //set card text content
-            cardPack.textContent = submissions[i].pack; //set pack text
+            cardText.innerHTML = submissions[i].text; //set card text content
+            cardPack.innerHTML = submissions[i].pack; //set pack text
             if (displaying && i === winningIndex) {
                 submittedCard.classList.add("selected-card");
                 if (submissions[i].text.includes("vine")) {
@@ -510,24 +520,34 @@ document.addEventListener('DOMContentLoaded', function () {
                     hasCardBeenSelected = true; //a card has been selected
                     submitButton.disabled = false; //re-enable submit button
                 }
+                if(!this.classList.contains('clickable')) {
+                    // Check if the card is currently being hovered
+                    const isHovering = this.matches(':hover');
+                    this.style.setProperty('--scale-factor', isHovering ? '1.05' : '1');
+                    this.classList.add('shake');
+                    setTimeout(() => {
+                        this.classList.remove('shake');
+                        this.style.removeProperty('--scale-factor');
+                    }, 350); // slightly longer than the animation duration
+                }
             });
 
             submittedCard.addEventListener("mouseover", function () {
                 if (this.classList.contains("clickable") && !isHovering) {
                     let replacementText = '<span class="underlined">' + submissions[i].text + '</span>';
-                    blackText.innerHTML = blackText.textContent.replace("_____", replacementText);
+                    blackText.innerHTML = blackText.innerHTML.replace("_____", replacementText);
                 }
             });
 
             submittedCard.addEventListener("mouseleave", function () {
-                blackText.innerHTML = blackText.textContent.replace(submissions[i].text, "_____");
+                blackText.innerHTML = blackText.innerHTML.replace(submissions[i].text, "_____");
             });
 
             if (showContent) { //if content is to be shown to all
                 if(subway) {
                     submittedCard.classList.add('subway')
                 }
-                if (cardText.textContent.includes("vine")) {
+                if (cardText.innerHTML.includes("vine")) {
                     thatMomentWhen();
                 }
                 cardText.style.display = "p"; //make card text visible
@@ -540,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (firstCard && hasCardBeenSubmitted) { //if it's the first card
                 submittedCard.classList.add('subway')
                 firstCard = false; //disable first card
-                cardText.textContent = submittedText; //display personal submission text on first card
+                cardText.innerHTML = submittedText; //display personal submission text on first card
                 if (submittedText.includes("vine") && mySubmission) {
                     thatMomentWhen();
                     mySubmission = false;
@@ -548,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(subway) {
 
                 }
-                cardPack.textContent = submittedPack; //display personal submission pack on first card
+                cardPack.innerHTML = submittedPack; //display personal submission pack on first card
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
             } else { //else do not show any text content; display blank card, applies to czar and unsubmitted players
@@ -574,8 +594,8 @@ document.addEventListener('DOMContentLoaded', function () {
             let newPlayerObjectScore = document.createElement("h"); //create score text
             newPlayerObjectUsername.classList.add("player-score-item-username"); //add class for CSS
             newPlayerObjectScore.classList.add("player-score-item-score"); //add class for CSS
-            newPlayerObjectUsername.textContent = playerInfo[i].name; //set username text content
-            newPlayerObjectScore.textContent = playerInfo[i].score; //set score text content
+            newPlayerObjectUsername.innerHTML = playerInfo[i].name; //set username text content
+            newPlayerObjectScore.innerHTML = playerInfo[i].score; //set score text content
             if (i % 2 === 1) { //change color every other iteration
                 newPlayerObject.style.backgroundColor = "rgba(0,0,0,.2)";
             } else {
@@ -583,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (playerInfo[i].czar) { //if player is czar, set color to gray
-                newPlayerObjectUsername.textContent = (playerInfo[i].name + " [Card Czar]");
+                newPlayerObjectUsername.innerHTML = (playerInfo[i].name + " [Card Czar]");
             }
 
             if (playerInfo[i].justWon) { //if player has justWon status, highlight their item
@@ -623,7 +643,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function addMessage(message, author) {
         const messageElement = document.createElement('div');
-        messageElement.textContent = author + ": " + message;
+        messageElement.innerHTML = author + ": " + message;
         messages.appendChild(messageElement);
         scrollToBottom();
     }
@@ -640,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 for (let key in themes) {
                     let theme = themes[key];
                     const newOption = document.createElement("option");
-                    newOption.textContent = theme["name"];
+                    newOption.innerHTML = theme["name"];
                     themeDropdown.appendChild(newOption);
                 }
                 if (getCookie("themeName")) {
@@ -701,7 +721,7 @@ function populatePacks(packs) {
         const packDiv = document.createElement('div');
         const visualPackLabel = document.createElement("label")
         visualPackLabel.for = pack + "Visual";
-        visualPackLabel.textContent = pack
+        visualPackLabel.innerHTML = pack
         visualPackLabel.style.marginTop = "5px"
         packDiv.classList.add("transition");
         packCheck.type = "checkbox";

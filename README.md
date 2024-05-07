@@ -1,4 +1,4 @@
-# CardsForHumanity V1.2.0
+# CardsForHumanity V1.2.3
 ### __Suggest Features [HERE](https://forms.gle/wMJ3wAkWuBf9xk5c6)!__
 ### __Submit Cards [HERE](https://forms.gle/JD7iUcmttC9GB4gU6)!__ (Read submission rules at the bottom of this file before submitting)
 _____
@@ -145,24 +145,26 @@ Here is a brief list of all of them
   - Inputs:
       - Message : String
 
-# How to Submit Cards (manually)
-You can submit cards through the Google form at the top of this file, alternatively, for adding multiple cards, you can fork the
-GitHub repository and add multiple cards at once, here's a short guide on how to do that
-
-### 1. **Create a GitHub Account**
-If you don't have one already, sign up at [GitHub](https://github.com).
-
-### 2. **Fork the Repository**
-- Navigate to the main repository page [here](https://github.com/Foocett/CardsForHumanity).
-- Click the **Fork** button at the top right to create your own copy of the repository.
-
-### 3. **Edit the JSON File**
-- In your forked repository, navigate to the Packs folder and choose the json file you wish to edit.
-- Click the file, then click the pencil icon (Edit) to start making changes.
+# How to Add Your Own Cards
+In order to get a card into the main game, use the card submission form at the top of this file, if you want to add your own private card pack 
+though, here are some brief instructions
+### 1. **Download a version newer than 1.2.0
+### 2. **Edit the JSON File**
+- Navigate to the Packs folder in your text editor of choice and choose the json file you wish to edit, or create a new file.
 - Be careful to maintain the formatting of the file, or else everything breaks
-  - White cards are simply comma-separated string values surrounded in quotes; make sure the last card does **not** have a comma after it
+- If you're creating a new file, paste this skeleton into your empty JSON file
+- ```
+    {
+      "packName": "",
+      "whiteCards": [
+    
+      ],
+      "blackCards": [
+      ]
+    }
+  ```
+- White cards are simply comma-separated string values surrounded in quotes; make sure the last card does **not** have a comma after it
 ```
-{
   "whiteCards": [
     "card text",
     "other card text",
@@ -189,24 +191,7 @@ If you don't have one already, sign up at [GitHub](https://github.com).
 ```
   - Funny enough, the game actually does not currently support cards with more than one blank, so idk why I even formatted it like that lol
 
-### 4. **Commit Your Changes**
-- After editing, scroll to the bottom of the page.
-- Provide a brief description of your changes in the **Commit changes** box.
-- Choose "Create a new branch for this commit and start a pull request," then click **Propose changes**.
-
-### 5. **Open a Pull Request**
-- On the new page, click **Create pull request**.
-- Add a suitable title and a detailed description of your changes.
-- Click **Create pull request** again to submit your changes for review.
-
-### 6. **Await Approval**
- - There's Not a lot to say here; cards with content that contains slurs or other clearly malicious language will be removed
- - To clarify, this game is supposed to be crude and funny, but not at the expense of specific groups or people based solely on their nature.
-
-
 # Known Issues
-- Despite major bugfixes in the last two updates mostly resolving the problem, the server does still occasionally crash when the last player disconnects
-- Card czar submit button isn't deactivated, clicking doesn't cause problems so only visual
 - Players joining after game starts are not properly dealt in and are stuck on waiting screen
 
 # Likely coming in next few update(s)

@@ -416,11 +416,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         submitButton.disabled = true
-        blackText.innerHTML = gameData.currentBlackCard.text; //set black card text
+        blackText.innerHTML = extractBlock(gameData.currentBlackCard.text)[0]; //set black card text
+        console.log(gameData.currentBlackCard.text)
+        console.log(extractBlock(gameData.currentBlackCard.text))
+        console.log(extractBlock(gameData.currentBlackCard.text)[0])
+        console.log(blackText.innerHTML)
         if (gameData.currentBlackCard.text.includes("vine")) {
             thatMomentWhen();
         }
-        blackPack.innerHTML = gameData.currentBlackCard.pack; //get full pack name
+        blackPack.innerHTML = gameData.currentBlackCard.pack + extractBlock(gameData.currentBlackCard.text)[1]; //get full pack name
         updateConnectedPlayers(gameData.players); //updates connected players
     });
 
@@ -429,13 +433,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if(self.hand[i].text === "Subway Surfers.") {
                 handElementsText[i].parentElement.classList.add("subway")
                 handElementsPack[i].color = "white";
-                handElementsText[i].innerHTML = self.hand[i].text; //set text to card.text
-                handElementsPack[i].innerHTML = self.hand[i].pack; //set pack to card.pack's full nam
+                handElementsText[i].innerHTML = extractBlock(self.hand[i].text)[0]; //set text to card.text
+                handElementsPack[i].innerHTML = self.hand[i].pack + extractBlock(self.hand[i].text)[1]; //set pack to card.pack's full nam
             } else {
                 handElementsText[i].parentElement.classList.remove("subway")
                 handElementsPack[i].color = "black";
-                handElementsText[i].innerHTML = self.hand[i].text; //set text to card.text
-                handElementsPack[i].innerHTML = self.hand[i].pack; //set pack to card.pack's full name
+                handElementsText[i].innerHTML = extractBlock(self.hand[i].text)[0]; //set text to card.text
+                handElementsPack[i].innerHTML = self.hand[i].pack + extractBlock(self.hand[i].text)[1];
             }
         }
     }
@@ -487,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         handCards[i].addEventListener("mouseleave", function () {
             isHovering = false
-            blackText.innerHTML = blackText.innerHTML.replace(self.hand[i].text, "_____");
+            blackText.innerHTML = blackText.innerHTML.replace(extractBlock(self.hand[i].text)[0], "_____");
         });
     }
 
@@ -553,8 +557,8 @@ document.addEventListener('DOMContentLoaded', function () {
             cardText.classList.add("white-card-text"); //add white card text class for CSS formatting
             cardText.classList.add("submitted-card-text"); //designate card text
             cardPack.classList.add("white-card-pack"); //add white card pack class for CSS formatting
-            cardText.innerHTML = submissions[i].text; //set card text content
-            cardPack.innerHTML = submissions[i].pack; //set pack text
+            cardText.innerHTML = extractBlock(submissions[i].text)[0]; //set card text content
+            cardPack.innerHTML = submissions[i].pack + extractBlock(submissions[i].text)[1]; //set pack text
             if (displaying && i === winningIndex) {
                 submittedCard.classList.add("selected-card");
                 if (submissions[i].text.includes("vine")) {
@@ -608,7 +612,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             submittedCard.addEventListener("mouseleave", function () {
-                blackText.innerHTML = blackText.innerHTML.replace(submissions[i].text, "_____");
+                blackText.innerHTML = blackText.innerHTML.replace(extractBlock(submissions[i].text)[0], "_____");
             });
 
             if (showContent) { //if content is to be shown to all
@@ -630,12 +634,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     submittedCard.classList.add('subway')
                 }
                 firstCard = false; //disable first card
-                cardText.innerHTML = submittedText; //display personal submission text on first card
+                cardText.innerHTML = extractBlock(submittedText)[0]; //display personal submission text on first card
                 if (submittedText.includes("vine") && mySubmission) {
                     thatMomentWhen();
                     mySubmission = false;
                 }
-                cardPack.innerHTML = submittedPack; //display personal submission pack on first card
+                cardPack.innerHTML = submittedPack + extractBlock(submittedText)[1]; //display personal submission pack on first card
                 cardText.style.display = "p"; //make card text visible
                 cardPack.style.display = "p"; //make card pack visible
             } else { //else do not show any text content; display blank card, applies to czar and unsubmitted players
@@ -827,4 +831,27 @@ function populatePacks(packs) {
             }
         }
     })
+}
+
+function extractBlock(text) {
+    // Find the index of the last opening brace '{'
+    const startIndex = text.lastIndexOf('{');
+
+    // Find the index of the last closing brace '}'
+    const endIndex = text.lastIndexOf('}');
+
+    // Initialize variables for the cleaned text and block content
+    let cleanedText = text;
+    let blockContent = '';
+    // Check if both braces are found and the '{' is before the '}'
+    if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+        // Extract the content inside the last {} block
+        const content = text.substring(startIndex + 1, endIndex);
+        // Format the content if it exists
+        blockContent = content ? ` (${content})` : '';
+        // Remove the {} block from the original text
+        cleanedText = text.substring(0, startIndex).trim();
+    }
+    // Return the cleaned text and the formatted content inside the {}
+    return [cleanedText, blockContent];
 }

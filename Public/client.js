@@ -1,3 +1,8 @@
+// TODO wager with arrow keys
+// TODO de-focus text box with esc
+// TODO remove credit from black card blank filling
+// TODO submit card on double click?
+// TODO !IMPORTANT move {...} in pack JSON files to pack text
 const socket = io();
 let self; //will be given value after client is initialized with server
 let buttonStates = [];
@@ -26,6 +31,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const handCards = document.querySelectorAll(".white-card"); //all cards in hand
+    const selectedCardIndex = -1;
+    const selectedHandCardIndex = function() {
+        for(let i = 0; i<10; i++) {
+            if(handCards[i].classList.contains("selected-card")) {
+                return i;
+            }
+        }
+        return -1;
+    }
     let handElementsText = []; //white card text objects
     let handElementsPack = []; //white card pack objects
     let selectedIndex; //index of selected card
@@ -67,6 +81,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const warnLobbyButton = document.getElementById("warnLobby");
     const themeOverlay = document.getElementById("theme-overlay");
     const themeDropdown = document.getElementById("theme-select");
+    const handTextElements = document.querySelectorAll(".white-card-text")
+    const handPackElements = document.querySelectorAll(".white-card-pack");
+    handPackElements.forEach(obj => {
+        obj.classList.add("unselectable")
+    })
+    handTextElements.forEach(obj => {
+        obj.classList.add("unselectable")
+    })
     submitButton.disabled = true; //disable submit button by default
     let isTextBoxFocused = false;
 
@@ -216,6 +238,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 startGameButton.click();
             }
         }
+        if(isTextBoxFocused && e.key === "Escape") {
+            input.blur()
+        }
+        if((e.key==="+" || e.key === "=") && !isTextBoxFocused) {
+            wagerRight.click()
+        }
+        if((e.key === "-" || e.key === "_") && !isTextBoxFocused) {
+            wagerLeft.click()
+        }
     }
 
     socket.on('triggerAlert', (message) => {
@@ -234,6 +265,42 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if( e.key === "/" && !isTextBoxFocused) {
             e.preventDefault();
             input.focus();
+        }
+        if(e.key === "ArrowRight" && !isTextBoxFocused) {
+            let idx = selectedHandCardIndex();
+            if(idx === -1 || idx === 9) {
+                handCards[0].click()
+            } else {
+                handCards[idx+1].click();
+            }
+        }
+        if(e.key === "ArrowLeft" && !isTextBoxFocused) {
+            let idx = selectedHandCardIndex();
+            if(idx === -1 || idx === 0) {
+                handCards[0].click()
+            } else {
+                handCards[idx-1].click();
+            }
+        }
+        if(e.key === "ArrowUp" && !isTextBoxFocused) {
+            let idx = selectedHandCardIndex();
+            if(idx === -1) {
+                handCards[0].click()
+            } else if(idx < 5){
+                handCards[idx+5].click();
+            } else {
+                handCards[idx-5].click();
+            }
+        }
+        if(e.key === "ArrowDown" && !isTextBoxFocused) {
+            let idx = selectedHandCardIndex();
+            if(idx === -1) {
+                handCards[0].click()
+            } else if(idx > 5){
+                handCards[idx-5].click();
+            } else {
+                handCards[idx+5].click();
+            }
         }
     })
 
@@ -479,6 +546,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const cardText = document.createElement("p"); //create text object child
             const cardPack = document.createElement("p"); //create pack object child
+            cardPack.classList.add("unselectable");
+            cardText.classList.add("unselectable")
             submittedCard.classList.add("white-card"); //add white card class for CSS formatting
             submittedCard.classList.add("submitted-card"); //designate card as a selected card
             cardText.classList.add("white-card-text"); //add white card text class for CSS formatting
@@ -590,6 +659,8 @@ document.addEventListener('DOMContentLoaded', function () {
             newPlayerObject.classList.add("player-score-item"); //add class for CSS
             let newPlayerObjectUsername = document.createElement("h"); //create username text
             let newPlayerObjectScore = document.createElement("h"); //create score text
+            newPlayerObjectUsername.classList.add("unselectable")
+            newPlayerObjectScore.classList.add("unselectable")
             newPlayerObjectUsername.classList.add("player-score-item-username"); //add class for CSS
             newPlayerObjectScore.classList.add("player-score-item-score"); //add class for CSS
             newPlayerObjectUsername.innerHTML = playerInfo[i].name; //set username text content
@@ -711,6 +782,7 @@ function populatePacks(packs) {
         buttonsDiv.style.flexDirection = "column"
         buttonsDiv.style.alignItems = 'center';
         const packLabel = document.createElement('label')
+        packLabel.classList.add("unselectable")
         packLabel.id = pack + "Visual"
         packLabel.classList.add("checkBox")
         packLabel.for = pack;
@@ -718,6 +790,7 @@ function populatePacks(packs) {
         packCheck.id = pack;
         const packDiv = document.createElement('div');
         const visualPackLabel = document.createElement("label")
+        visualPackLabel.classList.add("unselectable")
         visualPackLabel.for = pack + "Visual";
         visualPackLabel.innerHTML = pack
         visualPackLabel.style.marginTop = "5px"

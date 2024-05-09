@@ -35,7 +35,7 @@
     "Gaslamping.",
     "Cum.",
     "Temu.",
-    "Thinking you're going to sneeze but not so you end up just sitting there like a little bitch.",
+    "Thinking you're about to sneeze but then not sneezing so you just end up sitting there like a stupid little bitch.",
     "Hellen keller.",
     "A Hallmark movie, except it's vaguely sexual for some reason.",
     "A low-quality christian radio show.",
@@ -78,7 +78,7 @@
     "MLA Formatted, 12pt, Times New Roman, Double Spaced.",
     "A favor that will \"only take a minute\".",
     "Holding the flashlight for your dad.",
-    "Barbemhimer.",
+    "Barbenhimer.",
     "Ze German language.",
     "A rock, nothing special, just a rock.",
     "Bees, a wall of bees, bees as far as the eye can see.",
@@ -88,9 +88,10 @@
     "A homosexual.",
     "A squat plug",
     "Being full of the exaggerated swagger of a black teen.",
-    "Man-made horrors beyond comprehension.<br>(-Kelbert)",
-    "Ripped socks with them dogs out ready to bite.<br>(-Kelbert)",
-    "The Fitness Gram Pacer Test®; a multi-stage aerobic capacity test.<br>(-Kelbert)"
+    "Man-made horrors beyond comprehension.{-Kelbert}",
+    "Ripped socks with them dogs out ready to bite.{-Kelbert}",
+    "The Fitness Gram Pacer Test®; a multi-stage aerobic capacity test. {-Kelbert}",
+    "Fettuccine."
   ],
   "blackCards": [
     {
@@ -215,6 +216,10 @@
     },
     {
       "text": "What's worse than stubbing your toe?",
+      "blanks": 1
+    },
+    {
+      "text": "Yeah, sure, when pigs _____.",
       "blanks": 1
     }
   ]

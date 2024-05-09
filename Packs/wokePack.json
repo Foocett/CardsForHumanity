@@ -48,9 +48,10 @@
     "White Jesus.",
     "The bible.",
     "Toyotathon",
-    "Getting your crackpipe from the government then selling it to a crackhead <br>(@hello.josh.12)",
-    "Watching Steven Crowder completely unironically. <br>(@hello.josh.12)",
-    "The american school system."
+    "Getting your crackpipe from the government then selling it to a crackhead {@hello.josh.12}",
+    "Watching Steven Crowder completely unironically. {@hello.josh.12}",
+    "The american school system.",
+    "Date Right Stuff."
   ],
 
   "blackCards": [
@@ -99,7 +100,11 @@
       "blanks": 1
     },
     {
-      "text": "_____: Change my mind. <br>(@hello.josh.12)",
+      "text": "_____: Change my mind. {@hello.josh.12}",
+      "blanks": 1
+    },
+    {
+      "text": "I homeschool my kid because the public school system is brainwashing children by teaching them _____.",
       "blanks": 1
     }
   ]

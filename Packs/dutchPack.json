@@ -66,21 +66,26 @@
     "JB's parking spot.",
     "A very safe, wholesome, and rule-abiding ISAS.",
     "Being Shenough.",
-    "The graveyard incident of '24<br>(-Kelbert)",
-    "Album day. <br>(-Kelbert)",
-    "Lane Mack's fabulous tie pin collection <br>(-Kelbert)",
-    "The unrivaled swagger of Lane Mack <br>(-Kelbert)",
+    "The graveyard incident of '24.{-Kelbert}",
+    "Album day. {-Kelbert}",
+    "Lane Mack's fabulous tie pin collection. {-Kelbert}",
+    "The unrivaled swagger of Lane Mack. {-Kelbert}",
     "THE Kelbert.",
-    "A rendition of 'what do you do with a drunken sailor', entitled 'what do you do with a zoinked out freshman'<br>(-Kelbert)",
-    "Campbell telling you to go fuck yourself.<br>(@hello.josh.12)",
-    "The third floor.<br>(-Kelbert)",
-    "Being bald.<br>(@emily.kbigelow)",
+    "A rendition of 'what do you do with a drunken sailor', entitled 'what do you do with a zoinked out freshman'{-Kelbert}",
+    "Campbell telling you to go fuck yourself.{@hello.josh.12}",
+    "The third floor.{-Kelbert}",
+    "Being bald. {@emily.kbigelow}",
     "The GPA crusher Oscar.",
-    "ISAS food poisoning.<br>(@dragons.at.the.dogpark)",
+    "ISAS food poisoning.{@dragons.at.the.dogpark}",
     "Onedutchmemes.",
     "Emo-Truett",
     "Dutch the tenderloin.",
-    "Ike shirt."
+    "Ike shirt.",
+    "Unironically pronouncing senior as señor.",
+    "$3.75 Tandy grapes.",
+    "The return of Young Democrats Club",
+    "Mr. Parks bingo.",
+    "Nathan filming at the WRONG time."
   ],
   "blackCards": [
     {
@@ -133,6 +138,10 @@
     },
     {
       "text": "Dude, I can't believe you convinced Bloom to _____.",
+      "blanks": 1
+    },
+    {
+      "text": "Why are the teachers SO mad about the senior prank this year.",
       "blanks": 1
     }
 

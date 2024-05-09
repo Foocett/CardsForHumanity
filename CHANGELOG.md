@@ -1,3 +1,18 @@
+# CHANGELOG V1.3.0
+
+## Card Credit System
+  - In update 1.2.3, I began to implement a few community suggested cards (the form to submit cards is in [README.md](README.md) btw)
+  - Optionally, you can add a social media handle to go along with your card submission
+  - This update makes it so that the handle can be appended to the end of the card text in the JSON file, wrapped in curly braces ({})
+  - `"text": "This is a really bad card {@me}"`
+  - Due to changes in this update, this handle will be extracted and appended after the _____ Pack text in the bottom left of the card
+
+## Other Changes
+  - Textbox can be unfocused with escape key
+  - Wager can now be set with -/+ keys (accepts both with or without shift key)
+  - Cards in your hand can now be traversed with the arrow keys, defaulting to the first card if there isn't one selected
+  - Made most UI text unselectable
+
 # CHANGELOG V1.2.3
 
 ## Other Changes

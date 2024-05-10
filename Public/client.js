@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         handCards[i].addEventListener("mouseover", function () {
             if (this.classList.contains("clickable") && !isHovering) {
-                let replacementText = '<span class="underlined">' + self.hand[i].text + '</span>';
+                let replacementText = '<span class="underlined">' + extractBlock(self.hand[i].text) + '</span>';
                 blackText.innerHTML = blackText.innerHTML.replace("_____", replacementText);
                 isHovering = true
             }
@@ -606,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             submittedCard.addEventListener("mouseover", function () {
                 if (this.classList.contains("clickable") && !isHovering) {
-                    let replacementText = '<span class="underlined">' + submissions[i].text + '</span>';
+                    let replacementText = '<span class="underlined">' + extractBlock(submissions[i].text)[0] + '</span>';
                     blackText.innerHTML = blackText.innerHTML.replace("_____", replacementText);
                 }
             });

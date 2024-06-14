@@ -40,9 +40,9 @@ const { Server } = require('socket.io');
 const io = new Server(server);
 io.disconnectSockets()
 app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/public/client.html');
+    res.sendFile(__dirname+'/Public/client.html');
 });
-app.use(express.static('public'));
+app.use(express.static('Public'));
 
 
 //handle client events

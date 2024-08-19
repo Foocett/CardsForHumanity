@@ -481,6 +481,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 350); // slightly longer than the animation duration
             }
         });
+        /*
+        * this code used to insert white card content into blanks in black cards when they're hovered
+        * I'm keeping the code but not using it because it was buggy and looked a lot cooler in my head
         handCards[i].addEventListener("mouseover", function () {
             if (this.classList.contains("clickable") && !isHovering) {
                 let replacementText = '<span class="underlined">' + extractBlock(self.hand[i].text) + '</span>';
@@ -493,6 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
             isHovering = false
             blackText.innerHTML = blackText.innerHTML.replace(extractBlock(self.hand[i].text)[0], "_____");
         });
+        */
     }
 
     submitButton.onclick = () => { //on submit button click
@@ -853,5 +857,6 @@ function extractBlock(text) {
         cleanedText = text.substring(0, startIndex).trim();
     }
     // Return the cleaned text and the formatted content inside the {}
+    console.table({cleanedText, blockContent});
     return [cleanedText, blockContent];
 }

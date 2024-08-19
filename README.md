@@ -54,8 +54,9 @@ For help or assistance, contact me at ajfawcett@gmail.com
   - Players can connect to the lobby by putting in your device's local IP address followed by :3000
   - To find your IP address, open a NEW instance of terminal (it won't work in the one you already have open) and run the following commands
   - Local players can join by connecting to your computer's local IP on port 3000 (this can be changed manually in [main.js](main.js))
-    - Mac/Linux:  ```ifconig```
+    - Mac:  ```ifconig```
     - Windows: ```ipconfig```
+    - Linux: Depends on your distro but probably ```ip addr```
   - You're going to see a lot of information when you do this, but the bit you're looking for is 'inet'; it should look something like this, somewhat near the top
     - <img width="437" alt="Screenshot 2024-04-24 at 1 42 32 PM" src="https://github.com/Foocett/CardsForHumanity/assets/141191160/b1d08fbc-7b50-44f5-91cf-78cf0fcfc74f">
   - The first number is the one we're after, and it's the address off the server that players need to connect to
@@ -79,16 +80,13 @@ In its current state, this game has seven unique packs to play with; here's a br
  - I added this one for personal reasons, I am diagnosed with ASD (autism spectrum disorder), and I think it plays a really big role in who I am as a person, so I wanted to add a pack that's targeted specifically towards people like me. At the moment, it's the smallest pack, but I plan on working on it soon.
 
 [Base Pack](Packs/basePack.json)
- - This is really just the general pack for whatever stupid ideas I might have. There aren't really any rules for this pack.
+ - This is really just the general pack for whatever stupid ideas I might have. There aren't really any special rules for this pack.
 
 [Brainrot Pack](Packs/brainrotPack.json)
- - This is by far the stupidest pack I have. It speaks for itself, and I will not elaborate.
-
-[Dutch Pack](Packs/dutchPack.json)
- - I can't go into too much detail, but this pack is pretty much just inside jokes from my high school; it's best if you ignore this one.
+ - I will not be elaborating, my IQ has dropped enough from this.
 
 [Festival Pack](Packs/festivalPack.json)
- - This pack was created by my friend and me, who share an interest in EDM music and whatnot.
+ - This pack was created by my friend and I, who share an interest in EDM music and whatnot.
 
 [STEM Pack](Packs/stemPack.json)
  - This pack is for anything STEM-related. Personally, I'm a massive nerd who loves programming, math, engineering, etc., so I made this pack to contain all my obscure nerd jokes.

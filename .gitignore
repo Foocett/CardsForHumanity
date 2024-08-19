@@ -134,4 +134,6 @@ dist
 exportToHTML
 Public/Assets/gifCompressor.py
 
+Some personal packs that won't make sense to most people don't worry ab it
 Packs/dutchPack.json
+Packs/summerBridgePack.json

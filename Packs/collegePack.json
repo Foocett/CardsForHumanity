@@ -1,0 +1,18 @@
+{
+  "packName": "College Pack",
+  "whiteCards": [
+    "My stupid useless college advisor",
+    "A 1000 level history class that will ruin your life",
+    "A single frat boy named Jacob (he's evil)",
+    "The worst rate my professor score ever achieved",
+    "A TA that I'm pretty sure has never taken the class",
+    "Responding to a discussion post",
+    "Canvas",
+    "Charlie Kirk coming to your campuss"
+  ],
+
+  "blackCards": [
+    "What's even the point of majoring in _____?",
+    "Why on EARTH would my professor include _____ in the syllabus?"
+  ]
+}

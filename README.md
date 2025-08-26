@@ -1,3 +1,4 @@
+hii if you're an employer looking at my github... ignore the packs folder
 # CardsForHumanity V1.2.3
 ### __Suggest Features [HERE](https://forms.gle/wMJ3wAkWuBf9xk5c6)!__
 ### __Submit Cards [HERE](https://forms.gle/JD7iUcmttC9GB4gU6)!__ (Read submission rules at the bottom of this file before submitting)

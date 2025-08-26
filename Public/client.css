@@ -1028,6 +1028,10 @@ button:disabled {
     }
 }
 
+.pack-buttons > label {
+    text-align: center;
+}
+
 .unselectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

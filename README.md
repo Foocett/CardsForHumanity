@@ -1,4 +1,7 @@
-hii if you're an employer looking at my github... ignore the packs folder
+Hii, a couple of notes if you're a recuiter or employer
+1) You should hire me
+2) I made this in highschool, I'm better at programming now
+3) It's probably best if you stay away from the packs folder <3
 # CardsForHumanity V1.2.3
 ### __Suggest Features [HERE](https://forms.gle/wMJ3wAkWuBf9xk5c6)!__
 ### __Submit Cards [HERE](https://forms.gle/JD7iUcmttC9GB4gU6)!__ (Read submission rules at the bottom of this file before submitting)
